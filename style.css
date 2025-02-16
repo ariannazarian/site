@@ -1,17 +1,44 @@
+/* Apply Courier font to the entire website */
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Courier", monospace;
     text-align: center;
     background-color: #f4f4f4;
 }
 
+/* Style the header */
 header {
     background-color: #333;
     color: white;
     padding: 15px;
 }
 
+/* Style the navigation links */
 nav a {
     color: white;
     margin: 0 10px;
     text-decoration: none;
 }
+
+/* Style the welcome quote */
+h1 {
+    text-align: center;
+}
+
+/* Make the quote bold and larger */
+.quote {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Style the author’s name (normal text, smaller size) */
+.author {
+    font-size: 18px;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Ensure only the book title is italicized */
+.author em {
+    font-style: italic;
+}
+
