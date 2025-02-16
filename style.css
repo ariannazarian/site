@@ -3,31 +3,41 @@ body {
     font-family: "Courier", monospace;
     text-align: center;
     background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
 }
 
 /* Style the header */
 header {
     background-color: #333;
     color: white;
-    padding: 15px;
+    padding: 20px;
 }
 
 /* Style the navigation links */
 nav a {
     color: white;
-    margin: 0 10px;
+    margin: 0 15px;
     text-decoration: none;
+    font-size: 18px;
+}
+
+/* Ensure navigation links change color when hovered */
+nav a:hover {
+    text-decoration: underline;
 }
 
 /* Style the welcome quote */
 h1 {
     text-align: center;
+    margin: 20px 0;
 }
 
 /* Make the quote bold and larger */
 .quote {
     font-size: 28px;
     font-weight: bold;
+    display: block;
 }
 
 /* Style the author’s name (normal text, smaller size) */
@@ -40,5 +50,28 @@ h1 {
 /* Ensure only the book title is italicized */
 .author em {
     font-style: italic;
+}
+
+/* Style the main section */
+main {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+}
+
+/* 🔹 Fix for Mobile Screens: Adjust Font Sizes */
+@media (max-width: 600px) {
+    .quote {
+        font-size: 22px; /* Reduce the quote size on small screens */
+    }
+
+    .author {
+        font-size: 14px; /* Reduce the author's name size on small screens */
+    }
+
+    nav a {
+        display: block; /* Stack links vertically on mobile */
+        margin: 10px 0;
+    }
 }
 
