@@ -74,26 +74,41 @@ nav a:hover {
     color: #f4f4f4;
 }
 
-/* Style the email address */
-.email {
-    color: var(--usc-cardinal);
+/* Page Title + Home Link Styling */
+.page-title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Space between Home link and title */
+    margin: 20px 0;
+}
+
+/* Style the "Home" link next to the title */
+.home-link {
     font-size: 20px;
-    margin-bottom: 5px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    transition: color 0.3s ease;
 }
 
-/* Force lowercase "a" in email */
-.lowercase {
-    text-transform: lowercase;
+/* Hover effect for Home link */
+.home-link:hover {
+    text-decoration: underline;
+    color: var(--black);
 }
 
-/* Ensure "at" and "dot" are italicized */
-.email em {
-    font-style: italic;
+/* Style the page title */
+.page-title {
+    font-size: 24px;
+    font-weight: bold;
 }
 
-/* Style all other text (same size) */
-.personal-text, .email, .author, nav a {
-    font-size: 18px; /* Standardized size for all text except the quote */
+/* Style the additional quote below the header */
+.sub-quote {
+    font-size: 18px;
+    color: black;
+    margin-top: 10px;
 }
 
 /* Mobile Fix: Ensures correct proportions */
@@ -106,6 +121,18 @@ nav a:hover {
         font-size: 16px;
     }
 
+    .page-title {
+        font-size: 20px;
+    }
+
+    .home-link {
+        font-size: 18px;
+    }
+
+    .sub-quote {
+        font-size: 16px;
+    }
+
     nav {
         flex-wrap: wrap;
         gap: 10px;
@@ -114,13 +141,6 @@ nav a:hover {
     nav a {
         font-size: 16px;
     }
-
-    .email {
-        font-size: 18px;
-    }
-
-    .personal-text {
-        font-size: 18px;
-    }
 }
+
 
