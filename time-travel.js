@@ -23,11 +23,13 @@ function getDayOfWeek(day, month, year) {
     return date.getDay(); // Returns 0=Sunday, ..., 6=Saturday
 }
 
-// Function to find matching years for the given date and weekday
+// Function to find matching years for the given date and weekday (excluding current year)
 function matchingYears(month, day, targetWeekday, startYear, endYear) {
     let years = [];
+    let currentYear = new Date().getFullYear(); // Get current year
+
     for (let year = startYear; year <= endYear; year++) {
-        if (getDayOfWeek(day, month, year) === targetWeekday) {
+        if (year !== currentYear && getDayOfWeek(day, month, year) === targetWeekday) {
             years.push(year);
         }
     }
@@ -49,6 +51,7 @@ function updateClockAndYears() {
 
     let currentYear = now.getFullYear(); // Get current year dynamically
     let years = matchingYears(month, day, weekday, 1892, currentYear);
+
     document.getElementById("matching-years").innerText = `Matching years: ${years.join(', ')}`;
 }
 
