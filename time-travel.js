@@ -84,9 +84,9 @@ function playAudioWithFadeIn() {
     // Ensure audio starts at low volume
     audio.volume = 0.2;
 
-    // Jump to 0:38 only the first time the song plays
+    // Jump to 0:385 only the first time the song plays
     if (!hasStartedOnce) {
-        audio.currentTime = 38;
+        audio.currentTime = 38.5;
         hasStartedOnce = true;
     }
 
