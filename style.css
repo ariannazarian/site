@@ -98,11 +98,6 @@ nav a:hover {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Initially hide the extra text and matching years */
-.hidden {
-    display: none;
-}
-
 /* The Eternal Watch - No space between it and frozen time */
 #eternal-title {
     font-size: var(--text-size);
@@ -144,4 +139,9 @@ nav a:hover {
     font-weight: bold;
     text-align: center;
     margin-top: 10px;
+}
+
+/* Ensures the ▼ symbol has slight spacing */
+#eternal-title::after, #reveal-matching-alt::after {
+    margin-left: 5px;
 }
