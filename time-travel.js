@@ -68,7 +68,7 @@ function revealMatchingYears() {
     let month = now.getMonth() + 1;
     let day = now.getDate();
     let weekday = now.getDay();
-    let currentYear = now.getFullYear();
+    let currentYear = new Date().getFullYear();
 
     let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892)
                      .filter(year => new Date(year, month - 1, day).getDay() === weekday);
@@ -76,25 +76,29 @@ function revealMatchingYears() {
     document.getElementById("matching-years").innerText = `Coordinate reflections: ${years.join(', ')}`;
 }
 
-// Function to play audio with fade-in effect
+// Function to play audio with fade-in effect (Ensures autoplay is allowed)
 function playAudioWithFadeIn() {
     if (!audio) return;
 
     audio.volume = 0.2;
-    audio.play();
-    isAudioPlaying = true;
 
-    let fadeDuration = 15000; // 15 seconds fade-in
-    let fadeStep = 0.05;
-    let interval = fadeDuration / (0.8 / fadeStep); // Smooth volume transition
+    // Try to play audio (browsers block autoplay unless inside a user-initiated event)
+    audio.play().then(() => {
+        isAudioPlaying = true;
+        let fadeDuration = 15000; // 15 seconds fade-in
+        let fadeStep = 0.05;
+        let interval = fadeDuration / (0.8 / fadeStep);
 
-    let fadeIn = setInterval(() => {
-        if (audio.volume < 1.0) {
-            audio.volume = Math.min(audio.volume + fadeStep, 1.0);
-        } else {
-            clearInterval(fadeIn);
-        }
-    }, interval);
+        let fadeIn = setInterval(() => {
+            if (audio.volume < 1.0) {
+                audio.volume = Math.min(audio.volume + fadeStep, 1.0);
+            } else {
+                clearInterval(fadeIn);
+            }
+        }, interval);
+    }).catch(error => {
+        console.error("Audio playback prevented:", error);
+    });
 }
 
 // Function to toggle audio without restarting
