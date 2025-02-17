@@ -81,19 +81,23 @@ nav a:hover {
     background-color: var(--black);
     padding: 15px;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
     color: white;
     position: relative;
 }
 
-/* Aligns "< Photos", "< Papers", "< Films" exactly with home page title */
+/* Aligns "< Photos", "< Papers", "< Films" exactly with home page links */
+.category-nav {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+/* Makes sure the "< Category" text aligns exactly with the home page link */
 .back-link {
-    position: absolute;
-    font-size: 24px; /* Matches home page title */
+    font-size: 18px; /* Matches home page navigation */
     font-weight: bold;
-    left: 50%;
-    transform: translateX(-50%);
     text-decoration: none;
     color: white;
     transition: color 0.3s ease, text-shadow 0.3s ease;
@@ -105,28 +109,6 @@ nav a:hover {
     text-decoration: underline;
     color: #f4f4f4;
     text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.6);
-}
-
-/* Style the email address */
-.email {
-    color: var(--usc-cardinal);
-    font-size: 20px;
-    margin-bottom: 5px;
-}
-
-/* Force lowercase "a" in email */
-.lowercase {
-    text-transform: lowercase;
-}
-
-/* Ensure "at" and "dot" are italicized */
-.email em {
-    font-style: italic;
-}
-
-/* Style all other text (same size) */
-.personal-text, .email, .author, nav a {
-    font-size: 18px; /* Standardized size for all text except the quote */
 }
 
 /* Mobile Fix: Ensures correct proportions */
@@ -149,17 +131,10 @@ nav a:hover {
     }
 
     .back-link {
-        font-size: 20px;
-    }
-
-    .email {
-        font-size: 18px;
-    }
-
-    .personal-text {
-        font-size: 18px;
+        font-size: 16px;
     }
 }
+
 
 
 
