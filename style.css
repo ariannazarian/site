@@ -12,25 +12,14 @@ header {
     background-color: #333;
     color: white;
     padding: 20px;
-}
-
-/* Style the navigation links */
-nav a {
-    color: white;
-    margin: 0 15px;
-    text-decoration: none;
-    font-size: 18px;
-}
-
-/* Ensure navigation links change color when hovered */
-nav a:hover {
-    text-decoration: underline;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Style the welcome quote */
 h1 {
-    text-align: center;
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 /* Make the quote bold and larger */
@@ -52,6 +41,29 @@ h1 {
     font-style: italic;
 }
 
+/* Style the navigation bar */
+nav {
+    display: flex;
+    justify-content: center; /* Center the links */
+    gap: 20px; /* Space between links */
+    margin-top: 10px;
+}
+
+/* Style the navigation links */
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 5px 10px;
+    transition: color 0.3s ease;
+}
+
+/* Hover effect for navigation links */
+nav a:hover {
+    text-decoration: underline;
+    color: #f4f4f4;
+}
+
 /* Style the main section */
 main {
     padding: 20px;
@@ -59,7 +71,7 @@ main {
     margin: auto;
 }
 
-/* 🔹 Fix for Mobile Screens: Adjust Font Sizes */
+/* 🔹 Responsive Design for Mobile Screens */
 @media (max-width: 600px) {
     .quote {
         font-size: 22px; /* Reduce the quote size on small screens */
@@ -69,9 +81,12 @@ main {
         font-size: 14px; /* Reduce the author's name size on small screens */
     }
 
+    nav {
+        flex-wrap: nowrap; /* Prevent links from stacking */
+        gap: 10px; /* Reduce space between links */
+    }
+
     nav a {
-        display: block; /* Stack links vertically on mobile */
-        margin: 10px 0;
+        font-size: 16px; /* Slightly smaller links for mobile */
     }
 }
-
