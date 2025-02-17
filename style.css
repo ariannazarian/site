@@ -12,41 +12,42 @@ body {
     background-color: #000000; /* Ensures contrast with random text */
     margin: 0;
     padding: 0;
+    position: relative;
 }
 
-/* Style the header */
+/* Header now takes up max 20% of page */
 header {
     background-color: var(--black-70k);
     color: white;
-    padding: 15px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 20vh;
+    justify-content: center;
 }
 
 /* Fix spacing issue between quote & author */
 h1 {
     margin: 0;
     padding: 0;
-    line-height: 1.1;
+    line-height: 1;
     color: white;
     user-select: none;
 }
 
 /* Make the quote bold and larger */
 .quote {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
     display: block;
-    margin-bottom: 0px; /* Eliminates extra space */
 }
 
 /* Style the author's name */
 .author {
-    font-size: 18px;
+    font-size: 16px;
     display: block;
-    margin-top: -5px; /* Moves closer to the quote */
-    line-height: 1;
+    margin-top: 0px; /* No gap between quote & author */
 }
 
 /* Ensure only the book title is italicized */
@@ -58,7 +59,7 @@ h1 {
 nav {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 15px;
     margin-top: 5px;
 }
 
@@ -66,8 +67,8 @@ nav {
 nav a {
     color: white;
     text-decoration: none;
-    font-size: 18px;
-    padding: 5px 10px;
+    font-size: 16px;
+    padding: 3px 8px;
     transition: color 0.3s ease, text-shadow 0.3s ease;
     font-weight: bold;
 }
@@ -81,7 +82,7 @@ nav a:hover {
 /* Style the email address */
 .email {
     color: var(--usc-cardinal);
-    font-size: 22px;
+    font-size: 20px;
     margin-bottom: 5px;
 }
 
@@ -90,40 +91,33 @@ nav a:hover {
     font-style: italic;
 }
 
-/* Style the paragraph below the email */
-.usc-text {
-    color: var(--usc-cardinal);
-    font-size: 18px;
+/* Style the "This is my personal website" text (now black) */
+.personal-text {
+    color: #000000;
+    font-size: 16px;
 }
 
-/* Babel-style random text lines (fills spaces between sections) */
-.babel-line {
-    font-size: 16px;
+/* Wall of Random Text */
+.babel-wall {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
     color: var(--black-30k);
-    text-align: center;
-    user-select: none;
     white-space: pre-wrap;
     word-wrap: break-word;
-    transition: opacity 0.5s ease-in-out;
-}
-
-/* Babel-style inline text (fills gaps between words) */
-.babel-inline {
-    color: var(--black-30k);
-    user-select: none;
-}
-
-/* Increase density of random text */
-.babel-line::after {
-    content: "\A" attr(data-random-text) "\A" attr(data-random-text) "\A" attr(data-random-text);
-    white-space: pre-wrap;
-    display: block;
+    opacity: 0.3;
+    font-family: "Courier", monospace;
+    z-index: -1;
+    padding: 20px;
 }
 
 /* Responsive Design */
 @media (max-width: 600px) {
     .quote {
-        font-size: 22px;
+        font-size: 18px;
     }
 
     .author {
@@ -131,23 +125,24 @@ nav a:hover {
     }
 
     nav {
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         gap: 10px;
     }
 
     nav a {
-        font-size: 16px;
+        font-size: 14px;
     }
 
     .email {
-        font-size: 18px;
-    }
-
-    .usc-text {
         font-size: 16px;
     }
 
-    .babel-line {
+    .personal-text {
         font-size: 14px;
     }
+
+    .babel-wall {
+        font-size: 12px;
+    }
 }
+
