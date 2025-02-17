@@ -111,6 +111,11 @@ nav a:hover {
     margin-top: 0px;
 }
 
+/* Ensure hidden text starts hidden */
+.hidden {
+    display: none;
+}
+
 /* Watch text formatting */
 .watch-text {
     font-size: var(--text-size);
