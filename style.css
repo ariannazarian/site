@@ -28,69 +28,24 @@ header {
     color: var(--white);
 }
 
-/* Quote container inside header */
-.quote-container {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Adjust the size of the header citation */
-.author {
-    font-size: var(--text-size);
-}
-
 /* Navigation */
-nav {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 5px;
-}
-
-/* Navigation links */
 nav a {
     font-size: var(--text-size);
     font-weight: bold;
-    color: var(--white) !important; /* Ensures links stay white */
-    text-decoration: none;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
-}
-
-/* Prevent visited links from changing color */
-nav a:visited {
     color: var(--white) !important;
-}
-
-/* Hover effect */
-nav a:hover {
-    text-decoration: underline;
-    color: #f4f4f4;
-    text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.6);
+    text-decoration: none;
 }
 
 /* Email & personal text */
 .email {
     color: var(--usc-cardinal);
     font-size: var(--text-size);
-    margin-bottom: 5px;
-}
-
-/* Force lowercase "a" in email */
-.lowercase {
-    text-transform: lowercase;
-}
-
-/* Ensure "at" and "dot" are italicized */
-.email em {
-    font-style: italic;
 }
 
 /* Clickable elements */
 .clickable {
     cursor: pointer;
-    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+    transition: text-shadow 0.3s ease;
 }
 
 /* Hover effect */
@@ -98,50 +53,25 @@ nav a:hover {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* The Eternal Watch - No space between it and frozen time */
+/* Initially hide the extra text */
+.hidden {
+    display: none;
+}
+
+/* The Eternal Watch */
 #eternal-title {
     font-size: var(--text-size);
     margin-bottom: 0px;
 }
 
-/* Frozen time display - Larger (24px) */
+/* Frozen time display */
 #current-time {
     font-size: var(--larger-text-size);
     margin-top: 0px;
 }
 
-/* Watch text formatting */
-.watch-text {
-    font-size: var(--text-size);
-    font-weight: bold;
-    text-align: center;
-    margin-top: 10px;
-}
-
-/* Bold Latin texts and "This time traveler's watch..." */
-#reveal-matching, #reveal-matching-alt {
-    font-weight: bold;
-    font-size: var(--text-size);
-}
-
-/* Watch description paragraphs */
-.watch-description {
-    font-size: var(--text-size);
-    text-align: justify;
-    margin: 10px auto;
-    max-width: 600px;
-    line-height: 1.6;
-}
-
-/* Matching years text */
-#matching-years {
-    font-size: var(--text-size);
-    font-weight: bold;
-    text-align: center;
-    margin-top: 10px;
-}
-
-/* Ensures the ▼ symbol has slight spacing */
-#eternal-title::after, #reveal-matching-alt::after {
+/* ▼ and ▲ spacing */
+#eternal-arrow, #watch-arrow {
     margin-left: 5px;
 }
+
