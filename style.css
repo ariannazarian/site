@@ -26,6 +26,13 @@ header {
     color: white;
 }
 
+/* Quote container inside header */
+.quote-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
 /* Category navigation */
 .category-nav {
     display: flex;
@@ -34,14 +41,19 @@ header {
     margin-top: 5px;
 }
 
-/* Category links */
+/* Category links (Home Page & Subpages) */
 .category-link {
     font-size: 18px;
     font-weight: bold;
-    color: white;
+    color: white !important; /* Keeps links white no matter what */
     text-decoration: none;
     transition: color 0.3s ease, text-shadow 0.3s ease;
     text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Prevent links from turning purple after clicking */
+.category-link:visited {
+    color: white !important;
 }
 
 /* Hover effect */
@@ -78,6 +90,7 @@ header {
 .personal-text, .email, .author, nav a {
     font-size: 18px; /* Standardized size for all text except the quote */
 }
+
 
 
 
