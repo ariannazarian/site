@@ -9,27 +9,16 @@ function getCurrentPSTDate() {
     return now.toLocaleString('en-US', options);
 }
 
-// Function to calculate matching years using Zeller’s Congruence
-function zellersCongruence(day, month, year) {
-    if (month < 3) { 
-        month += 12; 
-        year -= 1; 
-    }
-    let K = year % 100; // Last two digits of year
-    let J = Math.floor(year / 100); // First two digits of year
-    let h = (day + Math.floor(13 * (month + 1) / 5) + K + Math.floor(K / 4) + Math.floor(J / 4) + (5 * J)) % 7;
-
-    let zeller_day = (h + 7) % 7; // Ensures positive values
-
-    // Adjust to match JavaScript's `getDay()` format (0=Sunday, ..., 6=Saturday)
-    return (zeller_day + 5) % 7;  
+// Function to get the correct weekday using JavaScript's built-in `Date` object
+function getDayOfWeek(day, month, year) {
+    return new Date(year, month - 1, day).getDay();  // 0=Sunday, ..., 6=Saturday
 }
 
-// Function to find matching years
+// Function to find matching years for the given date and weekday
 function matchingYears(month, day, targetWeekday, startYear, endYear) {
     let years = [];
     for (let year = startYear; year <= endYear; year++) {
-        if (zellersCongruence(day, month, year) === targetWeekday) {
+        if (getDayOfWeek(day, month, year) === targetWeekday) {
             years.push(year);
         }
     }
@@ -57,4 +46,3 @@ function updateClockAndYears() {
 // Update clock and matching years every second
 setInterval(updateClockAndYears, 1000);
 updateClockAndYears(); // Run immediately on page load
-
