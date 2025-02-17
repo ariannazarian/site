@@ -90,7 +90,7 @@ header {
     font-size: 18px; /* Standardized size for all text except the quote */
 }
 
-/* --- TIME TRAVELER'S CLOCK STYLES --- */
+/* --- TIME TRAVELER'S CLOCK STYLES (HOME PAGE) --- */
 #time-travel-clock {
     margin-top: 20px;
     text-align: center;
@@ -114,12 +114,21 @@ header {
     font-weight: bold;
 }
 
-/* Styling for the Tolkien quote below the output */
+/* Styling for the Tolkien quote below the output (Home Page) */
 .travel-quote {
     font-size: 18px;
     color: black;
     margin-top: 10px;
     font-style: normal;
+}
+
+/* --- CATEGORY PAGES: QUOTE BELOW HEADER --- */
+.category-quote {
+    font-size: 18px;
+    color: black;
+    margin-top: 10px;
+    text-align: center;
+    font-family: "Courier", monospace;
 }
 
 /* --- MOBILE FIXES --- */
@@ -160,6 +169,7 @@ header {
         font-size: 18px;
     }
 }
+
 
 
 
