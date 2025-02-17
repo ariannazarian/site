@@ -75,3 +75,7 @@ nav a {
     margin-left: 5px;
 }
 
+/* Bold text for Latin and Watch phrases */
+.bold-text {
+    font-weight: bold;
+}
