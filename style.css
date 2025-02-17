@@ -26,16 +26,9 @@ header {
     color: white;
 }
 
-/* Keep quote and author on one line on mobile */
+/* Ensure quote and author stay on separate lines */
 .quote-container {
-    display: flex;
-    flex-wrap: nowrap; /* Prevents breaking onto multiple lines */
-    justify-content: center;
-    gap: 10px; /* Adds slight space between quote & credit */
-    max-width: 90vw; /* Ensures it scales on smaller screens */
-    overflow: hidden; /* Prevents text overflow */
-    text-overflow: ellipsis; /* Adds "..." if space is too small */
-    white-space: nowrap; /* Forces text to stay in one line */
+    text-align: center;
 }
 
 /* Make the quote bold and larger */
@@ -46,8 +39,8 @@ header {
 
 /* Style the author's name */
 .author {
-    font-size: 24px;
-    font-weight: normal;
+    font-size: 18px;
+    margin-top: 5px; /* Just enough space between quote & author */
 }
 
 /* Ensure only the book title is italicized */
@@ -67,7 +60,7 @@ nav {
 nav a {
     color: white;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 18px;
     padding: 3px 8px;
     transition: color 0.3s ease, text-shadow 0.3s ease;
     font-weight: bold;
@@ -101,15 +94,14 @@ nav a:hover {
     font-size: 18px; /* Standardized size for all text except the quote */
 }
 
-/* Mobile Fix: Prevent quote from breaking onto multiple lines */
+/* Mobile Fix: Prevents shrinking and ensures proper proportions */
 @media (max-width: 600px) {
-    .quote-container {
-        max-width: 90vw; /* Ensures quote fits in smaller screens */
-        font-size: 16px;
+    .quote {
+        font-size: 20px;
     }
 
-    .quote, .author {
-        font-size: 18px; /* Reduces size just enough to fit on one line */
+    .author {
+        font-size: 16px;
     }
 
     nav {
@@ -129,5 +121,3 @@ nav a:hover {
         font-size: 18px;
     }
 }
-
-
