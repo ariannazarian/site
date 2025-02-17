@@ -1,11 +1,10 @@
-/* Define USC Cardinal color */
+/* Define color variables */
 :root {
     --usc-cardinal: #990000;
-    --shadow-color: rgba(0, 0, 0, 0.3); /* Subtle shadow */
-    --decorative-text-gray: rgba(100, 100, 100, 0.3); /* Light gray, semi-transparent */
+    --decorative-text-gray: rgba(100, 100, 100, 0.3); /* Semi-transparent gray */
 }
 
-/* Apply Courier font to the entire website */
+/* Apply Courier font to everything */
 body {
     font-family: "Courier", monospace;
     text-align: center;
@@ -24,7 +23,7 @@ header {
     align-items: center;
 }
 
-/* Style the welcome quote */
+/* Style the meaningful quote */
 h1 {
     margin: 0;
     line-height: 1.1;
@@ -36,11 +35,9 @@ h1 {
 .quote {
     font-size: 28px;
     font-weight: bold;
-    display: block;
-    margin-bottom: 2px;
 }
 
-/* Style the author’s name */
+/* Style the author's name */
 .author {
     font-size: 18px;
     display: block;
@@ -61,7 +58,7 @@ nav {
     margin-top: 10px;
 }
 
-/* Style the navigation links */
+/* Style navigation links */
 nav a {
     color: white;
     text-decoration: none;
@@ -69,14 +66,12 @@ nav a {
     padding: 5px 10px;
     transition: color 0.3s ease, text-shadow 0.3s ease;
     font-weight: bold;
-    text-shadow: 2px 2px 5px var(--shadow-color); /* Subtle shadow */
 }
 
 /* Hover effect for navigation links */
 nav a:hover {
     text-decoration: underline;
     color: #f4f4f4;
-    text-shadow: 4px 4px 10px var(--shadow-color); /* Stronger shadow on hover */
 }
 
 /* Style the email address */
@@ -97,23 +92,24 @@ nav a:hover {
     font-size: 18px;
 }
 
-/* Style the decorative "Library of Babel" text */
-.decorative-text {
-    font-size: 14px;
+/* Babel-style random text lines (fills spaces between sections) */
+.babel-line {
+    font-size: 16px;
     color: var(--decorative-text-gray);
     text-align: center;
-    margin: 5px 0;
-    user-select: none; /* Prevent users from copying */
+    user-select: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    transition: opacity 0.5s ease-in-out;
 }
 
-/* Style the main section */
-main {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
+/* Babel-style inline text (fills gaps between words) */
+.babel-inline {
+    color: var(--decorative-text-gray);
+    user-select: none;
 }
 
-/* 🔹 Responsive Design for Mobile Screens */
+/* Responsive Design */
 @media (max-width: 600px) {
     .quote {
         font-size: 22px;
@@ -140,7 +136,7 @@ main {
         font-size: 16px;
     }
 
-    .decorative-text {
+    .babel-line {
         font-size: 12px;
     }
 }
