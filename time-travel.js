@@ -22,14 +22,18 @@ function getFrozenPSTDate() {
 // Update frozen time on page load
 document.getElementById("current-time").innerText = getFrozenPSTDate();
 
-// Toggle visibility
-document.getElementById("eternal-title").addEventListener("click", () => {
+// Toggle visibility for The Eternal Watch and Frozen Time Display
+function toggleEternalWatch() {
     let hiddenText = document.getElementById("hidden-text");
     let arrow = document.getElementById("eternal-arrow");
-    
+
     hiddenText.style.display = hiddenText.style.display === "block" ? "none" : "block";
     arrow.innerText = hiddenText.style.display === "block" ? "▲" : "▼";
-});
+}
+
+// Sync clicks between The Eternal Watch and Frozen Time Display
+document.getElementById("eternal-title").addEventListener("click", toggleEternalWatch);
+document.getElementById("current-time").addEventListener("click", toggleEternalWatch);
 
 // Toggle matching years visibility
 document.getElementById("reveal-matching").addEventListener("click", toggleMatchingYears);
@@ -58,5 +62,5 @@ function revealMatchingYears() {
 
     let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892).filter(year => new Date(year, month - 1, day).getDay() === weekday);
 
-    document.getElementById("matching-years").innerText = `Matching years: ${years.join(', ')}`;
+    document.getElementById("matching-years").innerText = `Coordinate reflections: ${years.join(', ')}`;
 }
