@@ -1,5 +1,7 @@
 // Store the frozen time when the page loads
 const frozenTime = new Date();
+const audio = document.getElementById("eternal-audio");
+let isAudioPlaying = false;
 
 function getFrozenPSTDate() {
     let now = new Date(frozenTime);
@@ -22,13 +24,21 @@ function getFrozenPSTDate() {
 // Update frozen time on page load
 document.getElementById("current-time").innerText = getFrozenPSTDate();
 
-// Toggle visibility for The Eternal Watch and Frozen Time Display
+// Toggle visibility for The Eternal Watch and Frozen Time Display + Play/Pause Audio
 function toggleEternalWatch() {
     let hiddenText = document.getElementById("hidden-text");
     let arrow = document.getElementById("eternal-arrow");
 
-    hiddenText.style.display = hiddenText.style.display === "block" ? "none" : "block";
-    arrow.innerText = hiddenText.style.display === "block" ? "▲" : "▼";
+    let isVisible = hiddenText.style.display === "block";
+    hiddenText.style.display = isVisible ? "none" : "block";
+    arrow.innerText = isVisible ? "▼" : "▲";
+
+    // Control audio playback
+    if (!isAudioPlaying) {
+        playAudioWithFadeIn();
+    } else {
+        toggleAudio();
+    }
 }
 
 // Sync clicks between The Eternal Watch and Frozen Time Display
@@ -64,4 +74,38 @@ function revealMatchingYears() {
                      .filter(year => new Date(year, month - 1, day).getDay() === weekday);
 
     document.getElementById("matching-years").innerText = `Coordinate reflections: ${years.join(', ')}`;
+}
+
+// Function to play audio with fade-in effect
+function playAudioWithFadeIn() {
+    if (!audio) return;
+
+    audio.volume = 0.2;
+    audio.play();
+    isAudioPlaying = true;
+
+    let fadeDuration = 15000; // 15 seconds fade-in
+    let fadeStep = 0.05;
+    let interval = fadeDuration / (0.8 / fadeStep); // Smooth volume transition
+
+    let fadeIn = setInterval(() => {
+        if (audio.volume < 1.0) {
+            audio.volume = Math.min(audio.volume + fadeStep, 1.0);
+        } else {
+            clearInterval(fadeIn);
+        }
+    }, interval);
+}
+
+// Function to toggle audio without restarting
+function toggleAudio() {
+    if (!audio) return;
+
+    if (audio.paused) {
+        audio.play();
+        isAudioPlaying = true;
+    } else {
+        audio.pause();
+        isAudioPlaying = false;
+    }
 }
