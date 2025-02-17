@@ -1,32 +1,29 @@
 // Function to get current date & time in PST (UTC-8, ignoring DST)
 function getCurrentPSTDate() {
     let now = new Date();
-    let utcOffset = now.getTimezoneOffset() / 60;  // Get user's local offset in hours
-    let pstOffset = 8;  // Fixed PST offset (UTC-8, no DST adjustment)
-    now.setHours(now.getHours() + (utcOffset - pstOffset));
+    let pstOffset = -8 * 60; // PST is UTC-8
+    now = new Date(now.getTime() + (pstOffset - now.getTimezoneOffset()) * 60000);
 
-    let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    return now.toLocaleString('en-US', options);
+    return now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
 
-// Function to get the correct weekday using JavaScript's built-in `Date` object
+// Function to check if a year is a leap year
+function isLeapYear(year) {
+    return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+}
+
+// Function to get the correct weekday using JavaScript’s Date object
 function getDayOfWeek(day, month, year) {
-    let date = new Date(year, month - 1, day);
-
-    // Ensure leap years are correctly handled
-    if (month === 2 && day === 29) {
-        if (!(year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0))) {
-            return null; // Skip invalid leap years
-        }
+    if (month === 2 && day === 29 && !isLeapYear(year)) {
+        return null;
     }
-
-    return date.getDay(); // Returns 0=Sunday, ..., 6=Saturday
+    return new Date(year, month - 1, day).getDay();
 }
 
 // Function to find matching years for the given date and weekday (excluding current year)
 function matchingYears(month, day, targetWeekday, startYear, endYear) {
     let years = [];
-    let currentYear = new Date().getFullYear(); // Get current year
+    let currentYear = new Date().getFullYear();
 
     for (let year = startYear; year <= endYear; year++) {
         if (year !== currentYear && getDayOfWeek(day, month, year) === targetWeekday) {
@@ -39,22 +36,17 @@ function matchingYears(month, day, targetWeekday, startYear, endYear) {
 // Function to update the live clock and matching years
 function updateClockAndYears() {
     let now = new Date();
-    let utcOffset = now.getTimezoneOffset() / 60;
-    let pstOffset = 8;
-    now.setHours(now.getHours() + (utcOffset - pstOffset));
-
-    let month = now.getMonth() + 1;  // JavaScript months are 0-based
+    let month = now.getMonth() + 1;
     let day = now.getDate();
-    let weekday = now.getDay();  // 0=Sunday, 1=Monday, ..., 6=Saturday
+    let weekday = now.getDay();
 
     document.getElementById("current-time").innerText = getCurrentPSTDate();
 
-    let currentYear = now.getFullYear(); // Get current year dynamically
+    let currentYear = now.getFullYear();
     let years = matchingYears(month, day, weekday, 1892, currentYear);
-
     document.getElementById("matching-years").innerText = `Matching years: ${years.join(', ')}`;
 }
 
 // Update clock and matching years every second
 setInterval(updateClockAndYears, 1000);
-updateClockAndYears(); // Run immediately on page load
+updateClockAndYears();
