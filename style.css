@@ -42,22 +42,22 @@ header {
 }
 
 /* Category links (Home Page & Subpages) */
-.category-link {
+.category-link, nav a {
     font-size: 18px;
     font-weight: bold;
-    color: white !important; /* Keeps links white no matter what */
+    color: white !important; /* Keeps links white at all times */
     text-decoration: none;
     transition: color 0.3s ease, text-shadow 0.3s ease;
     text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
 }
 
 /* Prevent links from turning purple after clicking */
-.category-link:visited {
+.category-link:visited, nav a:visited {
     color: white !important;
 }
 
 /* Hover effect */
-.category-link:hover {
+.category-link:hover, nav a:hover {
     text-decoration: underline;
     color: #f4f4f4;
     text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.6);
