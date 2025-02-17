@@ -130,6 +130,30 @@ header {
         font-size: 18px;
     }
 }
+/* --- TIME TRAVELER'S CLOCK STYLES --- */
+#time-travel-clock {
+    margin-top: 20px;
+    text-align: center;
+    font-family: "Courier", monospace;
+}
+
+#current-time {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.travel-text {
+    font-size: 18px;
+    margin-top: 5px;
+    color: black;
+}
+
+#matching-years {
+    font-size: 18px;
+    color: black;
+    font-weight: bold;
+}
+
 
 
 
