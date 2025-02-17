@@ -12,11 +12,13 @@ function getCurrentPSTDate() {
 // Function to calculate matching years using Zeller’s Congruence
 function zellersCongruence(day, month, year) {
     if (month < 3) { month += 12; year -= 1; }
-    let K = year % 100;
-    let J = Math.floor(year / 100);
-    let h = (day + Math.floor(13 * (month + 1) / 5) + K + Math.floor(K / 4) + Math.floor(J / 4) - (2 * J)) % 7;
-    return h;  // 0=Saturday, 1=Sunday, ..., 6=Thursday
+    let K = year % 100; // Last two digits of year
+    let J = Math.floor(year / 100); // First two digits of year
+    let h = (day + Math.floor((13 * (month + 1)) / 5) + K + Math.floor(K / 4) + Math.floor(J / 4) + (5 * J)) % 7;
+
+    return (h + 7) % 7; // Ensures positive values
 }
+
 
 // Function to find matching years
 function matchingYears(month, day, targetWeekday, startYear, endYear) {
