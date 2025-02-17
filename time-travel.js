@@ -35,8 +35,7 @@ function toggleEternalWatch() {
 document.getElementById("eternal-title").addEventListener("click", toggleEternalWatch);
 document.getElementById("current-time").addEventListener("click", toggleEternalWatch);
 
-// Toggle matching years visibility
-document.getElementById("reveal-matching").addEventListener("click", toggleMatchingYears);
+// Toggle coordinate reflections visibility
 document.getElementById("reveal-matching-alt").addEventListener("click", toggleMatchingYears);
 
 function toggleMatchingYears() {
@@ -53,6 +52,7 @@ function toggleMatchingYears() {
     }
 }
 
+// Generate coordinate reflections dynamically
 function revealMatchingYears() {
     let now = new Date(frozenTime);
     let month = now.getMonth() + 1;
@@ -60,7 +60,8 @@ function revealMatchingYears() {
     let weekday = now.getDay();
     let currentYear = now.getFullYear();
 
-    let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892).filter(year => new Date(year, month - 1, day).getDay() === weekday);
+    let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892)
+                     .filter(year => new Date(year, month - 1, day).getDay() === weekday);
 
     document.getElementById("matching-years").innerText = `Coordinate reflections: ${years.join(', ')}`;
 }
