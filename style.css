@@ -1,6 +1,6 @@
 /* Define color variables */
 :root {
-    --black-70k: #767676;  /* Header background */
+    --black: #000000;  /* Pure black */
     --usc-cardinal: #990000; /* Email color */
 }
 
@@ -14,9 +14,9 @@ body {
     padding: 0;
 }
 
-/* Header should take up no more than 20% of the screen */
+/* Header with pure black background */
 header {
-    background-color: var(--black-70k);
+    background-color: var(--black);
     padding: 15px;
     display: flex;
     flex-direction: column;
@@ -26,9 +26,11 @@ header {
     color: white;
 }
 
-/* Ensure quote and author stay on separate lines */
+/* Ensures the quote and author are stacked correctly */
 .quote-container {
     text-align: center;
+    display: flex;
+    flex-direction: column; /* Stacks elements vertically */
 }
 
 /* Make the quote bold and larger */
@@ -40,7 +42,7 @@ header {
 /* Style the author's name */
 .author {
     font-size: 18px;
-    margin-top: 5px; /* Just enough space between quote & author */
+    margin-top: 5px; /* Small spacing below quote */
 }
 
 /* Ensure only the book title is italicized */
@@ -94,7 +96,7 @@ nav a:hover {
     font-size: 18px; /* Standardized size for all text except the quote */
 }
 
-/* Mobile Fix: Prevents shrinking and ensures proper proportions */
+/* Mobile Fix: Ensures correct proportions */
 @media (max-width: 600px) {
     .quote {
         font-size: 20px;
@@ -121,3 +123,4 @@ nav a:hover {
         font-size: 18px;
     }
 }
+
