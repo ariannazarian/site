@@ -33,7 +33,7 @@ function toggleEternalWatch() {
     hiddenText.style.display = isVisible ? "none" : "block";
     arrow.innerText = isVisible ? "▼" : "▲";
 
-    // Control audio playback
+    // Play or pause audio
     if (!isAudioPlaying) {
         playAudioWithFadeIn();
     } else {
@@ -80,9 +80,10 @@ function revealMatchingYears() {
 function playAudioWithFadeIn() {
     if (!audio) return;
 
+    // Ensure audio starts at low volume
     audio.volume = 0.2;
 
-    // Try to play audio (browsers block autoplay unless inside a user-initiated event)
+    // Try to play audio (required for autoplay restrictions)
     audio.play().then(() => {
         isAudioPlaying = true;
         let fadeDuration = 15000; // 15 seconds fade-in
@@ -106,7 +107,7 @@ function toggleAudio() {
     if (!audio) return;
 
     if (audio.paused) {
-        audio.play();
+        audio.play().catch(error => console.error("Audio play error:", error));
         isAudioPlaying = true;
     } else {
         audio.pause();
