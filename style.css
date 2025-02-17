@@ -33,7 +33,7 @@ header {
     flex-direction: column;
 }
 
-/* Category navigation */
+/* Category navigation (Home & Subpages) */
 .category-nav {
     display: flex;
     justify-content: center;
@@ -42,7 +42,7 @@ header {
 }
 
 /* Category links (Home Page & Subpages) */
-.category-link, nav a {
+.category-link {
     font-size: 18px;
     font-weight: bold;
     color: white !important; /* Keeps links white at all times */
@@ -52,12 +52,12 @@ header {
 }
 
 /* Prevent links from turning purple after clicking */
-.category-link:visited, nav a:visited {
+.category-link:visited {
     color: white !important;
 }
 
 /* Hover effect */
-.category-link:hover, nav a:hover {
+.category-link:hover {
     text-decoration: underline;
     color: #f4f4f4;
     text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.6);
@@ -66,30 +66,9 @@ header {
 /* Hidden spaces to maintain alignment */
 .hidden-category {
     visibility: hidden;
-    font-size: 18px;
+    width: 80px; /* Ensures proper alignment */
 }
 
-/* --- EMAIL & PERSONAL TEXT --- */
-.email {
-    color: var(--usc-cardinal); /* Keeps the email USC Cardinal Red */
-    font-size: 20px;
-    margin-bottom: 5px;
-}
-
-/* Force lowercase "a" in email */
-.lowercase {
-    text-transform: lowercase;
-}
-
-/* Ensure "at" and "dot" are italicized */
-.email em {
-    font-style: italic;
-}
-
-/* Style all other text (same size) */
-.personal-text, .email, .author, nav a {
-    font-size: 18px; /* Standardized size for all text except the quote */
-}
 
 
 
