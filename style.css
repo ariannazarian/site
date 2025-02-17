@@ -1,3 +1,8 @@
+/* Define USC Cardinal color */
+:root {
+    --usc-cardinal: #990000;
+}
+
 /* Apply Courier font to the entire website */
 body {
     font-family: "Courier", monospace;
@@ -9,7 +14,7 @@ body {
 
 /* Style the header */
 header {
-    background-color: #333;
+    background-color: var(--usc-cardinal);
     color: white;
     padding: 20px;
     display: flex;
@@ -20,6 +25,7 @@ header {
 /* Style the welcome quote */
 h1 {
     margin: 10px 0;
+    line-height: 1.2;
 }
 
 /* Make the quote bold and larger */
@@ -27,13 +33,15 @@ h1 {
     font-size: 28px;
     font-weight: bold;
     display: block;
+    margin-bottom: 3px;
 }
 
 /* Style the author’s name (normal text, smaller size) */
 .author {
     font-size: 18px;
     display: block;
-    margin-top: 5px;
+    margin-top: 0;
+    line-height: 1;
 }
 
 /* Ensure only the book title is italicized */
@@ -44,8 +52,8 @@ h1 {
 /* Style the navigation bar */
 nav {
     display: flex;
-    justify-content: center; /* Center the links */
-    gap: 20px; /* Space between links */
+    justify-content: center;
+    gap: 20px;
     margin-top: 10px;
 }
 
@@ -64,6 +72,24 @@ nav a:hover {
     color: #f4f4f4;
 }
 
+/* Style the email address */
+.email {
+    color: var(--usc-cardinal);
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+/* Ensure "at" and "dot" are italicized */
+.email em {
+    font-style: italic;
+}
+
+/* Style the paragraph below the email */
+.usc-text {
+    color: var(--usc-cardinal);
+    font-size: 18px;
+}
+
 /* Style the main section */
 main {
     padding: 20px;
@@ -74,19 +100,27 @@ main {
 /* 🔹 Responsive Design for Mobile Screens */
 @media (max-width: 600px) {
     .quote {
-        font-size: 22px; /* Reduce the quote size on small screens */
+        font-size: 22px;
     }
 
     .author {
-        font-size: 14px; /* Reduce the author's name size on small screens */
+        font-size: 14px;
     }
 
     nav {
-        flex-wrap: nowrap; /* Prevent links from stacking */
-        gap: 10px; /* Reduce space between links */
+        flex-wrap: nowrap;
+        gap: 10px;
     }
 
     nav a {
-        font-size: 16px; /* Slightly smaller links for mobile */
+        font-size: 16px;
+    }
+
+    .email {
+        font-size: 18px;
+    }
+
+    .usc-text {
+        font-size: 16px;
     }
 }
