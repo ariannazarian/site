@@ -89,26 +89,26 @@ function playAudioWithFadeIn() {
         hasStartedOnce = true;
     }
 
+    // Set the fade-in duration
+    let fadeDuration = 20000; // 20 seconds
+    let maxVolume = 1.0; // Target max volume
+    let startTime = performance.now(); // Get current time for smooth animation
+
+    function fadeInAudio(currentTime) {
+        let elapsedTime = currentTime - startTime;
+        let progress = elapsedTime / fadeDuration;
+        if (progress < 1) {
+            audio.volume = Math.min(progress * maxVolume, maxVolume);
+            requestAnimationFrame(fadeInAudio);
+        } else {
+            audio.volume = maxVolume; // Ensure final volume is exactly 1.0
+        }
+    }
+
     // Try to play audio (required for autoplay restrictions)
     audio.play().then(() => {
         isAudioPlaying = true;
-
-        // Slight delay before starting the fade-in (Fix for mobile)
-        setTimeout(() => {
-            let fadeDuration = 20000; // 20 seconds fade-in
-            let fadeStep = 0.01; // Smooth fade increment
-            let maxVolume = 1.0; // Target max volume
-            let interval = fadeDuration / ((maxVolume - 0.0) / fadeStep); // Adjusted for smooth transition
-
-            let fadeIn = setInterval(() => {
-                if (audio.volume < maxVolume) {
-                    audio.volume = Math.min(audio.volume + fadeStep, maxVolume);
-                } else {
-                    clearInterval(fadeIn);
-                }
-            }, interval);
-        }, 300); // Delay start by 300ms to bypass mobile restrictions
-
+        requestAnimationFrame(fadeInAudio); // Start fade-in BEFORE play
     }).catch(error => {
         console.error("Audio playback prevented:", error);
     });
