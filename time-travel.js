@@ -11,7 +11,16 @@ function getCurrentPSTDate() {
 
 // Function to get the correct weekday using JavaScript's built-in `Date` object
 function getDayOfWeek(day, month, year) {
-    return new Date(year, month - 1, day).getDay();  // 0=Sunday, ..., 6=Saturday
+    let date = new Date(year, month - 1, day);
+
+    // Ensure leap years are correctly handled
+    if (month === 2 && day === 29) {
+        if (!(year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0))) {
+            return null; // Skip invalid leap years
+        }
+    }
+
+    return date.getDay(); // Returns 0=Sunday, ..., 6=Saturday
 }
 
 // Function to find matching years for the given date and weekday
