@@ -38,6 +38,7 @@ header {
     justify-content: center;
     gap: 15px;
     margin-top: 5px;
+    flex-wrap: nowrap; /* Prevents stacking on mobile */
 }
 
 /* Category links (Home Page & Subpages) */
@@ -48,6 +49,7 @@ header {
     text-decoration: none;
     transition: color 0.3s ease, text-shadow 0.3s ease;
     text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+    white-space: nowrap; /* Prevents text from breaking onto a new line */
 }
 
 /* Prevent links from turning purple after clicking */
@@ -105,12 +107,19 @@ header {
     }
 
     .category-nav {
-        flex-direction: column;
-        gap: 10px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: nowrap; /* Prevents stacking */
+        gap: 10px; /* Keeps spacing consistent */
     }
 
     .category-link {
         font-size: 16px;
+        white-space: nowrap; /* Prevents wrapping */
+    }
+
+    .hidden-category {
+        display: none; /* Prevents misalignment on mobile */
     }
 
     .email {
@@ -121,6 +130,7 @@ header {
         font-size: 18px;
     }
 }
+
 
 
 
