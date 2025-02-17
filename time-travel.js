@@ -42,10 +42,12 @@ function updateClockAndYears() {
 
     document.getElementById("current-time").innerText = getCurrentPSTDate();
 
-    let years = matchingYears(month, day, weekday, 1900, 2100);
+    let currentYear = now.getFullYear(); // Get current year dynamically
+    let years = matchingYears(month, day, weekday, 1892, currentYear);
     document.getElementById("matching-years").innerText = `Matching years: ${years.join(', ')}`;
 }
 
 // Update clock and matching years every second
 setInterval(updateClockAndYears, 1000);
 updateClockAndYears(); // Run immediately on page load
+
