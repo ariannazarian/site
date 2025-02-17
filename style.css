@@ -34,16 +34,16 @@ header {
     flex-direction: column;
 }
 
-/* Category navigation */
-.category-nav {
+/* Navigation */
+nav {
     display: flex;
     justify-content: center;
     gap: 15px;
     margin-top: 5px;
 }
 
-/* Category links */
-.category-link {
+/* Navigation links */
+nav a {
     font-size: var(--text-size);
     font-weight: bold;
     color: var(--white) !important;
@@ -53,12 +53,12 @@ header {
 }
 
 /* Prevent visited links from changing color */
-.category-link:visited {
+nav a:visited {
     color: var(--white) !important;
 }
 
 /* Hover effect */
-.category-link:hover {
+nav a:hover {
     text-decoration: underline;
     color: #f4f4f4;
     text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.6);
@@ -109,12 +109,12 @@ header {
         font-size: 16px;
     }
 
-    .category-nav {
+    nav {
         flex-wrap: nowrap;
         gap: 10px;
     }
 
-    .category-link {
+    nav a {
         font-size: 16px;
         white-space: nowrap;
     }
