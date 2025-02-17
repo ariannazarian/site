@@ -1,7 +1,6 @@
 /* Define color variables */
 :root {
     --black-70k: #767676;  /* Header background */
-    --black-30k: #CCCCCC;  /* Random text */
     --usc-cardinal: #990000; /* Email color */
 }
 
@@ -9,22 +8,22 @@
 body {
     font-family: "Courier", monospace;
     text-align: center;
-    background-color: #000000; /* Ensures contrast with random text */
+    background-color: #FFFFFF; /* Page background is now white */
+    color: black; /* Ensures text is readable */
     margin: 0;
     padding: 0;
-    position: relative;
 }
 
-/* Header now takes up max 20% of page */
+/* Header should take up no more than 20% of the screen */
 header {
     background-color: var(--black-70k);
-    color: white;
-    padding: 10px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 20vh;
+    max-height: 20vh;
     justify-content: center;
+    color: white; /* Keeps header text white */
 }
 
 /* Fix spacing issue between quote & author */
@@ -32,7 +31,6 @@ h1 {
     margin: 0;
     padding: 0;
     line-height: 1;
-    color: white;
     user-select: none;
 }
 
@@ -40,7 +38,6 @@ h1 {
 .quote {
     font-size: 24px;
     font-weight: bold;
-    display: block;
 }
 
 /* Style the author's name */
@@ -91,30 +88,13 @@ nav a:hover {
     font-style: italic;
 }
 
-/* Style the "This is my personal website" text (now black) */
+/* Style the "This is my personal website" text (black) */
 .personal-text {
-    color: #000000;
+    color: black;
     font-size: 16px;
 }
 
-/* Wall of Random Text */
-.babel-wall {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    font-size: 14px;
-    color: var(--black-30k);
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    opacity: 0.3;
-    font-family: "Courier", monospace;
-    z-index: -1;
-    padding: 20px;
-}
-
-/* Responsive Design */
+/* Fix proportions on mobile */
 @media (max-width: 600px) {
     .quote {
         font-size: 18px;
@@ -140,9 +120,6 @@ nav a:hover {
     .personal-text {
         font-size: 14px;
     }
-
-    .babel-wall {
-        font-size: 12px;
-    }
 }
+
 
