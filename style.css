@@ -1,6 +1,8 @@
 /* Define USC Cardinal color */
 :root {
     --usc-cardinal: #990000;
+    --shadow-color: rgba(0, 0, 0, 0.3); /* Subtle shadow */
+    --decorative-text-gray: rgba(100, 100, 100, 0.3); /* Light gray, semi-transparent */
 }
 
 /* Apply Courier font to the entire website */
@@ -24,8 +26,10 @@ header {
 
 /* Style the welcome quote */
 h1 {
-    margin: 10px 0;
-    line-height: 1.2;
+    margin: 0;
+    line-height: 1.1;
+    color: white;
+    user-select: none; /* Prevents accidental selection */
 }
 
 /* Make the quote bold and larger */
@@ -33,10 +37,10 @@ h1 {
     font-size: 28px;
     font-weight: bold;
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 
-/* Style the author’s name (normal text, smaller size) */
+/* Style the author’s name */
 .author {
     font-size: 18px;
     display: block;
@@ -63,13 +67,16 @@ nav a {
     text-decoration: none;
     font-size: 18px;
     padding: 5px 10px;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px var(--shadow-color); /* Subtle shadow */
 }
 
 /* Hover effect for navigation links */
 nav a:hover {
     text-decoration: underline;
     color: #f4f4f4;
+    text-shadow: 4px 4px 10px var(--shadow-color); /* Stronger shadow on hover */
 }
 
 /* Style the email address */
@@ -88,6 +95,15 @@ nav a:hover {
 .usc-text {
     color: var(--usc-cardinal);
     font-size: 18px;
+}
+
+/* Style the decorative "Library of Babel" text */
+.decorative-text {
+    font-size: 14px;
+    color: var(--decorative-text-gray);
+    text-align: center;
+    margin: 5px 0;
+    user-select: none; /* Prevent users from copying */
 }
 
 /* Style the main section */
@@ -122,5 +138,9 @@ main {
 
     .usc-text {
         font-size: 16px;
+    }
+
+    .decorative-text {
+        font-size: 12px;
     }
 }
