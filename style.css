@@ -4,7 +4,7 @@
     --usc-cardinal: #990000; /* USC Crimson */
     --white: #ffffff;
     --text-size: 16px; /* Standard text size below the header */
-    --larger-text-size: 18px; /* Frozen time display */
+    --larger-text-size: 24px; /* Frozen time display */
 }
 
 /* General styling */
@@ -73,7 +73,7 @@ nav a:hover {
 /* Email & personal text */
 .email {
     color: var(--usc-cardinal);
-    font-size: 20px;
+    font-size: var(--text-size);
     margin-bottom: 5px;
 }
 
@@ -109,7 +109,7 @@ nav a:hover {
     margin-bottom: 0px;
 }
 
-/* Frozen time display - Slightly larger */
+/* Frozen time display - Larger (24px) */
 #current-time {
     font-size: var(--larger-text-size);
     margin-top: 0px;
