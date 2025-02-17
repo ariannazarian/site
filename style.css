@@ -21,7 +21,6 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-height: 20vh;
     justify-content: center;
     color: white;
 }
@@ -68,6 +67,61 @@ header {
     visibility: hidden;
     width: 80px; /* Ensures proper alignment */
 }
+
+/* --- EMAIL & PERSONAL TEXT --- */
+.email {
+    color: var(--usc-cardinal) !important; /* Ensures the email stays USC Cardinal */
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+/* Force lowercase "a" in email */
+.lowercase {
+    text-transform: lowercase;
+}
+
+/* Ensure "at" and "dot" are italicized */
+.email em {
+    font-style: italic;
+}
+
+/* Style all other text (same size) */
+.personal-text, .email, .author, nav a {
+    font-size: 18px; /* Standardized size for all text except the quote */
+}
+
+/* --- MOBILE FIXES --- */
+@media (max-width: 600px) {
+    header {
+        padding: 10px;
+    }
+
+    .quote {
+        font-size: 20px;
+    }
+
+    .author {
+        font-size: 16px;
+    }
+
+    .category-nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .category-link {
+        font-size: 16px;
+    }
+
+    .email {
+        font-size: 18px;
+    }
+
+    .personal-text {
+        font-size: 18px;
+    }
+}
+
 
 
 
