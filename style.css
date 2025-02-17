@@ -16,114 +16,43 @@ body {
     padding: 0;
 }
 
-/* Header */
-header {
-    background-color: var(--black);
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: var(--white);
-}
-
-/* Quote container inside header */
-.quote-container {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Navigation */
-nav {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 5px;
-}
-
-/* Navigation links */
-nav a {
-    font-size: var(--text-size);
-    font-weight: bold;
-    color: var(--white) !important;
-    text-decoration: none;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
-}
-
-/* Prevent visited links from changing color */
-nav a:visited {
-    color: var(--white) !important;
+/* Clickable elements */
+.clickable {
+    cursor: pointer;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease;
 }
 
 /* Hover effect */
-nav a:hover {
-    text-decoration: underline;
-    color: #f4f4f4;
-    text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.6);
+.clickable:hover {
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Email & personal text */
-.email {
-    color: var(--usc-cardinal);
-    font-size: 20px;
-    margin-bottom: 5px;
+/* Initially hide the extra text and matching years */
+.hidden {
+    display: none;
 }
 
-/* Force lowercase "a" in email */
-.lowercase {
-    text-transform: lowercase;
-}
-
-/* Ensure "at" and "dot" are italicized */
-.email em {
-    font-style: italic;
-}
-
-/* Styling for the Tolkien quote below the clock */
-.travel-quote, .travel-text, #matching-years {
-    font-size: var(--text-size);
-    color: var(--black);
-}
-
-/* Category pages quote */
-.category-quote {
-    font-size: var(--text-size);
-    color: var(--black);
-    margin-top: 10px;
+/* Watch text formatting */
+.watch-text {
+    font-size: 22px;
+    font-weight: bold;
     text-align: center;
+    margin-top: 10px;
 }
 
-/* Mobile Fixes */
-@media (max-width: 600px) {
-    header {
-        padding: 10px;
-    }
+/* Watch description paragraphs */
+.watch-description {
+    font-size: 18px;
+    text-align: justify;
+    margin: 10px auto;
+    max-width: 600px;
+    line-height: 1.6;
+}
 
-    .quote {
-        font-size: 20px;
-    }
-
-    .author {
-        font-size: 16px;
-    }
-
-    nav {
-        flex-wrap: nowrap;
-        gap: 10px;
-    }
-
-    nav a {
-        font-size: 16px;
-        white-space: nowrap;
-    }
-
-    .email {
-        font-size: 18px;
-    }
-
-    .personal-text {
-        font-size: 18px;
-    }
+/* Matching years text */
+#matching-years {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
 }
