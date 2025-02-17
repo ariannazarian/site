@@ -3,7 +3,8 @@
     --black: #000000;
     --usc-cardinal: #990000; /* USC Crimson */
     --white: #ffffff;
-    --text-size: 18px;
+    --text-size: 16px; /* Standard text size below the header */
+    --larger-text-size: 18px; /* Frozen time display */
 }
 
 /* General styling */
@@ -32,6 +33,11 @@ header {
     text-align: center;
     display: flex;
     flex-direction: column;
+}
+
+/* Adjust the size of the header citation */
+.author {
+    font-size: var(--text-size);
 }
 
 /* Navigation */
@@ -95,6 +101,18 @@ nav a:hover {
 /* Initially hide the extra text and matching years */
 .hidden {
     display: none;
+}
+
+/* The Eternal Watch - No space between it and frozen time */
+#eternal-title {
+    font-size: var(--text-size);
+    margin-bottom: 0px;
+}
+
+/* Frozen time display - Slightly larger */
+#current-time {
+    font-size: var(--larger-text-size);
+    margin-top: 0px;
 }
 
 /* Watch text formatting */
