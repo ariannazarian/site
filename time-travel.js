@@ -1,10 +1,24 @@
-// Function to get current date & time in PST (UTC-8, ignoring DST)
-function getCurrentPSTDate() {
-    let now = new Date();
-    let pstOffset = -8 * 60; // PST is UTC-8
-    now = new Date(now.getTime() + (pstOffset - now.getTimezoneOffset()) * 60000);
+// Store the frozen time when the page loads
+const frozenTime = new Date();
 
-    return now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+// Function to get frozen date & time in fixed UTC-8 (PST without DST)
+function getFrozenPSTDate() {
+    let now = new Date(frozenTime); // Use the frozen timestamp
+    let utcOffset = now.getTimezoneOffset() / 60;  // Get local offset in hours
+    let pstOffset = 8;  // Fixed UTC-8 offset (no DST adjustment)
+    
+    now.setHours(now.getHours() + (utcOffset - pstOffset));  // Adjust to fixed PST
+    
+    return now.toLocaleString("en-US", { 
+        weekday: "long", 
+        year: "numeric", 
+        month: "long", 
+        day: "numeric", 
+        hour: "2-digit", 
+        minute: "2-digit", 
+        second: "2-digit", 
+        hour12: true 
+    });
 }
 
 // Function to check if a year is a leap year
@@ -33,20 +47,19 @@ function matchingYears(month, day, targetWeekday, startYear, endYear) {
     return years;
 }
 
-// Function to update the live clock and matching years
-function updateClockAndYears() {
-    let now = new Date();
+// Function to update the clock and matching years once on page load
+function updateClockAndYearsOnce() {
+    let now = new Date(frozenTime);  // Use the frozen timestamp
     let month = now.getMonth() + 1;
     let day = now.getDate();
     let weekday = now.getDay();
 
-    document.getElementById("current-time").innerText = getCurrentPSTDate();
+    document.getElementById("current-time").innerText = getFrozenPSTDate();
 
     let currentYear = now.getFullYear();
     let years = matchingYears(month, day, weekday, 1892, currentYear);
     document.getElementById("matching-years").innerText = `Matching years: ${years.join(', ')}`;
 }
 
-// Update clock and matching years every second
-setInterval(updateClockAndYears, 1000);
-updateClockAndYears();
+// Run once on page load (no interval)
+updateClockAndYearsOnce();
