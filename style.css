@@ -38,7 +38,6 @@ header {
     justify-content: center;
     gap: 15px;
     margin-top: 5px;
-    flex-wrap: nowrap; /* Prevents stacking on mobile */
 }
 
 /* Category links (Home Page & Subpages) */
@@ -49,7 +48,6 @@ header {
     text-decoration: none;
     transition: color 0.3s ease, text-shadow 0.3s ease;
     text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
-    white-space: nowrap; /* Prevents text from breaking onto a new line */
 }
 
 /* Prevent links from turning purple after clicking */
@@ -92,6 +90,38 @@ header {
     font-size: 18px; /* Standardized size for all text except the quote */
 }
 
+/* --- TIME TRAVELER'S CLOCK STYLES --- */
+#time-travel-clock {
+    margin-top: 20px;
+    text-align: center;
+    font-family: "Courier", monospace;
+}
+
+#current-time {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.travel-text {
+    font-size: 18px;
+    margin-top: 5px;
+    color: black;
+}
+
+#matching-years {
+    font-size: 18px;
+    color: black;
+    font-weight: bold;
+}
+
+/* Styling for the Tolkien quote below the output */
+.travel-quote {
+    font-size: 18px;
+    color: black;
+    margin-top: 10px;
+    font-style: normal;
+}
+
 /* --- MOBILE FIXES --- */
 @media (max-width: 600px) {
     header {
@@ -129,29 +159,6 @@ header {
     .personal-text {
         font-size: 18px;
     }
-}
-/* --- TIME TRAVELER'S CLOCK STYLES --- */
-#time-travel-clock {
-    margin-top: 20px;
-    text-align: center;
-    font-family: "Courier", monospace;
-}
-
-#current-time {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.travel-text {
-    font-size: 18px;
-    margin-top: 5px;
-    color: black;
-}
-
-#matching-years {
-    font-size: 18px;
-    color: black;
-    font-weight: bold;
 }
 
 
