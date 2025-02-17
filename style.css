@@ -14,7 +14,7 @@ body {
     padding: 0;
 }
 
-/* --- HOME PAGE HEADER --- */
+/* --- HEADER --- */
 header {
     background-color: var(--black);
     padding: 15px;
@@ -26,114 +26,59 @@ header {
     color: white;
 }
 
-/* Ensures the quote and author are stacked correctly */
-.quote-container {
-    text-align: center;
-    display: flex;
-    flex-direction: column; /* Stacks elements vertically */
-}
-
-/* Make the quote bold and larger */
-.quote {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-/* Style the author's name */
-.author {
-    font-size: 18px;
-    margin-top: 5px; /* Small spacing below quote */
-}
-
-/* Ensure only the book title is italicized */
-.author em {
-    font-style: italic;
-}
-
-/* Navigation bar (Home Page) */
-nav {
+/* Category navigation */
+.category-nav {
     display: flex;
     justify-content: center;
     gap: 15px;
     margin-top: 5px;
 }
 
-/* Style navigation links */
-nav a {
-    color: white;
-    text-decoration: none;
+/* Category links */
+.category-link {
     font-size: 18px;
-    padding: 3px 8px;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
     font-weight: bold;
-    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3); /* Subtle shadow effect */
-}
-
-/* Hover effect for navigation links */
-nav a:hover {
-    text-decoration: underline;
-    color: #f4f4f4;
-    text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.6); /* Brighter shadow on hover */
-}
-
-/* --- CATEGORY PAGE HEADER (Photos, Papers, Films) --- */
-.category-header {
-    background-color: var(--black);
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     color: white;
-    position: relative;
-}
-
-/* Aligns "< Photos", "< Papers", "< Films" exactly with home page links */
-.category-nav {
-    display: flex;
-    justify-content: center;
-    margin-top: 5px;
-}
-
-/* Makes sure the "< Category" text aligns exactly with the home page link */
-.back-link {
-    font-size: 18px; /* Matches home page navigation */
-    font-weight: bold;
     text-decoration: none;
-    color: white;
     transition: color 0.3s ease, text-shadow 0.3s ease;
     text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
 }
 
-/* Hover effect for "< Photos", "< Papers", "< Films" */
-.back-link:hover {
+/* Hover effect */
+.category-link:hover {
     text-decoration: underline;
     color: #f4f4f4;
     text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.6);
 }
 
-/* Mobile Fix: Ensures correct proportions */
-@media (max-width: 600px) {
-    .quote {
-        font-size: 20px;
-    }
-
-    .author {
-        font-size: 16px;
-    }
-
-    nav {
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    nav a {
-        font-size: 16px;
-    }
-
-    .back-link {
-        font-size: 16px;
-    }
+/* Hidden spaces to maintain alignment */
+.hidden-category {
+    visibility: hidden;
+    font-size: 18px;
 }
+
+/* --- EMAIL & PERSONAL TEXT --- */
+.email {
+    color: var(--usc-cardinal); /* Keeps the email USC Cardinal Red */
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+/* Force lowercase "a" in email */
+.lowercase {
+    text-transform: lowercase;
+}
+
+/* Ensure "at" and "dot" are italicized */
+.email em {
+    font-style: italic;
+}
+
+/* Style all other text (same size) */
+.personal-text, .email, .author, nav a {
+    font-size: 18px; /* Standardized size for all text except the quote */
+}
+
 
 
 
