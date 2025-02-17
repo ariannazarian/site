@@ -1,7 +1,7 @@
 /* Define color variables */
 :root {
     --black: #000000;  /* Pure black */
-    --usc-cardinal: #990000; /* Email color */
+    --text-color: black; /* Main text color */
 }
 
 /* Apply Courier font to everything */
@@ -9,138 +9,47 @@ body {
     font-family: "Courier", monospace;
     text-align: center;
     background-color: #FFFFFF; /* Page background is white */
-    color: black;
+    color: var(--text-color);
     margin: 0;
     padding: 0;
 }
 
-/* Header with pure black background */
-header {
+/* Header for category pages */
+.category-header {
     background-color: var(--black);
     padding: 15px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    max-height: 20vh;
     justify-content: center;
     color: white;
+    position: relative;
 }
 
-/* Ensures the quote and author are stacked correctly */
-.quote-container {
-    text-align: center;
-    display: flex;
-    flex-direction: column; /* Stacks elements vertically */
-}
-
-/* Make the quote bold and larger */
-.quote {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-/* Style the author's name */
-.author {
+/* Aligns "< Category" correctly */
+.back-link {
+    position: absolute;
+    left: 20px;
     font-size: 18px;
-    margin-top: 5px; /* Small spacing below quote */
-}
-
-/* Ensure only the book title is italicized */
-.author em {
-    font-style: italic;
-}
-
-/* Style the navigation bar */
-nav {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 5px;
-}
-
-/* Style navigation links */
-nav a {
-    color: white;
     text-decoration: none;
-    font-size: 18px;
-    padding: 3px 8px;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
+    color: white;
     font-weight: bold;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3); /* Subtle shadow effect */
 }
 
-/* Hover effect for navigation links */
-nav a:hover {
+/* Hover effect for "< Photos", "< Papers", "< Films" */
+.back-link:hover {
     text-decoration: underline;
     color: #f4f4f4;
+    text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.6); /* Brighter shadow on hover */
 }
 
-/* Page Title + Home Link Styling */
-.page-title-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px; /* Space between Home link and title */
-    margin: 20px 0;
-}
-
-/* Style the "Home" link next to the title */
-.home-link {
-    font-size: 20px;
-    text-decoration: none;
-    color: black;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-/* Hover effect for Home link */
-.home-link:hover {
-    text-decoration: underline;
-    color: var(--black);
-}
-
-/* Style the page title */
-.page-title {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-/* Style the additional quote below the header */
+/* Style the quote below the header */
 .sub-quote {
     font-size: 18px;
-    color: black;
-    margin-top: 10px;
+    color: var(--text-color);
+    margin-top: 20px;
 }
 
-/* Mobile Fix: Ensures correct proportions */
-@media (max-width: 600px) {
-    .quote {
-        font-size: 20px;
-    }
-
-    .author {
-        font-size: 16px;
-    }
-
-    .page-title {
-        font-size: 20px;
-    }
-
-    .home-link {
-        font-size: 18px;
-    }
-
-    .sub-quote {
-        font-size: 16px;
-    }
-
-    nav {
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    nav a {
-        font-size: 16px;
-    }
-}
 
 
