@@ -1,7 +1,7 @@
 // Store the frozen time when the page loads
 const frozenTime = new Date();
 
-// Function to get frozen date & time in fixed UTC-8 (PST without DST), excluding the year
+// Function to get frozen date & time in fixed UTC-8 (PST without DST), in 24-hour format
 function getFrozenPSTDate() {
     let now = new Date(frozenTime); // Use the frozen timestamp
     let utcOffset = now.getTimezoneOffset() / 60;  // Get local offset in hours
@@ -16,7 +16,7 @@ function getFrozenPSTDate() {
         hour: "2-digit", 
         minute: "2-digit", 
         second: "2-digit", 
-        hour12: true 
+        hour12: false  // Use 24-hour time format
     };
     
     return now.toLocaleString("en-US", options); // Format date without year
