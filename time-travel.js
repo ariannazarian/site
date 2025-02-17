@@ -77,29 +77,29 @@ function revealMatchingYears() {
     document.getElementById("matching-years").innerText = `Coordinate reflections: ${years.join(', ')}`;
 }
 
-// Function to play audio with fade-in effect (Ensures autoplay is allowed)
 function playAudioWithFadeIn() {
     if (!audio) return;
 
-    // Ensure audio starts at low volume
-    audio.volume = 0.2;
+    // Ensure audio starts at zero volume
+    audio.volume = 0.0;
 
-    // Jump to 0:385 only the first time the song plays
+    // Jump to 0:38 only the first time the song plays
     if (!hasStartedOnce) {
-        audio.currentTime = 38.5;
+        audio.currentTime = 38;
         hasStartedOnce = true;
     }
 
     // Try to play audio (required for autoplay restrictions)
     audio.play().then(() => {
         isAudioPlaying = true;
-        let fadeDuration = 15000; // 15 seconds fade-in
+        let fadeDuration = 20000; // 20 seconds fade-in
         let fadeStep = 0.05;
-        let interval = fadeDuration / (0.8 / fadeStep);
+        let maxVolume = 0.8; // Cap the volume at 0.8 instead of 1.0
+        let interval = fadeDuration / ((maxVolume - 0.0) / fadeStep); // Adjusted for smooth transition
 
         let fadeIn = setInterval(() => {
-            if (audio.volume < 1.0) {
-                audio.volume = Math.min(audio.volume + fadeStep, 1.0);
+            if (audio.volume < maxVolume) {
+                audio.volume = Math.min(audio.volume + fadeStep, maxVolume);
             } else {
                 clearInterval(fadeIn);
             }
