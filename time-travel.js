@@ -2,6 +2,7 @@
 const frozenTime = new Date();
 const audio = document.getElementById("eternal-audio");
 let isAudioPlaying = false;
+let hasStartedOnce = false; // Tracks if the song has already played once
 
 function getFrozenPSTDate() {
     let now = new Date(frozenTime);
@@ -33,7 +34,7 @@ function toggleEternalWatch() {
     hiddenText.style.display = isVisible ? "none" : "block";
     arrow.innerText = isVisible ? "▼" : "▲";
 
-    // Play or pause audio
+    // Control audio playback
     if (!isAudioPlaying) {
         playAudioWithFadeIn();
     } else {
@@ -83,6 +84,12 @@ function playAudioWithFadeIn() {
     // Ensure audio starts at low volume
     audio.volume = 0.2;
 
+    // Jump to 0:38 only the first time the song plays
+    if (!hasStartedOnce) {
+        audio.currentTime = 38;
+        hasStartedOnce = true;
+    }
+
     // Try to play audio (required for autoplay restrictions)
     audio.play().then(() => {
         isAudioPlaying = true;
@@ -114,3 +121,9 @@ function toggleAudio() {
         isAudioPlaying = false;
     }
 }
+
+// Ensure audio loops from 0:00 after finishing
+audio.addEventListener("ended", () => {
+    audio.currentTime = 0; // Reset playback to start at 0:00 for looping
+    audio.play();
+});
