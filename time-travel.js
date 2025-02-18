@@ -38,9 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Ensure the hidden-text starts hidden on page load
     document.querySelector("#hidden-text").style.display = "none";
-
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
@@ -74,20 +72,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* -------------------- */
-    /* 🎵 Fixing Music Issue */
+    /* 🎵 Audio Preloading */
     /* -------------------- */
     function playAudioWithFadeIn() {
         if (!audio) return;
 
         audio.volume = 0.0;
-
-        // Ensure the audio starts from 38.5s the first time it plays
         if (!hasStartedOnce) {
             audio.currentTime = 38.5;
             hasStartedOnce = true;
         }
 
-        let fadeDuration = 20000; // 20 seconds fade-in
+        let fadeDuration = 20000;
         let maxVolume = 1.0;
         let startTime = performance.now();
 
@@ -121,14 +117,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Ensure audio loops from 0:00 after finishing
     audio.addEventListener("ended", () => {
         audio.currentTime = 0;
         audio.play();
     });
 
     /* ------------------------------ */
-    /* 🔄 Latin-English Toggle Feature */
+    /* 🔄 Event Delegation for Translation */
     /* ------------------------------ */
     const translations = {
         "num-nimis-erravi": { latin: "NUM NIMIS ERRAVI", english: "Have I wandered too far?" },
@@ -136,17 +131,12 @@ document.addEventListener("DOMContentLoaded", () => {
         "quo-vel-quando-vadis": { latin: "QUO VEL QUANDO VADIS", english: "Where or when are you going?" }
     };
 
-    function toggleTranslation(event) {
+    document.body.addEventListener("click", (event) => {
         let id = event.target.id;
-        if (!translations[id]) return;
-
-        let element = document.querySelector(`#${id}`);
-        let currentText = element.innerText;
-
-        element.innerText = (currentText === translations[id].latin) ? translations[id].english : translations[id].latin;
-    }
-
-    document.querySelector("#num-nimis-erravi").addEventListener("click", toggleTranslation);
-    document.querySelector("#iterum-nos-convenimus").addEventListener("click", toggleTranslation);
-    document.querySelector("#quo-vel-quando-vadis").addEventListener("click", toggleTranslation);
+        if (translations[id]) {
+            let element = document.querySelector(`#${id}`);
+            let currentText = element.innerText;
+            element.innerText = (currentText === translations[id].latin) ? translations[id].english : translations[id].latin;
+        }
+    });
 });
