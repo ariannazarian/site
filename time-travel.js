@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
             el.style.transition = "opacity 3s ease-in";
             setTimeout(() => {
                 el.style.opacity = 1;
-            }, 1000); // No delay between fades
+            }, 0); // No delay between fades
         });
     }
 
