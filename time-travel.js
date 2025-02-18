@@ -77,7 +77,7 @@ function revealMatchingYears() {
     document.getElementById("matching-years").innerText = `Coordinate reflections: ${years.join(', ')}`;
 }
 
-// Function to play audio with fade-in effect (Ensures autoplay is allowed)
+// Function to play audio with fade-in effect
 function playAudioWithFadeIn() {
     if (!audio) return;
 
@@ -135,7 +135,7 @@ audio.addEventListener("ended", () => {
 });
 
 /* ------------------------ */
-/* Latin-English Toggle Feature */
+/* Latin-English Toggle Feature (Fixed) */
 /* ------------------------ */
 
 // Object to store Latin phrases and their translations
@@ -157,7 +157,9 @@ function toggleTranslation(event) {
     element.innerText = (currentText === translations[id].latin) ? translations[id].english : translations[id].latin;
 }
 
-// Attach event listeners for Latin phrases
-document.getElementById("num-nimis-erravi").addEventListener("click", toggleTranslation);
-document.getElementById("iterum-nos-convenimus").addEventListener("click", toggleTranslation);
-document.getElementById("quo-vel-quando-vadis").addEventListener("click", toggleTranslation);
+// Ensure event listeners are correctly added after the page loads
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("num-nimis-erravi").addEventListener("click", toggleTranslation);
+    document.getElementById("iterum-nos-convenimus").addEventListener("click", toggleTranslation);
+    document.getElementById("quo-vel-quando-vadis").addEventListener("click", toggleTranslation);
+});
