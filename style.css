@@ -31,7 +31,15 @@ a {
     user-select: text;
 }
 
-/* Header */
+/* 🔹 Style for Header Image */
+.header-image {
+    max-width: 100%; /* Ensures the image scales properly */
+    height: auto; /* Maintains aspect ratio */
+    display: block; /* Removes any default spacing */
+    margin: 0 auto 10px; /* Centers the image and adds slight spacing */
+}
+
+/* 🔹 Ensure the header still looks correct */
 header {
     background-color: var(--black);
     padding: 15px;
@@ -40,18 +48,6 @@ header {
     align-items: center;
     justify-content: center;
     color: var(--white);
-}
-
-/* Quote container inside header */
-.quote-container {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Adjust the size of the header citation */
-.author {
-    font-size: var(--text-size);
 }
 
 /* Navigation */
