@@ -31,10 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
         hiddenText.style.display = expanded ? "none" : "block";
         arrow.innerText = expanded ? "▼" : "▲";
 
-        if (!isAudioPlaying) {
-            playAudioWithFadeIn();
+        if (expanded) {
+            pauseAudio();
         } else {
-            toggleAudio();
+            playAudioWithFadeIn();
         }
     }
 
@@ -95,6 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
             isAudioPlaying = true;
             requestAnimationFrame(fadeInAudio);
         }).catch(console.error);
+    }
+
+    function pauseAudio() {
+        if (audio && !audio.paused) {
+            audio.pause();
+            isAudioPlaying = false;
+        }
     }
 
     document.querySelectorAll(".toggle-text").forEach(element => {
