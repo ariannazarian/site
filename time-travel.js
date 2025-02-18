@@ -26,10 +26,14 @@ document.addEventListener("DOMContentLoaded", () => {
     function toggleEternalWatch() {
         let hiddenText = document.querySelector("#hidden-text");
         let arrow = document.querySelector("#eternal-arrow");
+        let expanded = hiddenText.style.display === "block";
 
-        let isVisible = hiddenText.style.display === "block";
-        hiddenText.style.display = isVisible ? "none" : "block";
-        arrow.innerText = isVisible ? "▼" : "▲";
+        hiddenText.style.display = expanded ? "none" : "block";
+        arrow.innerText = expanded ? "▼" : "▲";
+
+        // Update ARIA attributes
+        document.querySelector("#eternal-title").setAttribute("aria-expanded", !expanded);
+        document.querySelector("#current-time").setAttribute("aria-expanded", !expanded);
 
         if (!isAudioPlaying) {
             playAudioWithFadeIn();
@@ -45,15 +49,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
         let arrow = document.querySelector("#watch-arrow");
+        let expanded = matchingYears.style.display === "block";
 
-        if (matchingYears.style.display === "none" || matchingYears.style.display === "") {
-            revealMatchingYears();
-            matchingYears.style.display = "block";
-            arrow.innerText = "▲";
-        } else {
-            matchingYears.style.display = "none";
-            arrow.innerText = "▼";
-        }
+        matchingYears.style.display = expanded ? "none" : "block";
+        arrow.innerText = expanded ? "▼" : "▲";
+
+        // Update ARIA attributes
+        document.querySelector("#reveal-matching-alt").setAttribute("aria-expanded", !expanded);
     }
 
     document.querySelector("#reveal-matching-alt").addEventListener("click", toggleMatchingYears);
