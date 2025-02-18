@@ -137,12 +137,11 @@ document.addEventListener("DOMContentLoaded", () => {
         "quo-vel-quando-vadis": { latin: "QUO VEL QUANDO VADIS", english: "Where or when are you going?" }
     };
 
-    document.body.addEventListener("click", (event) => {
-        let id = event.target.id;
-        if (translations[id]) {
-            let element = document.querySelector(`#${id}`);
+    document.querySelectorAll(".toggle-text").forEach(element => {
+        element.addEventListener("click", () => {
+            let id = element.id;
             let currentText = element.innerText;
             element.innerText = (currentText === translations[id].latin) ? translations[id].english : translations[id].latin;
-        }
+        });
     });
 });
