@@ -31,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
         hiddenText.style.display = expanded ? "none" : "block";
         arrow.innerText = expanded ? "▼" : "▲";
 
-        // Update ARIA attributes
         document.querySelector("#eternal-title").setAttribute("aria-expanded", !expanded);
         document.querySelector("#current-time").setAttribute("aria-expanded", !expanded);
 
@@ -51,10 +50,14 @@ document.addEventListener("DOMContentLoaded", () => {
         let arrow = document.querySelector("#watch-arrow");
         let expanded = matchingYears.style.display === "block";
 
-        matchingYears.style.display = expanded ? "none" : "block";
+        if (!expanded) {
+            revealMatchingYears();
+            matchingYears.style.display = "block";
+        } else {
+            matchingYears.style.display = "none";
+        }
         arrow.innerText = expanded ? "▼" : "▲";
 
-        // Update ARIA attributes
         document.querySelector("#reveal-matching-alt").setAttribute("aria-expanded", !expanded);
     }
 
@@ -71,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
                          .filter(year => new Date(year, month - 1, day).getDay() === weekday);
 
         document.querySelector("#matching-years").innerText = `Coordinate reflections: ${years.join(', ')}`;
+        document.querySelector("#matching-years").style.display = "block";
     }
 
     /* -------------------- */
