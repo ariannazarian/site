@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let hasStartedOnce = false;
     let hasRevealedStoryOnce = false;
     let hasRevealedYearsOnce = false;
+    let hasRevealedLatinOnce = false;
 
     function getFrozenPSTDate() {
         let now = new Date(frozenTime);
@@ -44,6 +45,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 hasRevealedStoryOnce = true;
             } else {
                 document.querySelectorAll(".watch-description").forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transition = "none";
+                });
+            }
+
+            if (!hasRevealedLatinOnce) {
+                fadeInLatinText();
+                hasRevealedLatinOnce = true;
+            } else {
+                document.querySelectorAll(".toggle-text").forEach(el => {
                     el.style.opacity = 1;
                     el.style.transition = "none";
                 });
@@ -105,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             setTimeout(() => {
                 span.style.opacity = 1;
-            }, index * 1000); // Each fades in after a 1-second overlap
+            }, index * 1000);
         });
     }
 
@@ -149,6 +160,17 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 el.style.opacity = 1;
             }, index * 10000); // 10-second gap between each fade-in
+        });
+    }
+
+    function fadeInLatinText() {
+        let latinElements = document.querySelectorAll(".toggle-text");
+        latinElements.forEach(el => {
+            el.style.opacity = 0;
+            el.style.transition = "opacity 2s ease-in";
+            setTimeout(() => {
+                el.style.opacity = 1;
+            }, 0); // No delay between fades
         });
     }
 
