@@ -31,9 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
         hiddenText.style.display = expanded ? "none" : "block";
         arrow.innerText = expanded ? "▼" : "▲";
 
-        document.querySelector("#eternal-title").setAttribute("aria-expanded", !expanded);
-        document.querySelector("#current-time").setAttribute("aria-expanded", !expanded);
-
         if (!isAudioPlaying) {
             playAudioWithFadeIn();
         } else {
@@ -44,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#hidden-text").style.display = "none";
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
+
+    document.querySelector("#reveal-matching-alt").addEventListener("click", toggleMatchingYears);
 
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
@@ -57,11 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
             matchingYears.style.display = "none";
         }
         arrow.innerText = expanded ? "▼" : "▲";
-
-        document.querySelector("#reveal-matching-alt").setAttribute("aria-expanded", !expanded);
     }
-
-    document.querySelector("#reveal-matching-alt").addEventListener("click", toggleMatchingYears);
 
     function revealMatchingYears() {
         let now = new Date(frozenTime);
@@ -77,9 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector("#matching-years").style.display = "block";
     }
 
-    /* -------------------- */
-    /* 🎵 Audio Preloading */
-    /* -------------------- */
     function playAudioWithFadeIn() {
         if (!audio) return;
 
@@ -90,60 +82,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         let fadeDuration = 20000;
-        let maxVolume = 1.0;
         let startTime = performance.now();
 
         function fadeInAudio(currentTime) {
             let elapsedTime = currentTime - startTime;
             let progress = elapsedTime / fadeDuration;
-            if (progress < 1) {
-                audio.volume = Math.min(progress * maxVolume, maxVolume);
-                requestAnimationFrame(fadeInAudio);
-            } else {
-                audio.volume = maxVolume;
-            }
+            audio.volume = Math.min(progress, 1.0);
+            if (progress < 1) requestAnimationFrame(fadeInAudio);
         }
 
         audio.play().then(() => {
             isAudioPlaying = true;
             requestAnimationFrame(fadeInAudio);
-        }).catch(error => {
-            console.error("Audio playback prevented:", error);
-        });
+        }).catch(console.error);
     }
-
-    function toggleAudio() {
-        if (!audio) return;
-        if (audio.paused) {
-            audio.play().catch(error => console.error("Audio play error:", error));
-            isAudioPlaying = true;
-        } else {
-            audio.pause();
-            isAudioPlaying = false;
-        }
-    }
-
-    audio.addEventListener("ended", () => {
-        audio.currentTime = 0;
-        audio.play();
-    });
-
-    /* ------------------------------ */
-    /* 🔄 Event Delegation for Translation */
-    /* ------------------------------ */
-    const translations = {
-        "num-nimis-erravi": { latin: "NUM NIMIS ERRAVI", english: "Have I wandered too far?" },
-        "iterum-nos-convenimus": { latin: "ITERUM NOS CONVENIMUS", english: "We meet again." },
-        "quo-vel-quando-vadis": { latin: "QUO VEL QUANDO VADIS", english: "Where or when are you going?" }
-    };
 
     document.querySelectorAll(".toggle-text").forEach(element => {
         element.addEventListener("click", () => {
-            let id = element.id;
-            if (translations[id]) {
-                let currentText = element.innerText;
-                element.innerText = (currentText === translations[id].latin) ? translations[id].english : translations[id].latin;
-            }
+            let translations = {
+                "num-nimis-erravi": ["NUM NIMIS ERRAVI", "Have I wandered too far?"],
+                "iterum-nos-convenimus": ["ITERUM NOS CONVENIMUS", "We meet again."],
+                "quo-vel-quando-vadis": ["QUO VEL QUANDO VADIS", "Where or when are you going?"]
+            };
+            element.innerText = element.innerText === translations[element.id][0] ? translations[element.id][1] : translations[element.id][0];
         });
     });
 });
