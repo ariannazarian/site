@@ -40,22 +40,21 @@ document.addEventListener("DOMContentLoaded", () => {
             arrow.innerText = "▲";
             playAudioWithFadeIn();
 
-            if (!hasRevealedLatinOnce) {
-                fadeInLatinText(() => {
-                    setTimeout(() => {
-                        if (!hasRevealedStoryOnce) {
-                            fadeInStoryText();
-                            hasRevealedStoryOnce = true;
-                        }
-                    }, 1500); // Start story fade-in 1.5s after first Latin text starts
-                });
-                hasRevealedLatinOnce = true;
+            if (!hasRevealedStoryOnce) {
+                fadeInStoryText();
+                hasRevealedStoryOnce = true;
             } else {
-                document.querySelectorAll(".toggle-text").forEach(el => {
+                document.querySelectorAll(".watch-description").forEach(el => {
                     el.style.opacity = 1;
                     el.style.transition = "none";
                 });
-                document.querySelectorAll(".watch-description").forEach(el => {
+            }
+
+            if (!hasRevealedLatinOnce) {
+                fadeInLatinText();
+                hasRevealedLatinOnce = true;
+            } else {
+                document.querySelectorAll(".toggle-text").forEach(el => {
                     el.style.opacity = 1;
                     el.style.transition = "none";
                 });
@@ -160,26 +159,18 @@ document.addEventListener("DOMContentLoaded", () => {
             el.style.transition = `opacity 3s ease-in`;
             setTimeout(() => {
                 el.style.opacity = 1;
-            }, index * 10000);
+            }, index * 10000); // 10-second gap between each fade-in
         });
     }
 
-    function fadeInLatinText(callback) {
+    function fadeInLatinText() {
         let latinElements = document.querySelectorAll(".toggle-text");
-        let totalLatinElements = latinElements.length;
-        let completedFades = 0;
-
         latinElements.forEach(el => {
             el.style.opacity = 0;
             el.style.transition = "opacity 3s ease-in";
             setTimeout(() => {
                 el.style.opacity = 1;
-                completedFades++;
-
-                if (completedFades === totalLatinElements && typeof callback === "function") {
-                    callback();
-                }
-            }, 0);
+            }, 1000); // No delay between fades
         });
     }
 
