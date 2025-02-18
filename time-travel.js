@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const audio = document.querySelector("#eternal-audio");
     let isAudioPlaying = false;
     let hasStartedOnce = false;
+    let hasRevealedOnce = false;
 
     function getFrozenPSTDate() {
         let now = new Date(frozenTime);
@@ -28,13 +29,25 @@ document.addEventListener("DOMContentLoaded", () => {
         let arrow = document.querySelector("#eternal-arrow");
         let expanded = hiddenText.style.display === "block";
 
-        hiddenText.style.display = expanded ? "none" : "block";
-        arrow.innerText = expanded ? "▼" : "▲";
-
         if (expanded) {
+            hiddenText.style.display = "none";
+            arrow.innerText = "▼";
             pauseAudio();
         } else {
+            hiddenText.style.display = "block";
+            arrow.innerText = "▲";
             playAudioWithFadeIn();
+
+            if (!hasRevealedOnce) {
+                fadeInStoryText();
+                hasRevealedOnce = true;
+            } else {
+                // Show text instantly if toggled again
+                document.querySelectorAll(".watch-description").forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transition = "none";
+                });
+            }
         }
     }
 
@@ -102,6 +115,17 @@ document.addEventListener("DOMContentLoaded", () => {
             audio.pause();
             isAudioPlaying = false;
         }
+    }
+
+    function fadeInStoryText() {
+        let storyParagraphs = document.querySelectorAll(".watch-description");
+        storyParagraphs.forEach((el, index) => {
+            el.style.opacity = 0;
+            el.style.transition = `opacity 3s ease-in`;
+            setTimeout(() => {
+                el.style.opacity = 1;
+            }, index * 5000); // 5-second gap between each fade-in
+        });
     }
 
     document.querySelectorAll(".toggle-text").forEach(element => {
