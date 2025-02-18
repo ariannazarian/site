@@ -38,6 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Ensure the hidden-text starts hidden on page load
+    document.querySelector("#hidden-text").style.display = "none";
+
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
@@ -70,7 +73,63 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector("#matching-years").innerText = `Coordinate reflections: ${years.join(', ')}`;
     }
 
-    /* Latin-English Toggle */
+    /* -------------------- */
+    /* 🎵 Fixing Music Issue */
+    /* -------------------- */
+    function playAudioWithFadeIn() {
+        if (!audio) return;
+
+        audio.volume = 0.0;
+
+        // Ensure the audio starts from 38.5s the first time it plays
+        if (!hasStartedOnce) {
+            audio.currentTime = 38.5;
+            hasStartedOnce = true;
+        }
+
+        let fadeDuration = 20000; // 20 seconds fade-in
+        let maxVolume = 1.0;
+        let startTime = performance.now();
+
+        function fadeInAudio(currentTime) {
+            let elapsedTime = currentTime - startTime;
+            let progress = elapsedTime / fadeDuration;
+            if (progress < 1) {
+                audio.volume = Math.min(progress * maxVolume, maxVolume);
+                requestAnimationFrame(fadeInAudio);
+            } else {
+                audio.volume = maxVolume;
+            }
+        }
+
+        audio.play().then(() => {
+            isAudioPlaying = true;
+            requestAnimationFrame(fadeInAudio);
+        }).catch(error => {
+            console.error("Audio playback prevented:", error);
+        });
+    }
+
+    function toggleAudio() {
+        if (!audio) return;
+        if (audio.paused) {
+            audio.play().catch(error => console.error("Audio play error:", error));
+            isAudioPlaying = true;
+        } else {
+            audio.pause();
+            isAudioPlaying = false;
+        }
+    }
+
+    // Ensure audio loops from 0:00 after finishing
+    audio.addEventListener("ended", () => {
+        audio.currentTime = 0;
+        audio.play();
+    });
+
+    /* ------------------------------ */
+    /* 🔄 Latin-English Toggle Feature */
+    /* ------------------------------ */
     const translations = {
         "num-nimis-erravi": { latin: "NUM NIMIS ERRAVI", english: "Have I wandered too far?" },
         "iterum-nos-convenimus": { latin: "ITERUM NOS CONVENIMUS", english: "We meet again." },
