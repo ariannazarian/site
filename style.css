@@ -132,8 +132,15 @@ nav a:hover {
     margin-top: 10px;
 }
 
-/* Bold Latin texts and "This time traveler's watch..." */
-#reveal-matching, #reveal-matching-alt {
+/* 🔹 Bold Latin texts and their translations */
+.toggle-text {
+    font-size: var(--text-size);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Bold "This time traveler's watch..." */
+#reveal-matching-alt {
     font-weight: bold;
     font-size: var(--text-size);
 }
