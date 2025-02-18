@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
             el.style.transition = `opacity 3s ease-in`;
             setTimeout(() => {
                 el.style.opacity = 1;
-            }, index * 8000); // 8-second gap between each fade-in
+            }, index * 10000); // 10-second gap between each fade-in
         });
     }
 
