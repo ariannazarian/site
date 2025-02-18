@@ -4,7 +4,6 @@
     --usc-cardinal: #990000; /* USC Crimson */
     --white: #ffffff;
     --text-size: 16px; /* Standard text size below the header */
-    --nav-text-size: 18px; /* Navigation and citation text size */
     --larger-text-size: 24px; /* Frozen time display */
 }
 
@@ -16,6 +15,20 @@ body {
     color: var(--black);
     margin: 0;
     padding: 0;
+    user-select: none; /* Disables text selection */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Edge */
+}
+
+/* Prevent text selection for all elements */
+p, h1, h2, h3, h4, h5, h6, span, div {
+    user-select: none;
+}
+
+/* Make links still clickable */
+a {
+    user-select: text;
 }
 
 /* Header */
@@ -36,9 +49,9 @@ header {
     flex-direction: column;
 }
 
-/* Adjust the size of the header citation to match navigation links */
+/* Adjust the size of the header citation */
 .author {
-    font-size: var(--nav-text-size);
+    font-size: var(--text-size);
 }
 
 /* Navigation */
@@ -51,7 +64,7 @@ nav {
 
 /* Navigation links */
 nav a {
-    font-size: var(--nav-text-size);
+    font-size: var(--text-size);
     font-weight: bold;
     color: var(--white) !important; /* Ensures links stay white */
     text-decoration: none;
@@ -111,11 +124,6 @@ nav a:hover {
     margin-top: 0px;
 }
 
-/* Ensure hidden text starts hidden */
-.hidden {
-    display: none;
-}
-
 /* Watch text formatting */
 .watch-text {
     font-size: var(--text-size);
@@ -150,9 +158,4 @@ nav a:hover {
 /* Ensures the ▼ symbol has slight spacing */
 #eternal-title::after, #reveal-matching-alt::after {
     margin-left: 5px;
-}
-
-/* Bold text for specific elements */
-.bold-text {
-    font-weight: bold;
 }
