@@ -77,6 +77,7 @@ function revealMatchingYears() {
     document.getElementById("matching-years").innerText = `Coordinate reflections: ${years.join(', ')}`;
 }
 
+// Function to play audio with fade-in effect (Ensures autoplay is allowed)
 function playAudioWithFadeIn() {
     if (!audio) return;
 
@@ -132,3 +133,31 @@ audio.addEventListener("ended", () => {
     audio.currentTime = 0; // Reset playback to start at 0:00 for looping
     audio.play();
 });
+
+/* ------------------------ */
+/* Latin-English Toggle Feature */
+/* ------------------------ */
+
+// Object to store Latin phrases and their translations
+const translations = {
+    "num-nimis-erravi": { latin: "NUM NIMIS ERRAVI", english: "Have I wandered too far?" },
+    "iterum-nos-convenimus": { latin: "ITERUM NOS CONVENIMUS", english: "We meet again." },
+    "quo-vel-quando-vadis": { latin: "QUO VEL QUANDO VADIS", english: "Where or when are you going?" }
+};
+
+// Function to toggle text between Latin and English
+function toggleTranslation(event) {
+    let id = event.target.id;
+    if (!translations[id]) return;
+
+    let element = document.getElementById(id);
+    let currentText = element.innerText;
+
+    // Switch between Latin and English
+    element.innerText = (currentText === translations[id].latin) ? translations[id].english : translations[id].latin;
+}
+
+// Attach event listeners for Latin phrases
+document.getElementById("num-nimis-erravi").addEventListener("click", toggleTranslation);
+document.getElementById("iterum-nos-convenimus").addEventListener("click", toggleTranslation);
+document.getElementById("quo-vel-quando-vadis").addEventListener("click", toggleTranslation);

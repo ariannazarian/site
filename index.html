@@ -26,36 +26,37 @@
         <p class="personal-text">This is my personal website where I share my work.</p>
 
         <!-- The Eternal Watch Section -->
-<section id="eternal-watch">
-    <h2 id="eternal-title" class="clickable">The Eternal Watch <span id="eternal-arrow">▼</span></h2>
-    <h2 id="current-time" class="clickable"></h2>
+        <section id="eternal-watch">
+            <h2 id="eternal-title" class="clickable">The Eternal Watch <span id="eternal-arrow">▼</span></h2>
+            <h2 id="current-time" class="clickable"></h2>
+            
+            <div id="hidden-text" class="hidden">
+                <!-- Latin phrases with click-to-toggle functionality -->
+                <p id="num-nimis-erravi" class="toggle-text clickable bold-text">NUM NIMIS ERRAVI</p>
+                <p class="watch-description">
+                    The machine’s workings have broken, its dial frozen—fixed upon my arrival in month, week, day, and hour. 
+                    As I drift across years of measured turning, I long to meet this moment's return. No—this moment shall return, and somehow, I with it.
+                </p>
+                
+                <p id="iterum-nos-convenimus" class="toggle-text clickable bold-text">ITERUM NOS CONVENIMUS</p>
+                <p class="watch-description">
+                    With no small astonishment, I behold the machine’s restraint, for though it bears me backwards, it does so with unyielding precision.
+                    An unmoving face stands as both beacon and shackle, tethering my descent through history to when time’s ceaseless reflections turn to greet their likeness.
+                </p>
 
-    <!-- Hidden Audio Element -->
-    <audio id="eternal-audio" src="assets/audio/timepiece.mp3" loop></audio>
+                <p id="quo-vel-quando-vadis" class="toggle-text clickable bold-text">QUO VEL QUANDO VADIS</p>
+                <p class="watch-description">
+                    Thus, I am no master of time, but its prisoner—immutably bound to instants where pasts converge.
+                </p>
 
-    <div id="hidden-text" class="hidden">
-        <p class="watch-text bold-text">NUM LONGIUS ERRAVI</p>
-        <p class="watch-description">
-            The machine’s workings have broken, its dial frozen—fixed upon my arrival in month, week, day, and hour. As I drift across years of measured turning, I long to meet this moment's return. No—this moment shall return, and somehow, I with it.
-        </p>
-        <p class="watch-text bold-text">ITERUM CONVENIMUS</p>
-        <p class="watch-description">
-            With no small astonishment, I behold the machine’s restraint, for though it bears me backwards, it does so with unyielding precision.
-            An unmoving face stands as both beacon and shackle, tethering my descent through history to when time’s ceaseless reflections turn to greet their likeness.
-        </p>
-        <p class="watch-text bold-text">QUO AUT QUANDO VADIS</p>
-        <p class="watch-description">
-            Thus, I am no master of time, but its prisoner—immutably bound to instants where pasts converge.
-        </p>
-        <p id="reveal-matching-alt" class="clickable bold-text">
-            This time traveller's watch can take you there… or rather, to then. <span id="watch-arrow">▼</span>
-        </p>
-    </div>
+                <p id="reveal-matching-alt" class="clickable bold-text">
+                    This time traveller's watch can take you there… or rather, to then. <span id="watch-arrow">▼</span>
+                </p>
+            </div>
 
-    <p id="matching-years" class="hidden"></p>
-
-    <p class="travel-quote">"All we have to decide is what to do with the time that is given us."<br>- J.R.R. Tolkien, <em>The Lord of the Rings</em></p>
-</section>
+            <p id="matching-years" class="hidden"></p>
+            <p class="travel-quote">"All we have to decide is what to do with the time that is given us."<br>- J.R.R. Tolkien, <em>The Lord of the Rings</em></p>
+        </section>
     </main>
 
     <script src="time-travel.js"></script>
