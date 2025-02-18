@@ -31,9 +31,9 @@ a {
     user-select: text;
 }
 
-/* 🔹 Style for Header Image */
+/* 🔹 Style for Header Image (Reduced to 10% of Original Size) */
 .header-image {
-    max-width: 100%; /* Ensures the image scales properly */
+    max-width: 10%; /* Shrinks image to 10% of its original size */
     height: auto; /* Maintains aspect ratio */
     display: block; /* Removes any default spacing */
     margin: 0 auto 10px; /* Centers the image and adds slight spacing */
