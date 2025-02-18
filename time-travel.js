@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let storyParagraphs = document.querySelectorAll(".watch-description");
         storyParagraphs.forEach((el, index) => {
             el.style.opacity = 0;
-            el.style.transition = `opacity 3s ease-in`;
+            el.style.transition = `opacity 4s ease-in`;
             setTimeout(() => {
                 el.style.opacity = 1;
             }, index * 10000); // 10-second gap between each fade-in
@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
             el.style.transition = "opacity 3s ease-in";
             setTimeout(() => {
                 el.style.opacity = 1;
-            }, 0); // No delay between fades
+            }, index * 10000); // 10-second gap between each fade-in
         });
     }
 
