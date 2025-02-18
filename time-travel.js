@@ -1,8 +1,8 @@
-// Ensure the script runs only after the page loads
+// Ensure script runs only after the page loads
 document.addEventListener("DOMContentLoaded", () => {
     // Store the frozen time when the page loads
     const frozenTime = new Date();
-    const audio = document.getElementById("eternal-audio");
+    const audio = document.querySelector("#eternal-audio");
     let isAudioPlaying = false;
     let hasStartedOnce = false; // Tracks if the song has already played once
 
@@ -25,12 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Update frozen time on page load
-    document.getElementById("current-time").innerText = getFrozenPSTDate();
+    document.querySelector("#current-time").innerText = getFrozenPSTDate();
 
     // Toggle visibility for The Eternal Watch and Frozen Time Display + Play/Pause Audio
     function toggleEternalWatch() {
-        let hiddenText = document.getElementById("hidden-text");
-        let arrow = document.getElementById("eternal-arrow");
+        let hiddenText = document.querySelector("#hidden-text");
+        let arrow = document.querySelector("#eternal-arrow");
 
         let isVisible = hiddenText.style.display === "block";
         hiddenText.style.display = isVisible ? "none" : "block";
@@ -45,15 +45,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Sync clicks between The Eternal Watch and Frozen Time Display
-    document.getElementById("eternal-title").addEventListener("click", toggleEternalWatch);
-    document.getElementById("current-time").addEventListener("click", toggleEternalWatch);
+    document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
+    document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
     // Toggle coordinate reflections visibility
-    document.getElementById("reveal-matching-alt").addEventListener("click", toggleMatchingYears);
+    document.querySelector("#reveal-matching-alt").addEventListener("click", toggleMatchingYears);
 
     function toggleMatchingYears() {
-        let matchingYears = document.getElementById("matching-years");
-        let arrow = document.getElementById("watch-arrow");
+        let matchingYears = document.querySelector("#matching-years");
+        let arrow = document.querySelector("#watch-arrow");
 
         if (matchingYears.style.display === "none" || matchingYears.style.display === "") {
             revealMatchingYears();
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892)
                          .filter(year => new Date(year, month - 1, day).getDay() === weekday);
 
-        document.getElementById("matching-years").innerText = `Coordinate reflections: ${years.join(', ')}`;
+        document.querySelector("#matching-years").innerText = `Coordinate reflections: ${years.join(', ')}`;
     }
 
     // Function to play audio with fade-in effect
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let id = event.target.id;
         if (!translations[id]) return;
 
-        let element = document.getElementById(id);
+        let element = document.querySelector(`#${id}`);
         let currentText = element.innerText;
 
         // Switch between Latin and English
@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Ensure event listeners are correctly added after the page loads
-    document.getElementById("num-nimis-erravi").addEventListener("click", toggleTranslation);
-    document.getElementById("iterum-nos-convenimus").addEventListener("click", toggleTranslation);
-    document.getElementById("quo-vel-quando-vadis").addEventListener("click", toggleTranslation);
+    document.querySelector("#num-nimis-erravi").addEventListener("click", toggleTranslation);
+    document.querySelector("#iterum-nos-convenimus").addEventListener("click", toggleTranslation);
+    document.querySelector("#quo-vel-quando-vadis").addEventListener("click", toggleTranslation);
 });
