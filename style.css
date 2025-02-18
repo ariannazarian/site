@@ -31,13 +31,23 @@ a {
     user-select: text;
 }
 
-/* 🔹 Style for Header Image (Reduced to 10% of Original Size) */
+/* 🔹 Style for Header Image (Responsive Sizing) */
 .header-image {
-    max-width: 10%; /* Shrinks image to 10% of its original size */
+    width: 10vw; /* 10% of the viewport width on larger screens */
+    max-width: 200px; /* Ensures it doesn't get too large */
     height: auto; /* Maintains aspect ratio */
-    display: block; /* Removes any default spacing */
-    margin: 0 auto 10px; /* Centers the image and adds slight spacing */
+    display: block; /* Removes default spacing */
+    margin: 0 auto 10px; /* Centers the image */
 }
+
+/* 🔹 Adjust image size for smaller screens */
+@media (max-width: 600px) {
+    .header-image {
+        width: 50vw; /* 50% of viewport width on smaller screens */
+        max-width: 300px; /* Prevents it from becoming too large */
+    }
+}
+
 
 /* 🔹 Ensure the header still looks correct */
 header {
