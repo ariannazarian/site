@@ -140,8 +140,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".toggle-text").forEach(element => {
         element.addEventListener("click", () => {
             let id = element.id;
-            let currentText = element.innerText;
-            element.innerText = (currentText === translations[id].latin) ? translations[id].english : translations[id].latin;
+            if (translations[id]) {
+                let currentText = element.innerText;
+                element.innerText = (currentText === translations[id].latin) ? translations[id].english : translations[id].latin;
+            }
         });
     });
 });
