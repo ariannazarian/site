@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const audio = document.querySelector("#eternal-audio");
     let isAudioPlaying = false;
     let hasStartedOnce = false;
-    let hasRevealedOnce = false;
+    let hasRevealedStoryOnce = false;
+    let hasRevealedYearsOnce = false;
 
     function getFrozenPSTDate() {
         let now = new Date(frozenTime);
@@ -38,11 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
             arrow.innerText = "▲";
             playAudioWithFadeIn();
 
-            if (!hasRevealedOnce) {
+            if (!hasRevealedStoryOnce) {
                 fadeInStoryText();
-                hasRevealedOnce = true;
+                hasRevealedStoryOnce = true;
             } else {
-                // Show text instantly if toggled again
                 document.querySelectorAll(".watch-description").forEach(el => {
                     el.style.opacity = 1;
                     el.style.transition = "none";
@@ -62,16 +62,26 @@ document.addEventListener("DOMContentLoaded", () => {
         let arrow = document.querySelector("#watch-arrow");
         let expanded = matchingYears.style.display === "block";
 
-        if (!expanded) {
-            revealMatchingYears();
-            matchingYears.style.display = "block";
-        } else {
+        if (expanded) {
             matchingYears.style.display = "none";
+            arrow.innerText = "▼";
+        } else {
+            matchingYears.style.display = "block";
+            arrow.innerText = "▲";
+
+            if (!hasRevealedYearsOnce) {
+                revealMatchingYearsWithFade();
+                hasRevealedYearsOnce = true;
+            } else {
+                document.querySelectorAll(".year-item").forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transition = "none";
+                });
+            }
         }
-        arrow.innerText = expanded ? "▼" : "▲";
     }
 
-    function revealMatchingYears() {
+    function revealMatchingYearsWithFade() {
         let now = new Date(frozenTime);
         let month = now.getMonth() + 1;
         let day = now.getDate();
@@ -81,8 +91,22 @@ document.addEventListener("DOMContentLoaded", () => {
         let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892)
                          .filter(year => new Date(year, month - 1, day).getDay() === weekday);
 
-        document.querySelector("#matching-years").innerText = `Coordinate reflections: ${years.join(', ')}`;
-        document.querySelector("#matching-years").style.display = "block";
+        let outputElement = document.querySelector("#matching-years");
+        outputElement.innerHTML = `<strong>Coordinate reflections:</strong> `;
+
+        years.forEach((year, index) => {
+            let span = document.createElement("span");
+            span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
+            span.classList.add("year-item");
+            span.style.opacity = 0;
+            span.style.transition = "opacity 2s ease-in";
+
+            outputElement.appendChild(span);
+
+            setTimeout(() => {
+                span.style.opacity = 1;
+            }, index * 1000); // Each fades in after a 1-second overlap
+        });
     }
 
     function playAudioWithFadeIn() {
