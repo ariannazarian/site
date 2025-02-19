@@ -128,6 +128,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }, index * 1000);
         });
+
+        // Remove transition after first fade-in
+        setTimeout(() => {
+            document.querySelectorAll(".year-item").forEach(el => {
+                el.style.transition = "none";
+            });
+        }, years.length * 1000);
     }
 
     function fadeInStoryGroups(callback) {
