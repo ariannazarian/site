@@ -73,6 +73,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
+    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
+        toggleWatchText();
+        toggleMatchingYears();
+
+        // Stop blinking after first click
+        if (!hasClickedWatch) {
+            document.querySelector("#watch-arrow").classList.remove("blink-arrow");
+            hasClickedWatch = true;
+        }
+    });
+
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
         let travelQuote = document.querySelector("#travel-quote");
@@ -130,10 +141,10 @@ document.addEventListener("DOMContentLoaded", () => {
     function fadeInWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
         if (!hasRevealedWatchOnce) {
-            watchText.style.display = "block"; // Ensure it's visible before fading
+            watchText.style.display = "block";
             setTimeout(() => {
                 watchText.style.opacity = 1;
-                watchText.classList.add("revealed"); // Ensures instant toggling after first fade
+                watchText.classList.add("revealed");
             }, 50);
             hasRevealedWatchOnce = true;
         }
@@ -141,8 +152,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
-        if (hasRevealedWatchOnce) { // Ensure instant toggle only after first fade-in
-            if (watchText.style.display === "block") {
+        if (hasRevealedWatchOnce) {
+            if (watchText.style.opacity === "1") {
                 watchText.style.opacity = "0";
                 setTimeout(() => {
                     watchText.style.display = "none";
