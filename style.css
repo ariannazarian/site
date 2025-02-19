@@ -148,6 +148,8 @@ nav a:hover {
 #reveal-matching-alt {
     font-weight: bold;
     font-size: var(--text-size);
+    opacity: 0; /* Start hidden */
+    transition: opacity 3s ease-in; /* Fade in after last story text */
 }
 
 /* Watch description paragraphs */
@@ -172,15 +174,10 @@ nav a:hover {
     margin-left: 5px;
 }
 
-/* 🔹 Travel Quote Styling (New Feature) */
+/* 🔹 Travel Quote Styling (Existing Feature) */
 /* Initially hide the travel quote */
 #travel-quote {
     display: none;
     opacity: 0;
     transition: opacity 3s ease-in;
-}
-/* Initially hide "This time traveller's watch..." */
-#reveal-matching-alt {
-    opacity: 0;
-    transition: opacity 2s ease-in;
 }
