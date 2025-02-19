@@ -73,32 +73,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const arrow = document.querySelector("#watch-arrow");
     
         // Ensure both matching-years and travel-quote start hidden
-        matchingYears.style.display = "none";
-        travelQuote.style.display = "none";
+        matchingYears.classList.add("hidden");
+        travelQuote.classList.add("hidden");
     
         let hasRevealedYearsOnce = false;
     
         revealMatchingAlt.addEventListener("click", function () {
-            const isHidden = matchingYears.style.display === "none";
+            // Toggle visibility
+            matchingYears.classList.toggle("hidden");
+            travelQuote.classList.toggle("hidden");
     
-            if (isHidden) {
-                matchingYears.style.display = "block";
-                travelQuote.style.display = "block";
-                arrow.innerText = "▲";
+            // Update arrow direction
+            arrow.innerText = matchingYears.classList.contains("hidden") ? "▼" : "▲";
     
-                if (!hasRevealedYearsOnce) {
-                    revealMatchingYearsWithFade();
-                    hasRevealedYearsOnce = true;
-                } else {
-                    document.querySelectorAll(".year-item").forEach(el => {
-                        el.style.opacity = 1;
-                        el.style.transition = "none";
-                    });
-                }
-            } else {
-                matchingYears.style.display = "none";
-                travelQuote.style.display = "none";
-                arrow.innerText = "▼";
+            // Handle fade-in effect for first reveal
+            if (!matchingYears.classList.contains("hidden") && !hasRevealedYearsOnce) {
+                revealMatchingYearsWithFade();
+                hasRevealedYearsOnce = true;
             }
         });
     });

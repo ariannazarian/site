@@ -48,7 +48,6 @@ a {
     }
 }
 
-
 /* 🔹 Ensure the header still looks correct */
 header {
     background-color: var(--black);
@@ -171,4 +170,9 @@ nav a:hover {
 /* Ensures the ▼ symbol has slight spacing */
 #eternal-title::after, #reveal-matching-alt::after {
     margin-left: 5px;
+}
+
+/* 🔹 Fix: Hide matching-years & travel-quote initially */
+.hidden {
+    display: none !important;
 }
