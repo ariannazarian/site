@@ -159,6 +159,22 @@ nav a:hover {
     transition: opacity 3s ease-in; /* First-time fade-in */
 }
 
+/* 🔹 Blinking effect for ▼ indicators */
+.blink-arrow {
+    animation: blink 1s infinite alternate;
+}
+
+/* 🔹 Define blinking animation */
+@keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+/* 🔹 Ensure ▲ remains unaffected */
+#eternal-arrow, #watch-arrow {
+    transition: opacity 0.3s ease-in-out;
+}
+
 /* Watch description paragraphs */
 .watch-description {
     font-size: var(--text-size);
