@@ -70,17 +70,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
-        let travelQuote = document.querySelector("#travel-quote");
         let arrow = document.querySelector("#watch-arrow");
         let expanded = matchingYears.style.display === "block";
 
         if (expanded) {
             matchingYears.style.display = "none";
-            travelQuote.style.display = "none"; // Hides travel quote when toggled off
             arrow.innerText = "▼";
         } else {
             matchingYears.style.display = "block";
-            travelQuote.style.display = "block"; // Ensures quote appears when years are revealed
             arrow.innerText = "▲";
 
             if (!hasRevealedYearsOnce) {
