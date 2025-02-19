@@ -66,34 +66,42 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
-    document.querySelector("#reveal-matching-alt").addEventListener("click", toggleMatchingYears);
-
-    function toggleMatchingYears() {
-    let matchingYears = document.querySelector("#matching-years");
-    let travelQuote = document.querySelector(".travel-quote");
-    let arrow = document.querySelector("#watch-arrow");
-    let expanded = matchingYears.style.display === "block";
-
-    if (expanded) {
-        matchingYears.style.display = "none";
-        travelQuote.style.display = "none"; // Hide travel-quote as well
-        arrow.innerText = "▼";
-    } else {
-        matchingYears.style.display = "block";
-        travelQuote.style.display = "block"; // Show travel-quote as well
-        arrow.innerText = "▲";
-
-        if (!hasRevealedYearsOnce) {
-            revealMatchingYearsWithFade();
-            hasRevealedYearsOnce = true;
-        } else {
-            document.querySelectorAll(".year-item").forEach(el => {
-                el.style.opacity = 1;
-                el.style.transition = "none";
-            });
-        }
-    }
-}
+    document.addEventListener("DOMContentLoaded", function () {
+        const matchingYears = document.querySelector("#matching-years");
+        const travelQuote = document.querySelector(".travel-quote");
+        const revealMatchingAlt = document.querySelector("#reveal-matching-alt");
+        const arrow = document.querySelector("#watch-arrow");
+    
+        // Ensure both matching-years and travel-quote start hidden
+        matchingYears.classList.add("hidden");
+        travelQuote.classList.add("hidden");
+    
+        let hasRevealedYearsOnce = false;
+    
+        revealMatchingAlt.addEventListener("click", function () {
+            const isExpanded = !matchingYears.classList.contains("hidden");
+    
+            if (isExpanded) {
+                matchingYears.classList.add("hidden");
+                travelQuote.classList.add("hidden");
+                arrow.innerText = "▼";
+            } else {
+                matchingYears.classList.remove("hidden");
+                travelQuote.classList.remove("hidden");
+                arrow.innerText = "▲";
+    
+                if (!hasRevealedYearsOnce) {
+                    revealMatchingYearsWithFade();
+                    hasRevealedYearsOnce = true;
+                } else {
+                    document.querySelectorAll(".year-item").forEach(el => {
+                        el.style.opacity = 1;
+                        el.style.transition = "none";
+                    });
+                }
+            }
+        });
+    });    
 
 // Ensure travel-quote starts hidden
 document.addEventListener("DOMContentLoaded", function () {
