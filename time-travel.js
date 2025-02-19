@@ -90,8 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 hasRevealedYearsOnce = true;
             } else {
-                matchingYears.style.opacity = 1;
-                matchingYears.style.transition = "none";
+                document.querySelectorAll(".year-item").forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transition = "none"; // Ensure instant reveal on subsequent toggles
+                });
                 travelQuote.style.opacity = 1;
                 travelQuote.style.transition = "none";
             }
@@ -132,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // **Fix: Remove transition after first fade-in**
         setTimeout(() => {
             document.querySelectorAll(".year-item").forEach(el => {
-                el.style.transition = "none";
+                el.style.transition = "none"; // Ensures instant reveal on future toggles
             });
         }, years.length * 1000 + 500);
     }
