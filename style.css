@@ -179,3 +179,8 @@ nav a:hover {
     opacity: 0;
     transition: opacity 3s ease-in;
 }
+/* Initially hide "This time traveller's watch..." */
+#reveal-matching-alt {
+    opacity: 0;
+    transition: opacity 2s ease-in;
+}
