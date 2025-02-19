@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.querySelector("#hidden-text").style.display = "none";
+    document.querySelector("#travel-quote").style.display = "none"; // Hides the quote on page load
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
@@ -139,9 +140,21 @@ document.addEventListener("DOMContentLoaded", () => {
         let quote = document.querySelector("#travel-quote");
         quote.style.opacity = 0;
         quote.style.transition = "opacity 3s ease-in";
+        quote.style.display = "block";
         setTimeout(() => {
             quote.style.opacity = 1;
         }, 0);
+    }
+
+    function fadeInStoryText() {
+        let storyParagraphs = document.querySelectorAll(".watch-description");
+        storyParagraphs.forEach((el, index) => {
+            el.style.opacity = 0;
+            el.style.transition = "opacity 3s ease-in";
+            setTimeout(() => {
+                el.style.opacity = 1;
+            }, index * 10000); // 10-second gap between each fade-in
+        });
     }
 
     function playAudioWithFadeIn() {
