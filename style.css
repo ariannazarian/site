@@ -150,7 +150,7 @@ nav a:hover {
     transition: opacity 3s ease-in;
 }
 
-/* 🔹 Ensure "This time traveller's watch..." is properly hidden and delayed */
+/* 🔹 Ensure "This time traveller's watch..." only fades once, then toggles instantly */
 #reveal-matching-alt {
     font-weight: bold;
     font-size: var(--text-size);

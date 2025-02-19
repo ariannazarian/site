@@ -151,9 +151,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     setTimeout(() => {
                         fadeInWatchText();
     
-                        // **Remove transition after first fade-in for instant toggles**
+                        // **Ensure the transition is removed after first fade-in for instant toggles**
                         setTimeout(() => {
-                            document.querySelector("#reveal-matching-alt").style.transition = "none";
+                            let watchText = document.querySelector("#reveal-matching-alt");
+                            watchText.style.transition = "none";
                         }, 3500);
                         
                     }, 3500);
