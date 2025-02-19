@@ -69,28 +69,37 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#reveal-matching-alt").addEventListener("click", toggleMatchingYears);
 
     function toggleMatchingYears() {
-        let matchingYears = document.querySelector("#matching-years");
-        let arrow = document.querySelector("#watch-arrow");
-        let expanded = matchingYears.style.display === "block";
+    let matchingYears = document.querySelector("#matching-years");
+    let travelQuote = document.querySelector(".travel-quote");
+    let arrow = document.querySelector("#watch-arrow");
+    let expanded = matchingYears.style.display === "block";
 
-        if (expanded) {
-            matchingYears.style.display = "none";
-            arrow.innerText = "▼";
+    if (expanded) {
+        matchingYears.style.display = "none";
+        travelQuote.style.display = "none"; // Hide travel-quote as well
+        arrow.innerText = "▼";
+    } else {
+        matchingYears.style.display = "block";
+        travelQuote.style.display = "block"; // Show travel-quote as well
+        arrow.innerText = "▲";
+
+        if (!hasRevealedYearsOnce) {
+            revealMatchingYearsWithFade();
+            hasRevealedYearsOnce = true;
         } else {
-            matchingYears.style.display = "block";
-            arrow.innerText = "▲";
-
-            if (!hasRevealedYearsOnce) {
-                revealMatchingYearsWithFade();
-                hasRevealedYearsOnce = true;
-            } else {
-                document.querySelectorAll(".year-item").forEach(el => {
-                    el.style.opacity = 1;
-                    el.style.transition = "none";
-                });
-            }
+            document.querySelectorAll(".year-item").forEach(el => {
+                el.style.opacity = 1;
+                el.style.transition = "none";
+            });
         }
     }
+}
+
+// Ensure travel-quote starts hidden
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelector(".travel-quote").style.display = "none";
+});
+
 
     function revealMatchingYearsWithFade() {
         let now = new Date(frozenTime);
