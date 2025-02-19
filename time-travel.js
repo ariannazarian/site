@@ -144,10 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Ensure clicking "This time traveller's watch..." toggles years output and travel quote
+    // Fix all three issues: clicking "This time traveller's watch..." should work properly
     document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
         toggleWatchText();
-        toggleMatchingYears(); // Ensure years and quote are always toggled correctly
+        toggleMatchingYears();
 
         // Stop blinking after first click
         if (!hasClickedWatch) {
@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function toggleWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
         if (hasRevealedWatchOnce) { // Ensure instant toggle only after first fade-in
-            if (watchText.style.opacity === "1") {
+            if (watchText.style.display === "block") {
                 watchText.style.opacity = "0";
                 setTimeout(() => {
                     watchText.style.display = "none";
