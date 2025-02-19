@@ -148,8 +148,6 @@ nav a:hover {
 #reveal-matching-alt {
     font-weight: bold;
     font-size: var(--text-size);
-    opacity: 0; /* Start hidden */
-    transition: opacity 3s ease-in; /* Fade in after last story text */
 }
 
 /* Watch description paragraphs */
@@ -174,7 +172,7 @@ nav a:hover {
     margin-left: 5px;
 }
 
-/* 🔹 Travel Quote Styling (Existing Feature) */
+/* 🔹 Travel Quote Styling (New Feature) */
 /* Initially hide the travel quote */
 #travel-quote {
     display: none;

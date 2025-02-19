@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let hasRevealedYearsOnce = false;
     let hasRevealedLatinOnce = false;
     let hasRevealedQuoteOnce = false;
-    let hasRevealedWatchOnce = false;
 
     function getFrozenPSTDate() {
         let now = new Date(frozenTime);
@@ -43,16 +42,13 @@ document.addEventListener("DOMContentLoaded", () => {
             playAudioWithFadeIn();
 
             if (!hasRevealedStoryOnce) {
-                fadeInStoryText(() => {
-                    fadeInWatchText(); // Fade in "This time traveller's watch..." after last story text
-                });
+                fadeInStoryText();
                 hasRevealedStoryOnce = true;
             } else {
                 document.querySelectorAll(".watch-description").forEach(el => {
                     el.style.opacity = 1;
                     el.style.transition = "none";
                 });
-                fadeInWatchText(); // If already revealed before, ensure the watch text is visible
             }
 
             if (!hasRevealedLatinOnce) {
@@ -146,19 +142,46 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 50);
     }
 
-    function fadeInStoryText(callback) {
-        let storyParagraphs = document.querySelectorAll(".watch-description");
-        let lastIndex = storyParagraphs.length - 1;
+    function playAudioWithFadeIn() {
+        if (!audio) return;
 
+        audio.volume = 0.0;
+        if (!hasStartedOnce) {
+            audio.currentTime = 38.5;
+            hasStartedOnce = true;
+        }
+
+        let fadeDuration = 20000;
+        let startTime = performance.now();
+
+        function fadeInAudio(currentTime) {
+            let elapsedTime = currentTime - startTime;
+            let progress = elapsedTime / fadeDuration;
+            audio.volume = Math.min(progress, 1.0);
+            if (progress < 1) requestAnimationFrame(fadeInAudio);
+        }
+
+        audio.play().then(() => {
+            isAudioPlaying = true;
+            requestAnimationFrame(fadeInAudio);
+        }).catch(console.error);
+    }
+
+    function pauseAudio() {
+        if (audio && !audio.paused) {
+            audio.pause();
+            isAudioPlaying = false;
+        }
+    }
+
+    function fadeInStoryText() {
+        let storyParagraphs = document.querySelectorAll(".watch-description");
         storyParagraphs.forEach((el, index) => {
             el.style.opacity = 0;
             el.style.transition = `opacity 3s ease-in`;
             setTimeout(() => {
                 el.style.opacity = 1;
-                if (index === lastIndex && callback) {
-                    setTimeout(callback, 500); // Fade in "This time traveller's watch..." after last story text
-                }
-            }, index * 10000); // 10-second gap between each fade-in
+            }, index * 10000);
         });
     }
 
@@ -171,18 +194,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 el.style.opacity = 1;
             }, 0);
         });
-    }
-
-    function fadeInWatchText() {
-        let watchText = document.querySelector("#reveal-matching-alt");
-        if (!hasRevealedWatchOnce) {
-            watchText.style.opacity = 0;
-            watchText.style.display = "block";
-            setTimeout(() => {
-                watchText.style.opacity = 1;
-            }, 50);
-            hasRevealedWatchOnce = true;
-        }
     }
 
     document.querySelectorAll(".toggle-text").forEach(element => {
