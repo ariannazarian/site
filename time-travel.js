@@ -1,7 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     const frozenTime = new Date();
     const audio = document.querySelector("#eternal-audio");
-    let audioPlayed = false;
+    let isAudioPlaying = false;
+    let hasStartedOnce = false;
+    let hasRevealedStoryOnce = false;
+    let hasRevealedYearsOnce = false;
+    let hasRevealedLatinOnce = false;
+    let hasRevealedQuoteOnce = false;
 
     function getFrozenPSTDate() {
         let now = new Date(frozenTime);
@@ -22,68 +27,180 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelector("#current-time").innerText = getFrozenPSTDate();
 
-    function toggleElementVisibility(element, arrow) {
-        const expanded = element.style.display === "block";
-        element.style.display = expanded ? "none" : "block";
-        arrow.innerText = expanded ? "▼" : "▲";
-    }
+    function toggleEternalWatch() {
+        let hiddenText = document.querySelector("#hidden-text");
+        let arrow = document.querySelector("#eternal-arrow");
+        let expanded = hiddenText.style.display === "block";
 
-    function playAudioWithFadeIn() {
-        if (!audioPlayed) {
-            audio.volume = 0.0;
-            audio.play();
-            audioPlayed = true;
+        if (expanded) {
+            hiddenText.style.display = "none";
+            arrow.innerText = "▼";
+            pauseAudio();
+        } else {
+            hiddenText.style.display = "block";
+            arrow.innerText = "▲";
+            playAudioWithFadeIn();
 
-            let fadeDuration = 20000;
-            let startTime = performance.now();
-
-            function fadeInAudio(currentTime) {
-                let elapsedTime = currentTime - startTime;
-                let progress = elapsedTime / fadeDuration;
-                audio.volume = Math.min(progress, 1.0);
-                if (progress < 1) requestAnimationFrame(fadeInAudio);
+            if (!hasRevealedStoryOnce) {
+                fadeInStoryText();
+                hasRevealedStoryOnce = true;
+            } else {
+                document.querySelectorAll(".watch-description").forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transition = "none";
+                });
             }
 
-            requestAnimationFrame(fadeInAudio);
+            if (!hasRevealedLatinOnce) {
+                fadeInLatinText();
+                hasRevealedLatinOnce = true;
+            } else {
+                document.querySelectorAll(".toggle-text").forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transition = "none";
+                });
+            }
         }
     }
 
-    function getMatchingYears() {
+    document.querySelector("#hidden-text").style.display = "none";
+    document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
+    document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
+
+    document.querySelector("#reveal-matching-alt").addEventListener("click", toggleMatchingYears);
+
+    function toggleMatchingYears() {
+        let matchingYears = document.querySelector("#matching-years");
+        let arrow = document.querySelector("#watch-arrow");
+        let expanded = matchingYears.style.display === "block";
+
+        if (expanded) {
+            matchingYears.style.display = "none";
+            arrow.innerText = "▼";
+        } else {
+            matchingYears.style.display = "block";
+            arrow.innerText = "▲";
+
+            if (!hasRevealedYearsOnce) {
+                revealMatchingYearsWithFade(() => {
+                    setTimeout(() => {
+                        fadeInQuote();
+                        hasRevealedQuoteOnce = true;
+                    }, 3000);
+                });
+                hasRevealedYearsOnce = true;
+            } else {
+                document.querySelectorAll(".year-item").forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transition = "none";
+                });
+            }
+        }
+    }
+
+    function revealMatchingYearsWithFade(callback) {
         let now = new Date(frozenTime);
         let month = now.getMonth() + 1;
         let day = now.getDate();
         let weekday = now.getDay();
         let currentYear = new Date().getFullYear();
 
-        return Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892)
-            .filter(year => new Date(year, month - 1, day).getDay() === weekday);
-    }
+        let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892)
+                         .filter(year => new Date(year, month - 1, day).getDay() === weekday);
 
-    function displayMatchingYears() {
-        const years = getMatchingYears();
         let outputElement = document.querySelector("#matching-years");
+        outputElement.innerHTML = `<strong>Coordinate reflections:</strong> `;
 
-        outputElement.innerHTML = `<strong>Coordinate reflections:</strong> ` + 
-            years.map(year => `<span class="year-item">${year}</span>`).join(", ");
+        years.forEach((year, index) => {
+            let span = document.createElement("span");
+            span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
+            span.classList.add("year-item");
+            span.style.opacity = 0;
+            span.style.transition = "opacity 2s ease-in";
 
-        outputElement.style.display = "block";
+            outputElement.appendChild(span);
+
+            setTimeout(() => {
+                span.style.opacity = 1;
+                if (index === years.length - 1 && typeof callback === "function") {
+                    callback();
+                }
+            }, index * 1000);
+        });
     }
 
-    document.querySelector("#eternal-title").addEventListener("click", () => {
-        toggleElementVisibility(document.querySelector("#hidden-text"), document.querySelector("#eternal-arrow"));
-        playAudioWithFadeIn();
-    });
+    function fadeInQuote() {
+        let quote = document.querySelector("#travel-quote");
+        quote.style.opacity = 0;
+        quote.style.transition = "opacity 3s ease-in";
+        quote.style.display = "block";
+        setTimeout(() => {
+            quote.style.opacity = 1;
+        }, 0);
+    }
 
-    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
-        let matchingYearsElement = document.querySelector("#matching-years");
-        if (matchingYearsElement.style.display === "none") {
-            displayMatchingYears();
-        } else {
-            matchingYearsElement.style.display = "none";
+    function playAudioWithFadeIn() {
+        if (!audio) return;
+
+        audio.volume = 0.0;
+        if (!hasStartedOnce) {
+            audio.currentTime = 38.5;
+            hasStartedOnce = true;
         }
-    });
 
-    document.body.addEventListener("click", () => {
-        if (!audioPlayed) playAudioWithFadeIn();
-    }, { once: true });
+        let fadeDuration = 20000;
+        let startTime = performance.now();
+
+        function fadeInAudio(currentTime) {
+            let elapsedTime = currentTime - startTime;
+            let progress = elapsedTime / fadeDuration;
+            audio.volume = Math.min(progress, 1.0);
+            if (progress < 1) requestAnimationFrame(fadeInAudio);
+        }
+
+        audio.play().then(() => {
+            isAudioPlaying = true;
+            requestAnimationFrame(fadeInAudio);
+        }).catch(console.error);
+    }
+
+    function pauseAudio() {
+        if (audio && !audio.paused) {
+            audio.pause();
+            isAudioPlaying = false;
+        }
+    }
+
+    function fadeInStoryText() {
+        let storyParagraphs = document.querySelectorAll(".watch-description");
+        storyParagraphs.forEach((el, index) => {
+            el.style.opacity = 0;
+            el.style.transition = "opacity 3s ease-in";
+            setTimeout(() => {
+                el.style.opacity = 1;
+            }, index * 10000); // 10-second gap between each fade-in
+        });
+    }
+
+    function fadeInLatinText() {
+        let latinElements = document.querySelectorAll(".toggle-text");
+        latinElements.forEach(el => {
+            el.style.opacity = 0;
+            el.style.transition = "opacity 3s ease-in";
+            setTimeout(() => {
+                el.style.opacity = 1;
+            }, 0);
+        });
+    }
+
+    document.querySelectorAll(".toggle-text").forEach(element => {
+        element.addEventListener("click", () => {
+            let translations = {
+                "num-nimis-erravi": ["NUM NIMIS ERRAVI", "Have I wandered too far?"],
+                "iterum-nos-convenimus": ["ITERUM NOS CONVENIMUS", "We meet again."],
+                "quo-vel-quando-vadis": ["QUO VEL QUANDO VADIS", "Where or when are you going?"]
+            };
+            element.innerText = element.innerText === translations[element.id][0] ? translations[element.id][1] : translations[element.id][0];
+        });
+    });
 });
