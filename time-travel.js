@@ -158,6 +158,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    function fadeInLatinText() {
+        let latinElements = document.querySelectorAll(".toggle-text");
+        latinElements.forEach(el => {
+            el.style.opacity = 0;
+            el.style.transition = "opacity 3s ease-in";
+            setTimeout(() => {
+                el.style.opacity = 1;
+            }, 0);
+        });
+    }
+
     function playAudioWithFadeIn() {
         if (!audio) return;
 
@@ -188,17 +199,6 @@ document.addEventListener("DOMContentLoaded", () => {
             audio.pause();
             isAudioPlaying = false;
         }
-    }
-
-    function fadeInLatinText() {
-        let latinElements = document.querySelectorAll(".toggle-text");
-        latinElements.forEach(el => {
-            el.style.opacity = 0;
-            el.style.transition = "opacity 3s ease-in";
-            setTimeout(() => {
-                el.style.opacity = 1;
-            }, 0);
-        });
     }
 
     document.querySelectorAll(".toggle-text").forEach(element => {
