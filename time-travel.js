@@ -73,21 +73,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const arrow = document.querySelector("#watch-arrow");
     
         // Ensure both matching-years and travel-quote start hidden
-        matchingYears.classList.add("hidden");
-        travelQuote.classList.add("hidden");
+        matchingYears.style.display = "none";
+        travelQuote.style.display = "none";
     
         let hasRevealedYearsOnce = false;
     
         revealMatchingAlt.addEventListener("click", function () {
-            const isExpanded = !matchingYears.classList.contains("hidden");
+            const isHidden = matchingYears.style.display === "none";
     
-            if (isExpanded) {
-                matchingYears.classList.add("hidden");
-                travelQuote.classList.add("hidden");
-                arrow.innerText = "▼";
-            } else {
-                matchingYears.classList.remove("hidden");
-                travelQuote.classList.remove("hidden");
+            if (isHidden) {
+                matchingYears.style.display = "block";
+                travelQuote.style.display = "block";
                 arrow.innerText = "▲";
     
                 if (!hasRevealedYearsOnce) {
@@ -99,15 +95,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         el.style.transition = "none";
                     });
                 }
+            } else {
+                matchingYears.style.display = "none";
+                travelQuote.style.display = "none";
+                arrow.innerText = "▼";
             }
         });
-    });    
-
-// Ensure travel-quote starts hidden
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelector(".travel-quote").style.display = "none";
-});
-
+    });
+    
 
     function revealMatchingYearsWithFade() {
         let now = new Date(frozenTime);
