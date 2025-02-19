@@ -156,11 +156,11 @@ nav a:hover {
     font-size: var(--text-size);
 }
 
-/* 🔹 Fade-in effect for "This time traveller's watch..." */
+/* 🔹 Ensure "This time traveller's watch..." fades in **AFTER** last story text */
 #reveal-matching-alt.hidden {
     display: none;
     opacity: 0;
-    transition: opacity 3s ease-in;
+    transition: opacity 3s ease-in 3.5s; /* Add 3.5s delay */
 }
 
 /* Watch description paragraphs */
