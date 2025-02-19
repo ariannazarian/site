@@ -144,10 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Ensure clicking "This time traveller's watch..." toggles years output, travel quote, and stops blinking
+    // Ensure clicking "This time traveller's watch..." toggles years output and travel quote
     document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
         toggleWatchText();
-        toggleMatchingYears();
+        toggleMatchingYears(); // Ensure years and quote are always toggled correctly
 
         // Stop blinking after first click
         if (!hasClickedWatch) {
