@@ -63,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.querySelector("#hidden-text").style.display = "none";
+    document.querySelector("#travel-quote").style.display = "none"; // Hide travel-quote on page load
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
@@ -70,14 +71,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
+        let travelQuote = document.querySelector("#travel-quote");
         let arrow = document.querySelector("#watch-arrow");
         let expanded = matchingYears.style.display === "block";
 
         if (expanded) {
             matchingYears.style.display = "none";
+            travelQuote.style.display = "none"; // Hides travel quote when toggled off
             arrow.innerText = "▼";
         } else {
             matchingYears.style.display = "block";
+            travelQuote.style.display = "block"; // Ensures quote appears when years are revealed
             arrow.innerText = "▲";
 
             if (!hasRevealedYearsOnce) {
@@ -156,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let storyParagraphs = document.querySelectorAll(".watch-description");
         storyParagraphs.forEach((el, index) => {
             el.style.opacity = 0;
-            el.style.transition = `opacity 3s ease-in`;
+            el.style.transition = "opacity 3s ease-in";
             setTimeout(() => {
                 el.style.opacity = 1;
             }, index * 10000); // 10-second gap between each fade-in
@@ -170,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
             el.style.transition = "opacity 3s ease-in";
             setTimeout(() => {
                 el.style.opacity = 1;
-            }, 0); // No delay between fades
+            }, 0);
         });
     }
 
