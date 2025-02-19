@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (expanded) {
             matchingYears.style.display = "none";
-            travelQuote.style.display = "none"; // Ensure it hides properly when toggled off
+            travelQuote.style.display = "none"; // Ensure travel-quote hides when toggled off
             arrow.innerText = "▼";
         } else {
             matchingYears.style.display = "block";
@@ -99,9 +99,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     el.style.opacity = 1;
                     el.style.transition = "none";
                 });
+                travelQuote.style.display = "block"; // Ensure quote shows when years are revealed
                 travelQuote.style.opacity = 1;
                 travelQuote.style.transition = "none";
-                travelQuote.style.display = "block"; // Ensure it remains visible when years are revealed
             }
         }
     }
