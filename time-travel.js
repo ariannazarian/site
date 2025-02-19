@@ -148,7 +148,15 @@ document.addEventListener("DOMContentLoaded", () => {
     
                 // If this is the last story text, wait 3.5s and then fade in "This time traveller's watch..."
                 if (index === fadeGroups.length - 1) {
-                    setTimeout(fadeInWatchText, 3500);
+                    setTimeout(() => {
+                        fadeInWatchText();
+    
+                        // **Remove transition after first fade-in for instant toggles**
+                        setTimeout(() => {
+                            document.querySelector("#reveal-matching-alt").style.transition = "none";
+                        }, 3500);
+                        
+                    }, 3500);
                 }
             }, index * 10000);
         });
@@ -163,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 50);
             hasRevealedWatchOnce = true;
         }
-    }
+    }    
     
 
     function fadeInTravelQuote() {
