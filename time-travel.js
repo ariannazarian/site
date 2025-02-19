@@ -73,6 +73,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
+    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
+        toggleWatchText(); // Ensure "This time traveller's watch..." toggles properly
+        toggleMatchingYears(); // Ensure years output and travel quote toggle correctly
+
+        // Stop blinking after first click
+        if (!hasClickedWatch) {
+            document.querySelector("#watch-arrow").classList.remove("blink-arrow");
+            hasClickedWatch = true;
+        }
+    });
+
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
         let travelQuote = document.querySelector("#travel-quote");
@@ -133,33 +144,16 @@ document.addEventListener("DOMContentLoaded", () => {
             watchText.style.display = "block"; // Ensure it's visible before fading
             setTimeout(() => {
                 watchText.style.opacity = 1;
-
-                // **Fix: Remove transition after first fade-in for instant toggles**
-                setTimeout(() => {
-                    watchText.style.transition = "none"; // Removes fade effect after first reveal
-                }, 3000); // Wait for fade-in to complete before removing transition
-
+                watchText.classList.add("revealed"); // Ensures instant toggling after first fade
             }, 50);
             hasRevealedWatchOnce = true;
         }
     }
 
-    // Ensure clicking "This time traveller's watch..." toggles years output and travel quote
-    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
-        toggleWatchText();
-        toggleMatchingYears(); // Ensure it always toggles the years and travel quote properly
-
-        // Stop blinking after first click
-        if (!hasClickedWatch) {
-            document.querySelector("#watch-arrow").classList.remove("blink-arrow");
-            hasClickedWatch = true;
-        }
-    });
-
     function toggleWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
         if (hasRevealedWatchOnce) { // Ensure instant toggle only after first fade-in
-            if (watchText.style.opacity === "1") {
+            if (watchText.style.display === "block") {
                 watchText.style.opacity = "0";
                 setTimeout(() => {
                     watchText.style.display = "none";
