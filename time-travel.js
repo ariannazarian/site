@@ -73,6 +73,16 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
+    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
+        toggleMatchingYears(); // Ensure years output toggles correctly
+
+        // Stop blinking after first click
+        if (!hasClickedWatch) {
+            document.querySelector("#watch-arrow").classList.remove("blink-arrow");
+            hasClickedWatch = true;
+        }
+    });
+
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
         let travelQuote = document.querySelector("#travel-quote");
@@ -141,33 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             }, 50);
             hasRevealedWatchOnce = true;
-        }
-    }
-
-    // Fix all two issues: clicking "This time traveller's watch..." should work properly
-    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
-        toggleWatchText();
-        toggleMatchingYears(); // Ensure it always toggles the years and travel quote properly
-
-        // Stop blinking after first click
-        if (!hasClickedWatch) {
-            document.querySelector("#watch-arrow").classList.remove("blink-arrow");
-            hasClickedWatch = true;
-        }
-    });
-
-    function toggleWatchText() {
-        let watchText = document.querySelector("#reveal-matching-alt");
-        if (hasRevealedWatchOnce) { // Ensure instant toggle only after first fade-in
-            if (watchText.style.opacity === "1") {
-                watchText.style.opacity = "0";
-                setTimeout(() => {
-                    watchText.style.display = "none";
-                }, 50);
-            } else {
-                watchText.style.display = "block";
-                watchText.style.opacity = "1";
-            }
         }
     }
 
