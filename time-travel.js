@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let hasRevealedYearsOnce = false;
     let hasRevealedLatinOnce = false;
     let hasRevealedQuoteOnce = false;
+    let hasRevealedWatchOnce = false;
 
     function getFrozenPSTDate() {
         let now = new Date(frozenTime);
@@ -42,23 +43,16 @@ document.addEventListener("DOMContentLoaded", () => {
             playAudioWithFadeIn();
 
             if (!hasRevealedStoryOnce) {
-                fadeInStoryText();
+                fadeInStoryGroups(() => {
+                    fadeInWatchText(); // Ensure "This time traveller's watch..." fades in after last story text
+                });
                 hasRevealedStoryOnce = true;
             } else {
-                document.querySelectorAll(".watch-description").forEach(el => {
+                document.querySelectorAll(".fade-group").forEach(el => {
                     el.style.opacity = 1;
                     el.style.transition = "none";
                 });
-            }
-
-            if (!hasRevealedLatinOnce) {
-                fadeInLatinText();
-                hasRevealedLatinOnce = true;
-            } else {
-                document.querySelectorAll(".toggle-text").forEach(el => {
-                    el.style.opacity = 1;
-                    el.style.transition = "none";
-                });
+                fadeInWatchText();
             }
         }
     }
@@ -103,35 +97,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function revealMatchingYearsWithFade(callback) {
-        let now = new Date(frozenTime);
-        let month = now.getMonth() + 1;
-        let day = now.getDate();
-        let weekday = now.getDay();
-        let currentYear = new Date().getFullYear();
-
-        let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892)
-                         .filter(year => new Date(year, month - 1, day).getDay() === weekday);
-
-        let outputElement = document.querySelector("#matching-years");
-        outputElement.innerHTML = `<strong>Coordinate reflections:</strong> `;
-
-        years.forEach((year, index) => {
-            let span = document.createElement("span");
-            span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
-            span.classList.add("year-item");
-            span.style.opacity = 0;
-            span.style.transition = "opacity 2s ease-in";
-
-            outputElement.appendChild(span);
-
+    function fadeInStoryGroups(callback) {
+        let fadeGroups = document.querySelectorAll(".fade-group");
+        fadeGroups.forEach((el, index) => {
             setTimeout(() => {
-                span.style.opacity = 1;
-                if (index === years.length - 1 && callback) {
-                    setTimeout(callback, 1000);
+                el.style.opacity = 1;
+                el.style.transition = "opacity 3s ease-in";
+                if (index === fadeGroups.length - 1 && callback) {
+                    setTimeout(callback, 500);
                 }
-            }, index * 1000);
+            }, index * 10000);
         });
+    }
+
+    function fadeInWatchText() {
+        let watchText = document.querySelector("#reveal-matching-alt");
+        if (!hasRevealedWatchOnce) {
+            watchText.style.opacity = 0;
+            watchText.style.display = "block";
+            setTimeout(() => {
+                watchText.style.opacity = 1;
+            }, 50);
+            hasRevealedWatchOnce = true;
+        }
     }
 
     function fadeInTravelQuote() {
@@ -172,28 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
             audio.pause();
             isAudioPlaying = false;
         }
-    }
-
-    function fadeInStoryText() {
-        let storyParagraphs = document.querySelectorAll(".watch-description");
-        storyParagraphs.forEach((el, index) => {
-            el.style.opacity = 0;
-            el.style.transition = `opacity 3s ease-in`;
-            setTimeout(() => {
-                el.style.opacity = 1;
-            }, index * 10000);
-        });
-    }
-
-    function fadeInLatinText() {
-        let latinElements = document.querySelectorAll(".toggle-text");
-        latinElements.forEach(el => {
-            el.style.opacity = 0;
-            el.style.transition = "opacity 3s ease-in";
-            setTimeout(() => {
-                el.style.opacity = 1;
-            }, 0);
-        });
     }
 
     document.querySelectorAll(".toggle-text").forEach(element => {
