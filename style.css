@@ -171,3 +171,11 @@ nav a:hover {
 #eternal-title::after, #reveal-matching-alt::after {
     margin-left: 5px;
 }
+
+/* 🔹 Travel Quote Styling (New Feature) */
+/* Initially hide the travel quote */
+#travel-quote {
+    display: none;
+    opacity: 0;
+    transition: opacity 3s ease-in;
+}

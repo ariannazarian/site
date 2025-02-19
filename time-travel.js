@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let hasRevealedStoryOnce = false;
     let hasRevealedYearsOnce = false;
     let hasRevealedLatinOnce = false;
+    let hasRevealedQuoteOnce = false;
 
     function getFrozenPSTDate() {
         let now = new Date(frozenTime);
@@ -70,29 +71,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
+        let travelQuote = document.querySelector("#travel-quote");
         let arrow = document.querySelector("#watch-arrow");
         let expanded = matchingYears.style.display === "block";
 
         if (expanded) {
             matchingYears.style.display = "none";
+            travelQuote.style.display = "none";
             arrow.innerText = "▼";
         } else {
             matchingYears.style.display = "block";
             arrow.innerText = "▲";
 
             if (!hasRevealedYearsOnce) {
-                revealMatchingYearsWithFade();
+                revealMatchingYearsWithFade(() => {
+                    if (!hasRevealedQuoteOnce) {
+                        fadeInTravelQuote();
+                        hasRevealedQuoteOnce = true;
+                    } else {
+                        travelQuote.style.display = "block";
+                        travelQuote.style.opacity = 1;
+                        travelQuote.style.transition = "none";
+                    }
+                });
                 hasRevealedYearsOnce = true;
             } else {
-                document.querySelectorAll(".year-item").forEach(el => {
-                    el.style.opacity = 1;
-                    el.style.transition = "none";
-                });
+                travelQuote.style.display = "block";
+                travelQuote.style.opacity = 1;
+                travelQuote.style.transition = "none";
             }
         }
     }
 
-    function revealMatchingYearsWithFade() {
+    function revealMatchingYearsWithFade(callback) {
         let now = new Date(frozenTime);
         let month = now.getMonth() + 1;
         let day = now.getDate();
@@ -116,8 +127,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
             setTimeout(() => {
                 span.style.opacity = 1;
+                if (index === years.length - 1 && callback) {
+                    setTimeout(callback, 1000);
+                }
             }, index * 1000);
         });
+    }
+
+    function fadeInTravelQuote() {
+        let travelQuote = document.querySelector("#travel-quote");
+        travelQuote.style.display = "block";
+        setTimeout(() => {
+            travelQuote.style.opacity = 1;
+        }, 50);
     }
 
     function playAudioWithFadeIn() {
@@ -159,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
             el.style.transition = `opacity 3s ease-in`;
             setTimeout(() => {
                 el.style.opacity = 1;
-            }, index * 10000); // 10-second gap between each fade-in
+            }, index * 10000);
         });
     }
 
@@ -170,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
             el.style.transition = "opacity 3s ease-in";
             setTimeout(() => {
                 el.style.opacity = 1;
-            }, 0); // No delay between fades
+            }, 0);
         });
     }
 
