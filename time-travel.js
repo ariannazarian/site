@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
     document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
-        toggleMatchingYears();
+        toggleMatchingYears(); // Ensure years output toggles correctly
 
         // Stop blinking after first click
         if (!hasClickedWatch) {
@@ -82,6 +82,43 @@ document.addEventListener("DOMContentLoaded", () => {
             hasClickedWatch = true;
         }
     });
+
+    function toggleMatchingYears() {
+        let matchingYears = document.querySelector("#matching-years");
+        let travelQuote = document.querySelector("#travel-quote");
+        let arrow = document.querySelector("#watch-arrow");
+        let expanded = matchingYears.style.display === "block";
+
+        if (expanded) {
+            matchingYears.style.display = "none";
+            travelQuote.style.display = "none";
+            arrow.innerText = "▼";
+        } else {
+            matchingYears.style.display = "block";
+            travelQuote.style.display = "block";
+            arrow.innerText = "▲";
+
+            if (!hasRevealedYearsOnce) {
+                revealMatchingYearsWithFade(() => {
+                    if (!hasRevealedQuoteOnce) {
+                        fadeInTravelQuote();
+                        hasRevealedQuoteOnce = true;
+                    } else {
+                        travelQuote.style.opacity = 1;
+                        travelQuote.style.transition = "none";
+                    }
+                });
+                hasRevealedYearsOnce = true;
+            } else {
+                document.querySelectorAll(".year-item").forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transition = "none"; // Ensure instant reveal on subsequent toggles
+                });
+                travelQuote.style.opacity = 1;
+                travelQuote.style.transition = "none";
+            }
+        }
+    }
 
     function fadeInStoryGroups(callback) {
         let fadeGroups = document.querySelectorAll(".fade-group");
@@ -114,29 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             }, 50);
             hasRevealedWatchOnce = true;
-        }
-    }
-
-    // Modify the function that toggles visibility to ensure instant hide/show after first reveal
-    document.querySelector("#eternal-title").addEventListener("click", () => {
-        toggleWatchText();
-    });
-    document.querySelector("#current-time").addEventListener("click", () => {
-        toggleWatchText();
-    });
-
-    function toggleWatchText() {
-        let watchText = document.querySelector("#reveal-matching-alt");
-        if (hasRevealedWatchOnce) { // Ensure instant toggle only after first fade-in
-            if (watchText.style.opacity === "1") {
-                watchText.style.opacity = "0";
-                setTimeout(() => {
-                    watchText.style.display = "none";
-                }, 50);
-            } else {
-                watchText.style.display = "block";
-                watchText.style.opacity = "1";
-            }
         }
     }
 
