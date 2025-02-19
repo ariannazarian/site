@@ -159,6 +159,12 @@ nav a:hover {
     transition: opacity 3s ease-in; /* First-time fade-in */
 }
 
+/* Remove transition after first fade-in for instant toggles */
+#reveal-matching-alt.revealed {
+    transition: none !important;
+}
+
+
 /* 🔹 Blinking effect for ▼ indicators */
 .blink-arrow {
     animation: blink 1s infinite alternate;
