@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!hasRevealedStoryOnce) {
                 fadeInStoryGroups(() => {
-                    fadeInWatchText(); // Ensure "This time traveller's watch..." fades in after last story text
+                    fadeInWatchText();
                 });
                 hasRevealedStoryOnce = true;
             } else {
@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
             arrow.innerText = "▼";
         } else {
             matchingYears.style.display = "block";
+            travelQuote.style.display = "block";
             arrow.innerText = "▲";
 
             if (!hasRevealedYearsOnce) {
@@ -83,14 +84,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         fadeInTravelQuote();
                         hasRevealedQuoteOnce = true;
                     } else {
-                        travelQuote.style.display = "block";
                         travelQuote.style.opacity = 1;
                         travelQuote.style.transition = "none";
                     }
                 });
                 hasRevealedYearsOnce = true;
             } else {
-                travelQuote.style.display = "block";
                 travelQuote.style.opacity = 1;
                 travelQuote.style.transition = "none";
             }
@@ -113,8 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function fadeInWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
         if (!hasRevealedWatchOnce) {
-            watchText.style.opacity = 0;
-            watchText.style.display = "block";
+            watchText.classList.remove("hidden");
             setTimeout(() => {
                 watchText.style.opacity = 1;
             }, 50);
