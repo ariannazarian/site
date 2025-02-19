@@ -1,13 +1,11 @@
-/* Define color variables */
 :root {
     --black: #000000;
-    --usc-cardinal: #990000; /* USC Crimson */
+    --usc-cardinal: #990000;
     --white: #ffffff;
-    --text-size: 16px; /* Standard text size below the header */
-    --larger-text-size: 24px; /* Frozen time display */
+    --text-size: 16px;
+    --larger-text-size: 24px;
 }
 
-/* General styling */
 body {
     font-family: "Courier", monospace;
     text-align: center;
@@ -15,48 +13,31 @@ body {
     color: var(--black);
     margin: 0;
     padding: 0;
-    user-select: none; /* Disables text selection */
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Edge */
-}
-
-/* Prevent text selection for all elements */
-p, h1, h2, h3, h4, h5, h6, span, div {
     user-select: none;
 }
 
-/* Make links still clickable */
-a {
-    user-select: text;
-}
-
-/* 🔹 Style for Header Image (Responsive Sizing) */
+/* Header Styling */
 .header-image {
-    width: 10vw; /* 10% of the viewport width on larger screens */
-    max-width: 200px; /* Ensures it doesn't get too large */
-    height: auto; /* Maintains aspect ratio */
-    display: block; /* Removes default spacing */
-    margin: 0 auto 10px; /* Centers the image */
+    width: 10vw;
+    max-width: 200px;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
 }
 
-/* 🔹 Adjust image size for smaller screens */
 @media (max-width: 600px) {
     .header-image {
-        width: 50vw; /* 50% of viewport width on smaller screens */
-        max-width: 300px; /* Prevents it from becoming too large */
+        width: 50vw;
+        max-width: 300px;
     }
 }
 
-
-/* 🔹 Ensure the header still looks correct */
 header {
     background-color: var(--black);
     padding: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     color: var(--white);
 }
 
@@ -68,107 +49,41 @@ nav {
     margin-top: 5px;
 }
 
-/* Navigation links */
 nav a {
     font-size: var(--text-size);
     font-weight: bold;
-    color: var(--white) !important; /* Ensures links stay white */
-    text-decoration: none;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
-}
-
-/* Prevent visited links from changing color */
-nav a:visited {
     color: var(--white) !important;
+    text-decoration: none;
+    transition: text-shadow 0.3s ease;
 }
 
-/* Hover effect */
 nav a:hover {
     text-decoration: underline;
-    color: #f4f4f4;
     text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.6);
 }
 
-/* Email & personal text */
-.email {
-    color: var(--usc-cardinal);
-    font-size: var(--text-size);
-    margin-bottom: 5px;
-}
-
-/* Force lowercase "a" in email */
-.lowercase {
-    text-transform: lowercase;
-}
-
-/* Ensure "at" and "dot" are italicized */
-.email em {
-    font-style: italic;
-}
-
-/* Clickable elements */
+/* Clickable Elements */
 .clickable {
     cursor: pointer;
-    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+    transition: opacity 0.3s ease;
 }
 
-/* Hover effect */
-.clickable:hover {
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-/* The Eternal Watch - No space between it and frozen time */
-#eternal-title {
-    font-size: var(--text-size);
-    margin-bottom: 0px;
-}
-
-/* Frozen time display - Larger (24px) */
-#current-time {
-    font-size: var(--larger-text-size);
-    margin-top: 0px;
-}
-
-/* Watch text formatting */
 .watch-text {
     font-size: var(--text-size);
     font-weight: bold;
-    text-align: center;
-    margin-top: 10px;
-}
-
-/* 🔹 Bold Latin texts and their translations */
-.toggle-text {
-    font-size: var(--text-size);
-    font-weight: bold;
     cursor: pointer;
 }
 
-/* Bold "This time traveler's watch..." */
-#reveal-matching-alt {
-    font-weight: bold;
+/* The Eternal Watch */
+#eternal-title {
     font-size: var(--text-size);
 }
 
-/* Watch description paragraphs */
-.watch-description {
-    font-size: var(--text-size);
-    text-align: justify;
-    margin: 10px auto;
-    max-width: 600px;
-    line-height: 1.6;
+#current-time {
+    font-size: var(--larger-text-size);
 }
 
-/* Matching years text */
-#matching-years {
-    font-size: var(--text-size);
-    font-weight: bold;
-    text-align: center;
-    margin-top: 10px;
-}
-
-/* Ensures the ▼ symbol has slight spacing */
-#eternal-title::after, #reveal-matching-alt::after {
-    margin-left: 5px;
+/* Hidden Elements */
+.hidden {
+    display: none;
 }
