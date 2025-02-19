@@ -145,23 +145,26 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 el.style.opacity = 1;
                 el.style.transition = "opacity 3s ease-in";
-                if (index === fadeGroups.length - 1 && callback) {
-                    setTimeout(callback, 500);
+    
+                // If this is the last story text, wait 3.5s and then fade in "This time traveller's watch..."
+                if (index === fadeGroups.length - 1) {
+                    setTimeout(fadeInWatchText, 3500);
                 }
             }, index * 10000);
         });
     }
-
+    
     function fadeInWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
         if (!hasRevealedWatchOnce) {
-            watchText.classList.remove("hidden");
+            watchText.style.display = "block"; // Ensure it's visible before fading
             setTimeout(() => {
                 watchText.style.opacity = 1;
             }, 50);
             hasRevealedWatchOnce = true;
         }
     }
+    
 
     function fadeInTravelQuote() {
         let travelQuote = document.querySelector("#travel-quote");
