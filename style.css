@@ -1,206 +1,228 @@
-/* Define color variables */
-:root {
-    --black: #000000;
-    --usc-cardinal: #990000; /* USC Crimson */
-    --white: #ffffff;
-    --text-size: 16px; /* Standard text size below the header */
-    --larger-text-size: 24px; /* Frozen time display */
-}
+document.addEventListener("DOMContentLoaded", () => {
+    const frozenTime = new Date();
+    const audio = document.querySelector("#eternal-audio");
+    let isAudioPlaying = false;
+    let hasStartedOnce = false;
+    let hasRevealedStoryOnce = false;
+    let hasRevealedYearsOnce = false;
+    let hasRevealedLatinOnce = false;
+    let hasRevealedQuoteOnce = false;
+    let hasRevealedWatchOnce = false;
+    let hasClickedEternal = false;
+    let hasClickedWatch = false;
 
-/* General styling */
-body {
-    font-family: "Courier", monospace;
-    text-align: center;
-    background-color: var(--white);
-    color: var(--black);
-    margin: 0;
-    padding: 0;
-    user-select: none; /* Disables text selection */
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Edge */
-}
+    function getFrozenPSTDate() {
+        let now = new Date(frozenTime);
+        let utcOffset = now.getTimezoneOffset() / 60;
+        let pstOffset = 8;
+        now.setHours(now.getHours() + (utcOffset - pstOffset));
 
-/* Prevent text selection for all elements */
-p, h1, h2, h3, h4, h5, h6, span, div {
-    user-select: none;
-}
-
-/* Make links still clickable */
-a {
-    user-select: text;
-}
-
-/* 🔹 Style for Header Image (Responsive Sizing) */
-.header-image {
-    width: 10vw; /* 10% of the viewport width on larger screens */
-    max-width: 200px; /* Ensures it doesn't get too large */
-    height: auto; /* Maintains aspect ratio */
-    display: block; /* Removes default spacing */
-    margin: 0 auto 10px; /* Centers the image */
-}
-
-/* 🔹 Adjust image size for smaller screens */
-@media (max-width: 600px) {
-    .header-image {
-        width: 50vw; /* 50% of viewport width on smaller screens */
-        max-width: 300px; /* Prevents it from becoming too large */
+        return now.toLocaleString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false
+        });
     }
-}
 
-/* 🔹 Ensure the header still looks correct */
-header {
-    background-color: var(--black);
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: var(--white);
-}
+    document.querySelector("#current-time").innerText = getFrozenPSTDate();
 
-/* Navigation */
-nav {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 5px;
-}
+    // Initially add the blinking class to arrows
+    document.querySelector("#eternal-arrow").classList.add("blink-arrow");
+    document.querySelector("#watch-arrow").classList.add("blink-arrow");
 
-/* Navigation links */
-nav a {
-    font-size: var(--text-size);
-    font-weight: bold;
-    color: var(--white) !important; /* Ensures links stay white */
-    text-decoration: none;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
-}
+    function toggleEternalWatch() {
+        let hiddenText = document.querySelector("#hidden-text");
+        let arrow = document.querySelector("#eternal-arrow");
+        let expanded = hiddenText.style.display === "block";
 
-/* Prevent visited links from changing color */
-nav a:visited {
-    color: var(--white) !important;
-}
+        if (expanded) {
+            hiddenText.style.display = "none";
+            arrow.innerText = "▼";
+            pauseAudio();
+        } else {
+            hiddenText.style.display = "block";
+            arrow.innerText = "▲";
+            playAudioWithFadeIn();
 
-/* Hover effect */
-nav a:hover {
-    text-decoration: underline;
-    color: #f4f4f4;
-    text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.6);
-}
+            if (!hasRevealedStoryOnce) {
+                fadeInStoryGroups(() => {
+                    fadeInWatchText();
+                });
+                hasRevealedStoryOnce = true;
+            } else {
+                document.querySelectorAll(".fade-group").forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transition = "none";
+                });
+                fadeInWatchText();
+            }
+        }
 
-/* Email & personal text */
-.email {
-    color: var(--usc-cardinal);
-    font-size: var(--text-size);
-    margin-bottom: 5px;
-}
+        // Stop blinking after first click
+        if (!hasClickedEternal) {
+            document.querySelector("#eternal-arrow").classList.remove("blink-arrow");
+            hasClickedEternal = true;
+        }
+    }
 
-/* Force lowercase "a" in email */
-.lowercase {
-    text-transform: lowercase;
-}
+    document.querySelector("#hidden-text").style.display = "none";
+    document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
+    document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
-/* Ensure "at" and "dot" are italicized */
-.email em {
-    font-style: italic;
-}
+    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
+        toggleMatchingYears(); // Ensure years output toggles correctly
 
-/* Clickable elements */
-.clickable {
-    cursor: pointer;
-    transition: opacity 0.3s ease, text-shadow 0.3s ease;
-}
+        // Stop blinking after first click
+        if (!hasClickedWatch) {
+            document.querySelector("#watch-arrow").classList.remove("blink-arrow");
+            hasClickedWatch = true;
+        }
+    });
 
-/* Hover effect */
-.clickable:hover {
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
-}
+    function toggleMatchingYears() {
+        let matchingYears = document.querySelector("#matching-years");
+        let travelQuote = document.querySelector("#travel-quote");
+        let arrow = document.querySelector("#watch-arrow");
+        let expanded = matchingYears.style.display === "block";
 
-/* The Eternal Watch - No space between it and frozen time */
-#eternal-title {
-    font-size: var(--text-size);
-    margin-bottom: 0px;
-}
+        if (expanded) {
+            matchingYears.style.display = "none";
+            travelQuote.style.display = "none";
+            arrow.innerText = "▼";
+        } else {
+            matchingYears.style.display = "block";
+            travelQuote.style.display = "block";
+            arrow.innerText = "▲";
 
-/* Frozen time display - Larger (24px) */
-#current-time {
-    font-size: var(--larger-text-size);
-    margin-top: 0px;
-}
+            if (!hasRevealedYearsOnce) {
+                revealMatchingYearsWithFade(() => {
+                    if (!hasRevealedQuoteOnce) {
+                        fadeInTravelQuote();
+                        hasRevealedQuoteOnce = true;
+                    } else {
+                        travelQuote.style.opacity = 1;
+                        travelQuote.style.transition = "none";
+                    }
+                });
+                hasRevealedYearsOnce = true;
+            } else {
+                document.querySelectorAll(".year-item").forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transition = "none"; // Ensure instant reveal on subsequent toggles
+                });
+                travelQuote.style.opacity = 1;
+                travelQuote.style.transition = "none";
+            }
+        }
+    }
 
-/* Watch text formatting */
-.watch-text {
-    font-size: var(--text-size);
-    font-weight: bold;
-    text-align: center;
-    margin-top: 10px;
-}
+    function fadeInStoryGroups(callback) {
+        let fadeGroups = document.querySelectorAll(".fade-group");
+        fadeGroups.forEach((el, index) => {
+            setTimeout(() => {
+                el.style.opacity = 1;
+                el.style.transition = "opacity 3s ease-in";
 
-/* 🔹 Bold Latin texts and their translations */
-.toggle-text {
-    font-size: var(--text-size);
-    font-weight: bold;
-    cursor: pointer;
-}
+                // If this is the last story text, wait 3.5s and then fade in "This time traveller's watch..."
+                if (index === fadeGroups.length - 1) {
+                    setTimeout(() => {
+                        fadeInWatchText();
+                    }, 3500);
+                }
+            }, index * 10000);
+        });
+    }
 
-/* 🔹 Fade-in effect for Latin + story text groups */
-.fade-group {
-    opacity: 0;
-    transition: opacity 3s ease-in;
-}
+    function fadeInWatchText() {
+        let watchText = document.querySelector("#reveal-matching-alt");
+        if (!hasRevealedWatchOnce) {
+            watchText.style.display = "block"; // Ensure it's visible before fading
+            setTimeout(() => {
+                watchText.style.opacity = 1;
 
-/* 🔹 Ensure "This time traveller's watch..." only fades once, then toggles instantly */
-#reveal-matching-alt {
-    font-weight: bold;
-    font-size: var(--text-size);
-    opacity: 0;
-    display: none;
-    transition: opacity 3s ease-in; /* First-time fade-in */
-}
+                // **Fix: Remove transition after first fade-in for instant toggles**
+                setTimeout(() => {
+                    watchText.style.transition = "none"; // Removes fade effect after first reveal
+                }, 3000); // Wait for fade-in to complete before removing transition
 
-/* 🔹 Blinking effect for ▼ indicators */
-.blink-arrow {
-    animation: blink 1s infinite alternate;
-}
+            }, 50);
+            hasRevealedWatchOnce = true;
+        }
+    }
 
-/* 🔹 Define blinking animation */
-@keyframes blink {
-    0% { opacity: 1; }
-    100% { opacity: 0.3; }
-}
+    // Modify the function that toggles visibility to ensure instant hide/show after first reveal
+    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
+        toggleWatchText();
+        toggleMatchingYears(); // Ensure it always toggles the years and travel quote properly
+    });
 
-/* 🔹 Ensure ▲ remains unaffected */
-#eternal-arrow, #watch-arrow {
-    transition: opacity 0.3s ease-in-out;
-}
+    function toggleWatchText() {
+        let watchText = document.querySelector("#reveal-matching-alt");
+        if (hasRevealedWatchOnce) { // Ensure instant toggle only after first fade-in
+            if (watchText.style.opacity === "1") {
+                watchText.style.opacity = "0";
+                setTimeout(() => {
+                    watchText.style.display = "none";
+                }, 50);
+            } else {
+                watchText.style.display = "block";
+                watchText.style.opacity = "1";
+            }
+        }
+    }
 
-/* Watch description paragraphs */
-.watch-description {
-    font-size: var(--text-size);
-    text-align: justify;
-    margin: 10px auto;
-    max-width: 600px;
-    line-height: 1.6;
-}
+    function fadeInTravelQuote() {
+        let travelQuote = document.querySelector("#travel-quote");
+        travelQuote.style.display = "block";
+        setTimeout(() => {
+            travelQuote.style.opacity = 1;
+        }, 50);
+    }
 
-/* Matching years text */
-#matching-years {
-    font-size: var(--text-size);
-    font-weight: bold;
-    text-align: center;
-    margin-top: 10px;
-}
+    function playAudioWithFadeIn() {
+        if (!audio) return;
 
-/* Ensures the ▼ symbol has slight spacing */
-#eternal-title::after, #reveal-matching-alt::after {
-    margin-left: 5px;
-}
+        audio.volume = 0.0;
+        if (!hasStartedOnce) {
+            audio.currentTime = 38.5;
+            hasStartedOnce = true;
+        }
 
-/* 🔹 Travel Quote Styling (New Feature) */
-/* Initially hide the travel quote */
-#travel-quote {
-    display: none;
-    opacity: 0;
-    transition: opacity 3s ease-in;
-}
+        let fadeDuration = 20000;
+        let startTime = performance.now();
+
+        function fadeInAudio(currentTime) {
+            let elapsedTime = currentTime - startTime;
+            let progress = elapsedTime / fadeDuration;
+            audio.volume = Math.min(progress, 1.0);
+            if (progress < 1) requestAnimationFrame(fadeInAudio);
+        }
+
+        audio.play().then(() => {
+            isAudioPlaying = true;
+            requestAnimationFrame(fadeInAudio);
+        }).catch(console.error);
+    }
+
+    function pauseAudio() {
+        if (audio && !audio.paused) {
+            audio.pause();
+            isAudioPlaying = false;
+        }
+    }
+
+    document.querySelectorAll(".toggle-text").forEach(element => {
+        element.addEventListener("click", () => {
+            let translations = {
+                "num-nimis-erravi": ["NUM NIMIS ERRAVI", "Have I wandered too far?"],
+                "iterum-nos-convenimus": ["ITERUM NOS CONVENIMUS", "We meet again."],
+                "quo-vel-quando-vadis": ["QUO VEL QUANDO VADIS", "Where or when are you going?"]
+            };
+            element.innerText = element.innerText === translations[element.id][0] ? translations[element.id][1] : translations[element.id][0];
+        });
+    });
+});

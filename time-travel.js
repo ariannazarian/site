@@ -154,6 +154,27 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Modify the function that toggles visibility to ensure instant hide/show after first reveal
+    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
+        toggleWatchText();
+        toggleMatchingYears(); // Ensure it always toggles the years and travel quote properly
+    });
+
+    function toggleWatchText() {
+        let watchText = document.querySelector("#reveal-matching-alt");
+        if (hasRevealedWatchOnce) { // Ensure instant toggle only after first fade-in
+            if (watchText.style.opacity === "1") {
+                watchText.style.opacity = "0";
+                setTimeout(() => {
+                    watchText.style.display = "none";
+                }, 50);
+            } else {
+                watchText.style.display = "block";
+                watchText.style.opacity = "1";
+            }
+        }
+    }
+
     function fadeInTravelQuote() {
         let travelQuote = document.querySelector("#travel-quote");
         travelQuote.style.display = "block";
