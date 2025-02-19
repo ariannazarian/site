@@ -90,10 +90,44 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 hasRevealedYearsOnce = true;
             } else {
+                matchingYears.style.opacity = 1;
+                matchingYears.style.transition = "none";
                 travelQuote.style.opacity = 1;
                 travelQuote.style.transition = "none";
             }
         }
+    }
+
+    function revealMatchingYearsWithFade(callback) {
+        let matchingYears = document.querySelector("#matching-years");
+        matchingYears.innerHTML = `<strong>Coordinate reflections:</strong> `;
+        matchingYears.style.display = "block";
+
+        let now = new Date(frozenTime);
+        let month = now.getMonth() + 1;
+        let day = now.getDate();
+        let weekday = now.getDay();
+        let currentYear = new Date().getFullYear();
+
+        let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892)
+                         .filter(year => new Date(year, month - 1, day).getDay() === weekday);
+
+        years.forEach((year, index) => {
+            let span = document.createElement("span");
+            span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
+            span.classList.add("year-item");
+            span.style.opacity = 0;
+            span.style.transition = "opacity 2s ease-in";
+
+            matchingYears.appendChild(span);
+
+            setTimeout(() => {
+                span.style.opacity = 1;
+                if (index === years.length - 1 && callback) {
+                    setTimeout(callback, 1000);
+                }
+            }, index * 1000);
+        });
     }
 
     function fadeInStoryGroups(callback) {
