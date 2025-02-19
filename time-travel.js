@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.querySelector("#hidden-text").style.display = "none";
-    document.querySelector("#travel-quote").style.display = "none"; // Ensure travel-quote is hidden initially
+    document.querySelector("#travel-quote").style.display = "none"; // Hide travel-quote on page load
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (expanded) {
             matchingYears.style.display = "none";
-            travelQuote.style.display = "none"; // Ensure travel-quote hides when toggled off
+            travelQuote.style.display = "none"; // Hide travel-quote when years are hidden
             arrow.innerText = "▼";
         } else {
             matchingYears.style.display = "block";
