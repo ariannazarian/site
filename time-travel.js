@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let hasRevealedStoryOnce = false;
     let hasRevealedYearsOnce = false;
     let hasRevealedLatinOnce = false;
-    let hasRevealedQuoteOnce = false;
 
     function getFrozenPSTDate() {
         let now = new Date(frozenTime);
@@ -64,7 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.querySelector("#hidden-text").style.display = "none";
-    document.querySelector("#travel-quote").style.display = "none"; // Hide travel-quote on page load
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
@@ -72,41 +70,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
-        let travelQuote = document.querySelector("#travel-quote");
         let arrow = document.querySelector("#watch-arrow");
         let expanded = matchingYears.style.display === "block";
 
         if (expanded) {
             matchingYears.style.display = "none";
-            travelQuote.style.display = "none"; // Hide travel-quote when years are hidden
             arrow.innerText = "▼";
         } else {
             matchingYears.style.display = "block";
             arrow.innerText = "▲";
 
             if (!hasRevealedYearsOnce) {
-                revealMatchingYearsWithFade(() => {
-                    setTimeout(() => {
-                        if (!hasRevealedQuoteOnce) {
-                            fadeInQuote();
-                            hasRevealedQuoteOnce = true;
-                        }
-                    }, 3000); // Travel quote fades in 3s after last matching year
-                });
+                revealMatchingYearsWithFade();
                 hasRevealedYearsOnce = true;
             } else {
                 document.querySelectorAll(".year-item").forEach(el => {
                     el.style.opacity = 1;
                     el.style.transition = "none";
                 });
-                travelQuote.style.display = "block"; // Ensure quote shows when years are revealed
-                travelQuote.style.opacity = 1;
-                travelQuote.style.transition = "none";
             }
         }
     }
 
-    function revealMatchingYearsWithFade(callback) {
+    function revealMatchingYearsWithFade() {
         let now = new Date(frozenTime);
         let month = now.getMonth() + 1;
         let day = now.getDate();
@@ -130,42 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             setTimeout(() => {
                 span.style.opacity = 1;
-                if (index === years.length - 1 && typeof callback === "function") {
-                    callback();
-                }
             }, index * 1000);
-        });
-    }
-
-    function fadeInQuote() {
-        let quote = document.querySelector("#travel-quote");
-        quote.style.opacity = 0;
-        quote.style.transition = "opacity 3s ease-in";
-        quote.style.display = "block";
-        setTimeout(() => {
-            quote.style.opacity = 1;
-        }, 0);
-    }
-
-    function fadeInStoryText() {
-        let storyParagraphs = document.querySelectorAll(".watch-description");
-        storyParagraphs.forEach((el, index) => {
-            el.style.opacity = 0;
-            el.style.transition = "opacity 3s ease-in";
-            setTimeout(() => {
-                el.style.opacity = 1;
-            }, index * 10000); // 10-second gap between each fade-in
-        });
-    }
-
-    function fadeInLatinText() {
-        let latinElements = document.querySelectorAll(".toggle-text");
-        latinElements.forEach(el => {
-            el.style.opacity = 0;
-            el.style.transition = "opacity 3s ease-in";
-            setTimeout(() => {
-                el.style.opacity = 1;
-            }, 0);
         });
     }
 
@@ -199,6 +150,28 @@ document.addEventListener("DOMContentLoaded", () => {
             audio.pause();
             isAudioPlaying = false;
         }
+    }
+
+    function fadeInStoryText() {
+        let storyParagraphs = document.querySelectorAll(".watch-description");
+        storyParagraphs.forEach((el, index) => {
+            el.style.opacity = 0;
+            el.style.transition = `opacity 3s ease-in`;
+            setTimeout(() => {
+                el.style.opacity = 1;
+            }, index * 10000); // 10-second gap between each fade-in
+        });
+    }
+
+    function fadeInLatinText() {
+        let latinElements = document.querySelectorAll(".toggle-text");
+        latinElements.forEach(el => {
+            el.style.opacity = 0;
+            el.style.transition = "opacity 3s ease-in";
+            setTimeout(() => {
+                el.style.opacity = 1;
+            }, 0); // No delay between fades
+        });
     }
 
     document.querySelectorAll(".toggle-text").forEach(element => {
