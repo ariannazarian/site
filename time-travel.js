@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let hasRevealedStoryOnce = false;
     let hasRevealedYearsOnce = false;
     let hasRevealedLatinOnce = false;
+    let hasRevealedQuoteOnce = false;
 
     function getFrozenPSTDate() {
         let now = new Date(frozenTime);
@@ -70,29 +71,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
+        let travelQuote = document.querySelector("#travel-quote");
         let arrow = document.querySelector("#watch-arrow");
         let expanded = matchingYears.style.display === "block";
 
         if (expanded) {
             matchingYears.style.display = "none";
+            travelQuote.style.display = "none";
             arrow.innerText = "▼";
         } else {
             matchingYears.style.display = "block";
             arrow.innerText = "▲";
 
             if (!hasRevealedYearsOnce) {
-                revealMatchingYearsWithFade();
+                revealMatchingYearsWithFade(() => {
+                    setTimeout(() => {
+                        if (!hasRevealedQuoteOnce) {
+                            fadeInQuote();
+                            hasRevealedQuoteOnce = true;
+                        }
+                    }, 3000); // Travel quote fades in 3s after last matching year
+                });
                 hasRevealedYearsOnce = true;
             } else {
                 document.querySelectorAll(".year-item").forEach(el => {
                     el.style.opacity = 1;
                     el.style.transition = "none";
                 });
+                travelQuote.style.opacity = 1;
+                travelQuote.style.transition = "none";
             }
         }
     }
 
-    function revealMatchingYearsWithFade() {
+    function revealMatchingYearsWithFade(callback) {
         let now = new Date(frozenTime);
         let month = now.getMonth() + 1;
         let day = now.getDate();
@@ -116,8 +128,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
             setTimeout(() => {
                 span.style.opacity = 1;
+                if (index === years.length - 1 && typeof callback === "function") {
+                    callback();
+                }
             }, index * 1000);
         });
+    }
+
+    function fadeInQuote() {
+        let quote = document.querySelector("#travel-quote");
+        quote.style.opacity = 0;
+        quote.style.transition = "opacity 3s ease-in";
+        setTimeout(() => {
+            quote.style.opacity = 1;
+        }, 0);
     }
 
     function playAudioWithFadeIn() {
@@ -152,17 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function fadeInStoryText() {
-        let storyParagraphs = document.querySelectorAll(".watch-description");
-        storyParagraphs.forEach((el, index) => {
-            el.style.opacity = 0;
-            el.style.transition = `opacity 3s ease-in`;
-            setTimeout(() => {
-                el.style.opacity = 1;
-            }, index * 10000); // 10-second gap between each fade-in
-        });
-    }
-
     function fadeInLatinText() {
         let latinElements = document.querySelectorAll(".toggle-text");
         latinElements.forEach(el => {
@@ -170,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
             el.style.transition = "opacity 3s ease-in";
             setTimeout(() => {
                 el.style.opacity = 1;
-            }, 0); // No delay between fades
+            }, 0);
         });
     }
 
