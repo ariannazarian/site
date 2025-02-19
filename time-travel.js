@@ -150,13 +150,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (index === fadeGroups.length - 1) {
                     setTimeout(() => {
                         fadeInWatchText();
-    
-                        // **Ensure the transition is removed after first fade-in for instant toggles**
-                        setTimeout(() => {
-                            let watchText = document.querySelector("#reveal-matching-alt");
-                            watchText.style.transition = "none";
-                        }, 3500);
-                        
                     }, 3500);
                 }
             }, index * 10000);
@@ -169,10 +162,30 @@ document.addEventListener("DOMContentLoaded", () => {
             watchText.style.display = "block"; // Ensure it's visible before fading
             setTimeout(() => {
                 watchText.style.opacity = 1;
+    
+                // **Fix: Remove transition after first fade-in for instant toggles**
+                setTimeout(() => {
+                    watchText.style.transition = "none";
+                }, 3000); // Remove transition after fade-in completes
+    
             }, 50);
             hasRevealedWatchOnce = true;
         }
-    }    
+    }
+    
+    // Modify the function that toggles visibility to ensure instant hide/show after first reveal
+    document.querySelector("#eternal-title").addEventListener("click", () => {
+        let watchText = document.querySelector("#reveal-matching-alt");
+        if (watchText.style.display === "block") {
+            watchText.style.opacity = 0;
+            setTimeout(() => {
+                watchText.style.display = "none";
+            }, 50); // Ensure instant hide after first reveal
+        } else {
+            watchText.style.display = "block";
+            watchText.style.opacity = 1;
+        }
+    });
     
 
     function fadeInTravelQuote() {

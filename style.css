@@ -156,7 +156,7 @@ nav a:hover {
     font-size: var(--text-size);
     opacity: 0;
     display: none;
-    transition: opacity 3s ease-in;
+    transition: opacity 3s ease-in; /* First-time fade-in */
 }
 
 /* Watch description paragraphs */
