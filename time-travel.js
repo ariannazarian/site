@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let hasRevealedYearsOnce = false;
     let hasRevealedLatinOnce = false;
     let hasRevealedQuoteOnce = false;
-    let hasRevealedWatchOnce = false;
 
     function getFrozenPSTDate() {
         let now = new Date(frozenTime);
@@ -43,21 +42,23 @@ document.addEventListener("DOMContentLoaded", () => {
             playAudioWithFadeIn();
 
             if (!hasRevealedStoryOnce) {
-                fadeInStoryGroups(() => {
-                    fadeInWatchText(); // Fade in "This time traveller's watch..." after last story text
-                });
+                fadeInStoryText();
                 hasRevealedStoryOnce = true;
             } else {
-                document.querySelectorAll(".fade-group").forEach(el => {
+                document.querySelectorAll(".watch-description").forEach(el => {
                     el.style.opacity = 1;
                     el.style.transition = "none";
                 });
-                fadeInWatchText();
             }
 
             if (!hasRevealedLatinOnce) {
                 fadeInLatinText();
                 hasRevealedLatinOnce = true;
+            } else {
+                document.querySelectorAll(".toggle-text").forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transition = "none";
+                });
             }
         }
     }
@@ -102,30 +103,35 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function fadeInStoryGroups(callback) {
-        let fadeGroups = document.querySelectorAll(".fade-group");
-        fadeGroups.forEach((el, index) => {
-            setTimeout(() => {
-                el.style.opacity = 1;
-                el.style.transition = "opacity 3s ease-in";
+    function revealMatchingYearsWithFade(callback) {
+        let now = new Date(frozenTime);
+        let month = now.getMonth() + 1;
+        let day = now.getDate();
+        let weekday = now.getDay();
+        let currentYear = new Date().getFullYear();
 
-                if (index === fadeGroups.length - 1 && callback) {
-                    setTimeout(callback, 500); // Trigger fade-in of "This time traveller's watch..."
+        let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892)
+                         .filter(year => new Date(year, month - 1, day).getDay() === weekday);
+
+        let outputElement = document.querySelector("#matching-years");
+        outputElement.innerHTML = `<strong>Coordinate reflections:</strong> `;
+
+        years.forEach((year, index) => {
+            let span = document.createElement("span");
+            span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
+            span.classList.add("year-item");
+            span.style.opacity = 0;
+            span.style.transition = "opacity 2s ease-in";
+
+            outputElement.appendChild(span);
+
+            setTimeout(() => {
+                span.style.opacity = 1;
+                if (index === years.length - 1 && callback) {
+                    setTimeout(callback, 1000);
                 }
-            }, index * 10000); // 10-second gap between each fade-in
+            }, index * 1000);
         });
-    }
-
-    function fadeInWatchText() {
-        let watchText = document.querySelector("#reveal-matching-alt");
-        if (!hasRevealedWatchOnce) {
-            watchText.style.opacity = 0;
-            watchText.style.display = "block";
-            setTimeout(() => {
-                watchText.style.opacity = 1;
-            }, 50);
-            hasRevealedWatchOnce = true;
-        }
     }
 
     function fadeInTravelQuote() {
@@ -134,6 +140,49 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
             travelQuote.style.opacity = 1;
         }, 50);
+    }
+
+    function playAudioWithFadeIn() {
+        if (!audio) return;
+
+        audio.volume = 0.0;
+        if (!hasStartedOnce) {
+            audio.currentTime = 38.5;
+            hasStartedOnce = true;
+        }
+
+        let fadeDuration = 20000;
+        let startTime = performance.now();
+
+        function fadeInAudio(currentTime) {
+            let elapsedTime = currentTime - startTime;
+            let progress = elapsedTime / fadeDuration;
+            audio.volume = Math.min(progress, 1.0);
+            if (progress < 1) requestAnimationFrame(fadeInAudio);
+        }
+
+        audio.play().then(() => {
+            isAudioPlaying = true;
+            requestAnimationFrame(fadeInAudio);
+        }).catch(console.error);
+    }
+
+    function pauseAudio() {
+        if (audio && !audio.paused) {
+            audio.pause();
+            isAudioPlaying = false;
+        }
+    }
+
+    function fadeInStoryText() {
+        let storyParagraphs = document.querySelectorAll(".watch-description");
+        storyParagraphs.forEach((el, index) => {
+            el.style.opacity = 0;
+            el.style.transition = `opacity 3s ease-in`;
+            setTimeout(() => {
+                el.style.opacity = 1;
+            }, index * 10000);
+        });
     }
 
     function fadeInLatinText() {
