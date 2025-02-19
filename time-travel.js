@@ -76,11 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (expanded) {
             matchingYears.style.display = "none";
-            travelQuote.style.display = "none"; // Hides travel quote when toggled off
+            travelQuote.style.display = "block"; // Ensures quote appears when years are revealed
             arrow.innerText = "▼";
         } else {
             matchingYears.style.display = "block";
-            travelQuote.style.display = "block"; // Ensures quote appears when years are revealed
             arrow.innerText = "▲";
 
             if (!hasRevealedYearsOnce) {
