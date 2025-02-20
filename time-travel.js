@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+ddocument.addEventListener("DOMContentLoaded", () => {
     const frozenTime = new Date();
     const audio = document.querySelector("#eternal-audio");
     let isAudioPlaying = false;
@@ -194,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 watchText.style.opacity = "1";
             }
         }
-    }    
+    }           
 
     function fadeInTravelQuote() {
         let travelQuote = document.querySelector("#travel-quote");
