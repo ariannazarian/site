@@ -140,7 +140,18 @@ document.addEventListener("DOMContentLoaded", () => {
             hasRevealedWatchOnce = true;
         }
     }
-
+    
+    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
+        toggleWatchText();
+        toggleMatchingYears();
+    
+        // Stop blinking after first click
+        if (!hasClickedWatch) {
+            document.querySelector("#watch-arrow").classList.remove("blink-arrow");
+            hasClickedWatch = true;
+        }
+    });
+    
     function toggleWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
         if (hasRevealedWatchOnce) {
@@ -155,6 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
+    
 
     function revealMatchingYearsWithFade(callback) {
         let matchingYears = document.querySelector("#matching-years");

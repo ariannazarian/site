@@ -150,7 +150,7 @@ nav a:hover {
     transition: opacity 3s ease-in;
 }
 
-/* Ensure "This time traveller's watch..." only fades once, then toggles instantly */
+/* Ensure "This time traveller’s watch..." fades in once, then toggles instantly */
 #reveal-matching-alt {
     font-weight: bold;
     font-size: var(--text-size);
@@ -159,7 +159,6 @@ nav a:hover {
     transition: opacity 3s ease-in; /* First-time fade-in */
 }
 
-/* Ensure "This time traveller’s watch..." toggles instantly after the first fade-in */
 #reveal-matching-alt.revealed {
     transition: none !important;
 }
@@ -169,13 +168,17 @@ nav a:hover {
     transition: opacity 0.3s ease-in-out;
 }
 
-/* 🔹 Ensures the ▼ symbol has slight spacing */
-#eternal-title::after, #reveal-matching-alt::after {
-    margin-left: 5px;
+/* 🔹 Blinking effect for ▼ indicators */
+.blink-arrow {
+    animation: blink 1s infinite alternate;
 }
 
-/* 🔹 Travel Quote Styling (New Feature) */
-/* Initially hide the travel quote */
+@keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+/* 🔹 Travel Quote Styling */
 #travel-quote {
     display: none;
     opacity: 0;
