@@ -159,7 +159,7 @@ nav a:hover {
     transition: opacity 3s ease-in; /* First-time fade-in */
 }
 
-/* 🔹 Blinking effect for ▼ indicators */
+/* 🔹 Blinking effect for ▼ indicators (stopped via JavaScript after first click) */
 .blink-arrow {
     animation: blink 1s infinite alternate;
 }
@@ -173,6 +173,12 @@ nav a:hover {
 /* 🔹 Ensure ▲ remains unaffected */
 #eternal-arrow, #watch-arrow {
     transition: opacity 0.3s ease-in-out;
+}
+
+/* 🔹 Stop blinking for "▲" by removing the animation */
+#eternal-arrow:not(.blink-arrow),
+#watch-arrow:not(.blink-arrow) {
+    animation: none !important;
 }
 
 /* Watch description paragraphs */
