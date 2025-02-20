@@ -73,17 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
-    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
-        toggleWatchText();
-        toggleMatchingYears();
-
-        // Stop blinking after first click
-        if (!hasClickedWatch) {
-            document.querySelector("#watch-arrow").classList.remove("blink-arrow");
-            hasClickedWatch = true;
-        }
-    });
-
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
         let travelQuote = document.querySelector("#travel-quote");
@@ -168,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Ensure clicking "This time traveller's watch..." toggles years output and travel quote correctly
     document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
         toggleWatchText();
-        toggleMatchingYears(); // Ensure it always toggles the years and travel quote properly
+        toggleMatchingYears();
 
         // Stop blinking after first click
         if (!hasClickedWatch) {
