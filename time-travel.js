@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let hasRevealedLatinOnce = false;
     let hasRevealedQuoteOnce = false;
     let hasRevealedWatchOnce = false;
+    let hasToggledEternalOnce = false;
+    let hasToggledYearsOnce = false;
 
     function getFrozenPSTDate() {
         let now = new Date(frozenTime);
@@ -32,6 +34,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let hiddenText = document.querySelector("#hidden-text");
         let arrow = document.querySelector("#eternal-arrow");
         let expanded = hiddenText.style.display === "block";
+
+        if (!hasToggledEternalOnce) {
+            arrow.classList.remove("blink-arrow"); // Stop blinking after first toggle
+            hasToggledEternalOnce = true;
+        }
 
         if (expanded) {
             hiddenText.style.display = "none";
@@ -69,6 +76,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let arrow = document.querySelector("#watch-arrow");
         let expanded = matchingYears.style.display === "block";
 
+        if (!hasToggledYearsOnce) {
+            arrow.classList.remove("blink-arrow"); // Stop blinking after first toggle
+            hasToggledYearsOnce = true;
+        }
+
         if (expanded) {
             matchingYears.style.display = "none";
             travelQuote.style.display = "none";
@@ -92,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 document.querySelectorAll(".year-item").forEach(el => {
                     el.style.opacity = 1;
-                    el.style.transition = "none"; // Ensure instant reveal on subsequent toggles
+                    el.style.transition = "none";
                 });
                 travelQuote.style.opacity = 1;
                 travelQuote.style.transition = "none";
@@ -131,10 +143,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }, index * 1000);
         });
 
-        // **Fix: Remove transition after first fade-in**
         setTimeout(() => {
             document.querySelectorAll(".year-item").forEach(el => {
-                el.style.transition = "none"; // Ensures instant reveal on future toggles
+                el.style.transition = "none";
             });
         }, years.length * 1000 + 500);
     }
@@ -145,8 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 el.style.opacity = 1;
                 el.style.transition = "opacity 3s ease-in";
-    
-                // If this is the last story text, wait 3.5s and then fade in "This time traveller's watch..."
+
                 if (index === fadeGroups.length - 1) {
                     setTimeout(() => {
                         fadeInWatchText();
@@ -155,35 +165,31 @@ document.addEventListener("DOMContentLoaded", () => {
             }, index * 10000);
         });
     }
-    
+
     function fadeInWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
         if (!hasRevealedWatchOnce) {
-            watchText.style.display = "block"; // Ensure it's visible before fading
+            watchText.style.display = "block";
             setTimeout(() => {
                 watchText.style.opacity = 1;
-    
-                // **Fix: Remove transition after first fade-in for instant toggles**
                 setTimeout(() => {
-                    watchText.style.transition = "none"; // Removes fade effect after first reveal
-                }, 3000); // Wait for fade-in to complete before removing transition
-    
+                    watchText.style.transition = "none";
+                }, 3000);
             }, 50);
             hasRevealedWatchOnce = true;
         }
     }
-    
-    // Modify the function that toggles visibility to ensure instant hide/show after first reveal
+
     document.querySelector("#eternal-title").addEventListener("click", () => {
         toggleWatchText();
     });
     document.querySelector("#current-time").addEventListener("click", () => {
         toggleWatchText();
     });
-    
+
     function toggleWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
-        if (hasRevealedWatchOnce) { // Ensure instant toggle only after first fade-in
+        if (hasRevealedWatchOnce) {
             if (watchText.style.opacity === "1") {
                 watchText.style.opacity = "0";
                 setTimeout(() => {
@@ -194,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 watchText.style.opacity = "1";
             }
         }
-    }    
+    }
 
     function fadeInTravelQuote() {
         let travelQuote = document.querySelector("#travel-quote");
