@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Ensure clicking "This time traveller's watch..." toggles years output and travel quote correctly
+    // Fix: Clicking "This time traveller's watch..." now properly toggles reflections & travel quote
     document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
         toggleWatchText();
         toggleMatchingYears();
