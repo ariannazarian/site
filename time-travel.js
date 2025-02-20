@@ -8,8 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let hasRevealedLatinOnce = false;
     let hasRevealedQuoteOnce = false;
     let hasRevealedWatchOnce = false;
-    let hasClickedEternal = false;
-    let hasClickedWatch = false;
 
     function getFrozenPSTDate() {
         let now = new Date(frozenTime);
@@ -29,10 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.querySelector("#current-time").innerText = getFrozenPSTDate();
-
-    // Initially add the blinking class to arrows
-    document.querySelector("#eternal-arrow").classList.add("blink-arrow");
-    document.querySelector("#watch-arrow").classList.add("blink-arrow");
 
     function toggleEternalWatch() {
         let hiddenText = document.querySelector("#hidden-text");
@@ -61,17 +55,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 fadeInWatchText();
             }
         }
-
-        // Stop blinking after first click
-        if (!hasClickedEternal) {
-            document.querySelector("#eternal-arrow").classList.remove("blink-arrow");
-            hasClickedEternal = true;
-        }
     }
 
     document.querySelector("#hidden-text").style.display = "none";
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
+
+    document.querySelector("#reveal-matching-alt").addEventListener("click", toggleMatchingYears);
 
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
@@ -110,13 +100,52 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function revealMatchingYearsWithFade(callback) {
+        let matchingYears = document.querySelector("#matching-years");
+        matchingYears.innerHTML = `<strong>Coordinate reflections:</strong> `;
+        matchingYears.style.display = "block";
+
+        let now = new Date(frozenTime);
+        let month = now.getMonth() + 1;
+        let day = now.getDate();
+        let weekday = now.getDay();
+        let currentYear = new Date().getFullYear();
+
+        let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892)
+                         .filter(year => new Date(year, month - 1, day).getDay() === weekday);
+
+        years.forEach((year, index) => {
+            let span = document.createElement("span");
+            span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
+            span.classList.add("year-item");
+            span.style.opacity = 0;
+            span.style.transition = "opacity 2s ease-in";
+
+            matchingYears.appendChild(span);
+
+            setTimeout(() => {
+                span.style.opacity = 1;
+                if (index === years.length - 1 && callback) {
+                    setTimeout(callback, 1000);
+                }
+            }, index * 1000);
+        });
+
+        // **Fix: Remove transition after first fade-in**
+        setTimeout(() => {
+            document.querySelectorAll(".year-item").forEach(el => {
+                el.style.transition = "none"; // Ensures instant reveal on future toggles
+            });
+        }, years.length * 1000 + 500);
+    }
+
     function fadeInStoryGroups(callback) {
         let fadeGroups = document.querySelectorAll(".fade-group");
         fadeGroups.forEach((el, index) => {
             setTimeout(() => {
                 el.style.opacity = 1;
                 el.style.transition = "opacity 3s ease-in";
-
+    
                 // If this is the last story text, wait 3.5s and then fade in "This time traveller's watch..."
                 if (index === fadeGroups.length - 1) {
                     setTimeout(() => {
@@ -126,22 +155,35 @@ document.addEventListener("DOMContentLoaded", () => {
             }, index * 10000);
         });
     }
-
+    
     function fadeInWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
         if (!hasRevealedWatchOnce) {
-            watchText.style.display = "block";
+            watchText.style.display = "block"; // Ensure it's visible before fading
             setTimeout(() => {
                 watchText.style.opacity = 1;
-                watchText.classList.add("revealed");
+    
+                // **Fix: Remove transition after first fade-in for instant toggles**
+                setTimeout(() => {
+                    watchText.style.transition = "none"; // Removes fade effect after first reveal
+                }, 3000); // Wait for fade-in to complete before removing transition
+    
             }, 50);
             hasRevealedWatchOnce = true;
         }
     }
-
+    
+    // Modify the function that toggles visibility to ensure instant hide/show after first reveal
+    document.querySelector("#eternal-title").addEventListener("click", () => {
+        toggleWatchText();
+    });
+    document.querySelector("#current-time").addEventListener("click", () => {
+        toggleWatchText();
+    });
+    
     function toggleWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
-        if (hasRevealedWatchOnce) {
+        if (hasRevealedWatchOnce) { // Ensure instant toggle only after first fade-in
             if (watchText.style.opacity === "1") {
                 watchText.style.opacity = "0";
                 setTimeout(() => {
@@ -152,19 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 watchText.style.opacity = "1";
             }
         }
-    }
-
-    // Fix: Clicking "This time traveller's watch..." now properly toggles reflections & travel quote
-    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
-        toggleWatchText();
-        toggleMatchingYears();
-
-        // Stop blinking after first click
-        if (!hasClickedWatch) {
-            document.querySelector("#watch-arrow").classList.remove("blink-arrow");
-            hasClickedWatch = true;
-        }
-    });
+    }    
 
     function fadeInTravelQuote() {
         let travelQuote = document.querySelector("#travel-quote");
