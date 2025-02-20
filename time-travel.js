@@ -1,4 +1,4 @@
-ddocument.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const frozenTime = new Date();
     const audio = document.querySelector("#eternal-audio");
     let isAudioPlaying = false;
@@ -73,15 +73,42 @@ ddocument.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
-    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
-        toggleMatchingYears();
+    function toggleMatchingYears() {
+        let matchingYears = document.querySelector("#matching-years");
+        let travelQuote = document.querySelector("#travel-quote");
+        let arrow = document.querySelector("#watch-arrow");
+        let expanded = matchingYears.style.display === "block";
 
-        // Stop blinking after first click
-        if (!hasClickedWatch) {
-            document.querySelector("#watch-arrow").classList.remove("blink-arrow");
-            hasClickedWatch = true;
+        if (expanded) {
+            matchingYears.style.display = "none";
+            travelQuote.style.display = "none";
+            arrow.innerText = "▼";
+        } else {
+            matchingYears.style.display = "block";
+            travelQuote.style.display = "block";
+            arrow.innerText = "▲";
+
+            if (!hasRevealedYearsOnce) {
+                revealMatchingYearsWithFade(() => {
+                    if (!hasRevealedQuoteOnce) {
+                        fadeInTravelQuote();
+                        hasRevealedQuoteOnce = true;
+                    } else {
+                        travelQuote.style.opacity = 1;
+                        travelQuote.style.transition = "none";
+                    }
+                });
+                hasRevealedYearsOnce = true;
+            } else {
+                document.querySelectorAll(".year-item").forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transition = "none"; // Ensure instant reveal on subsequent toggles
+                });
+                travelQuote.style.opacity = 1;
+                travelQuote.style.transition = "none";
+            }
         }
-    });
+    }
 
     function fadeInStoryGroups(callback) {
         let fadeGroups = document.querySelectorAll(".fade-group");
@@ -103,31 +130,20 @@ ddocument.addEventListener("DOMContentLoaded", () => {
     function fadeInWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
         if (!hasRevealedWatchOnce) {
-            watchText.style.display = "block"; // Ensure it's visible before fading
+            watchText.style.display = "block";
+            watchText.style.opacity = "0"; // Ensure it starts hidden
             setTimeout(() => {
-                watchText.style.opacity = 1;
-
-                // **Fix: Remove transition after first fade-in for instant toggles**
-                setTimeout(() => {
-                    watchText.style.transition = "none"; // Removes fade effect after first reveal
-                }, 3000); // Wait for fade-in to complete before removing transition
-
+                watchText.style.transition = "opacity 3s ease-in"; // Apply fade-in
+                watchText.style.opacity = "1";
+                watchText.classList.add("revealed");
             }, 50);
             hasRevealedWatchOnce = true;
         }
     }
 
-    // Modify the function that toggles visibility to ensure instant hide/show after first reveal
-    document.querySelector("#eternal-title").addEventListener("click", () => {
-        toggleWatchText();
-    });
-    document.querySelector("#current-time").addEventListener("click", () => {
-        toggleWatchText();
-    });
-
     function toggleWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
-        if (hasRevealedWatchOnce) { // Ensure instant toggle only after first fade-in
+        if (hasRevealedWatchOnce) {
             if (watchText.style.opacity === "1") {
                 watchText.style.opacity = "0";
                 setTimeout(() => {
@@ -140,6 +156,49 @@ ddocument.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function revealMatchingYearsWithFade(callback) {
+        let matchingYears = document.querySelector("#matching-years");
+        matchingYears.innerHTML = `<strong>Coordinate reflections:</strong> `;
+        matchingYears.style.display = "block";
+
+        let now = new Date(frozenTime);
+        let month = now.getMonth() + 1;
+        let day = now.getDate();
+        let weekday = now.getDay();
+        let currentYear = new Date().getFullYear();
+
+        let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892)
+                         .filter(year => new Date(year, month - 1, day).getDay() === weekday);
+
+        years.forEach((year, index) => {
+            let span = document.createElement("span");
+            span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
+            span.classList.add("year-item");
+            span.style.opacity = 0;
+            span.style.transition = "opacity 2s ease-in";
+
+            matchingYears.appendChild(span);
+
+            setTimeout(() => {
+                span.style.opacity = 1;
+                if (index === years.length - 1 && callback) {
+                    setTimeout(callback, 1000);
+                }
+            }, index * 1000);
+        });
+    }
+
+    document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
+        toggleWatchText();
+        toggleMatchingYears();
+
+        // Stop blinking after first click
+        if (!hasClickedWatch) {
+            document.querySelector("#watch-arrow").classList.remove("blink-arrow");
+            hasClickedWatch = true;
+        }
+    });
+
     function fadeInTravelQuote() {
         let travelQuote = document.querySelector("#travel-quote");
         travelQuote.style.display = "block";
@@ -147,47 +206,4 @@ ddocument.addEventListener("DOMContentLoaded", () => {
             travelQuote.style.opacity = 1;
         }, 50);
     }
-
-    function playAudioWithFadeIn() {
-        if (!audio) return;
-
-        audio.volume = 0.0;
-        if (!hasStartedOnce) {
-            audio.currentTime = 38.5;
-            hasStartedOnce = true;
-        }
-
-        let fadeDuration = 20000;
-        let startTime = performance.now();
-
-        function fadeInAudio(currentTime) {
-            let elapsedTime = currentTime - startTime;
-            let progress = elapsedTime / fadeDuration;
-            audio.volume = Math.min(progress, 1.0);
-            if (progress < 1) requestAnimationFrame(fadeInAudio);
-        }
-
-        audio.play().then(() => {
-            isAudioPlaying = true;
-            requestAnimationFrame(fadeInAudio);
-        }).catch(console.error);
-    }
-
-    function pauseAudio() {
-        if (audio && !audio.paused) {
-            audio.pause();
-            isAudioPlaying = false;
-        }
-    }
-
-    document.querySelectorAll(".toggle-text").forEach(element => {
-        element.addEventListener("click", () => {
-            let translations = {
-                "num-nimis-erravi": ["NUM NIMIS ERRAVI", "Have I wandered too far?"],
-                "iterum-nos-convenimus": ["ITERUM NOS CONVENIMUS", "We meet again."],
-                "quo-vel-quando-vadis": ["QUO VEL QUANDO VADIS", "Where or when are you going?"]
-            };
-            element.innerText = element.innerText === translations[element.id][0] ? translations[element.id][1] : translations[element.id][0];
-        });
-    });
 });
