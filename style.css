@@ -144,10 +144,19 @@ nav a:hover {
     cursor: pointer;
 }
 
-/* Bold "This time traveler's watch..." */
+/* 🔹 Fade-in effect for Latin + story text groups */
+.fade-group {
+    opacity: 0;
+    transition: opacity 3s ease-in;
+}
+
+/* 🔹 Ensure "This time traveller's watch..." only fades once, then toggles instantly */
 #reveal-matching-alt {
     font-weight: bold;
     font-size: var(--text-size);
+    opacity: 0;
+    display: none;
+    transition: opacity 3s ease-in; /* First-time fade-in */
 }
 
 /* Watch description paragraphs */
