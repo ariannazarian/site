@@ -16,9 +16,9 @@ body {
     margin: 0;
     padding: 0;
     user-select: none; /* Disables text selection */
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Edge */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 /* Prevent text selection for all elements */
@@ -31,24 +31,24 @@ a {
     user-select: text;
 }
 
-/* 🔹 Style for Header Image (Responsive Sizing) */
+/* Style for Header Image */
 .header-image {
-    width: 10vw; /* 10% of the viewport width on larger screens */
-    max-width: 200px; /* Ensures it doesn't get too large */
-    height: auto; /* Maintains aspect ratio */
-    display: block; /* Removes default spacing */
-    margin: 0 auto 10px; /* Centers the image */
+    width: 10vw;
+    max-width: 200px;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
 }
 
-/* 🔹 Adjust image size for smaller screens */
+/* Adjust image size for smaller screens */
 @media (max-width: 600px) {
     .header-image {
-        width: 50vw; /* 50% of viewport width on smaller screens */
-        max-width: 300px; /* Prevents it from becoming too large */
+        width: 50vw;
+        max-width: 300px;
     }
 }
 
-/* 🔹 Ensure the header still looks correct */
+/* Header styling */
 header {
     background-color: var(--black);
     padding: 15px;
@@ -71,7 +71,7 @@ nav {
 nav a {
     font-size: var(--text-size);
     font-weight: bold;
-    color: var(--white) !important; /* Ensures links stay white */
+    color: var(--white) !important;
     text-decoration: none;
     transition: color 0.3s ease, text-shadow 0.3s ease;
     text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
@@ -117,13 +117,13 @@ nav a:hover {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* The Eternal Watch - No space between it and frozen time */
+/* The Eternal Watch */
 #eternal-title {
     font-size: var(--text-size);
     margin-bottom: 0px;
 }
 
-/* Frozen time display - Larger (24px) */
+/* Frozen time display */
 #current-time {
     font-size: var(--larger-text-size);
     margin-top: 0px;
@@ -137,20 +137,20 @@ nav a:hover {
     margin-top: 10px;
 }
 
-/* 🔹 Bold Latin texts and their translations */
+/* Bold Latin texts and their translations */
 .toggle-text {
     font-size: var(--text-size);
     font-weight: bold;
     cursor: pointer;
 }
 
-/* 🔹 Fade-in effect for Latin + story text groups */
+/* Fade-in effect for Latin + story text groups */
 .fade-group {
     opacity: 0;
     transition: opacity 3s ease-in;
 }
 
-/* 🔹 Ensure "This time traveller's watch..." only fades once, then toggles instantly */
+/* Ensure "This time traveller's watch..." only fades once, then toggles instantly */
 #reveal-matching-alt {
     font-weight: bold;
     font-size: var(--text-size);
@@ -159,20 +159,38 @@ nav a:hover {
     transition: opacity 3s ease-in; /* First-time fade-in */
 }
 
-/* 🔹 Blinking effect for ▼ indicators */
-.blink-arrow {
-    animation: blink 1s infinite alternate;
-}
-
-/* 🔹 Define blinking animation */
-@keyframes blink {
-    0% { opacity: 1; }
-    100% { opacity: 0.3; }
+/* Ensure "This time traveller’s watch..." toggles instantly after the first fade-in */
+#reveal-matching-alt.revealed {
+    transition: none !important;
 }
 
 /* 🔹 Ensure ▲ remains unaffected */
 #eternal-arrow, #watch-arrow {
     transition: opacity 0.3s ease-in-out;
+}
+
+/* 🔹 Ensures the ▼ symbol has slight spacing */
+#eternal-title::after, #reveal-matching-alt::after {
+    margin-left: 5px;
+}
+
+/* 🔹 Travel Quote Styling (New Feature) */
+/* Initially hide the travel quote */
+#travel-quote {
+    display: none;
+    opacity: 0;
+    transition: opacity 3s ease-in;
+}
+
+/* 🔹 Blinking effect for ▼ indicators */
+.blink-arrow {
+    animation: blink 1s infinite alternate;
+}
+
+/* Define blinking animation */
+@keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0.3; }
 }
 
 /* Watch description paragraphs */
@@ -190,17 +208,4 @@ nav a:hover {
     font-weight: bold;
     text-align: center;
     margin-top: 10px;
-}
-
-/* Ensures the ▼ symbol has slight spacing */
-#eternal-title::after, #reveal-matching-alt::after {
-    margin-left: 5px;
-}
-
-/* 🔹 Travel Quote Styling (New Feature) */
-/* Initially hide the travel quote */
-#travel-quote {
-    display: none;
-    opacity: 0;
-    transition: opacity 3s ease-in;
 }
