@@ -159,7 +159,6 @@ nav a:hover {
     transition: opacity 3s ease-in; /* First-time fade-in */
 }
 
-
 /* Watch description paragraphs */
 .watch-description {
     font-size: var(--text-size);
