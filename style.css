@@ -10,8 +10,8 @@
 /* Load Sequel Rounded */
 @font-face {
     font-family: 'SequelRounded';
-    src: url('/fonts/sequelrounded.woff2') format('woff2'),
-         url('/fonts/sequelrounded.woff') format('woff');
+    src: url('/assets/fonts/sequelrounded.woff2') format('woff2'),
+         url('/assets/fonts/sequelrounded.woff') format('woff');
     font-display: swap; /* Ensures text is visible while font loads */
 }
 
