@@ -7,18 +7,9 @@
     --larger-text-size: 24px; /* Frozen time display */
 }
 
-/* Load Sequel Rounded Font */
-@font-face {
-    font-family: 'SequelRounded';
-    src: url('/assets/fonts/sequelfont.ttf') format('truetype');
-    font-display: swap;
-    font-weight: normal;
-    font-style: normal;
-}
-
 /* General styling */
 body {
-    font-family: "SequelRounded", "Courier", monospace;
+    font-family: "Futura", "Trebuchet MS", sans-serif;
     text-align: center;
     background-color: var(--white);
     color: var(--black);
