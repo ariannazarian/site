@@ -101,10 +101,11 @@ nav a:hover {
     text-transform: lowercase;
 }
 
-/* Ensure "at" and "dot" are italicized */
+/* Ensure "at" and "dot" are italicized, black and non-bold */
 .email em {
     color: black;
     font-style: italic;
+    font-weight: normal;
 }
 
 /* Clickable elements */
