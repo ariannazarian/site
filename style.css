@@ -7,9 +7,17 @@
     --larger-text-size: 24px; /* Frozen time display */
 }
 
+/* Load Sequel Rounded */
+@font-face {
+    font-family: 'SequelRounded';
+    src: url('/fonts/sequelrounded.woff2') format('woff2'),
+         url('/fonts/sequelrounded.woff') format('woff');
+    font-display: swap; /* Ensures text is visible while font loads */
+}
+
 /* General styling */
 body {
-    font-family: "Courier", monospace;
+    font-family: "SequelRounded", "Courier", monospace;
     text-align: center;
     background-color: var(--white);
     color: var(--black);
@@ -20,6 +28,7 @@ body {
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Edge */
 }
+
 
 /* Prevent text selection for all elements */
 p, h1, h2, h3, h4, h5, h6, span, div {
