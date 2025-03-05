@@ -9,7 +9,7 @@
 
 /* General styling */
 body {
-    font-family: "Futura", "Trebuchet MS", sans-serif;
+    font-family: "Courier New", Courier, monospace;
     text-align: center;
     background-color: var(--white);
     color: var(--black);
@@ -20,7 +20,6 @@ body {
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Edge */
 }
-
 
 /* Prevent text selection for all elements */
 p, h1, h2, h3, h4, h5, h6, span, div {
