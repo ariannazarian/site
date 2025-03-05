@@ -9,7 +9,7 @@
 
 /* General styling */
 body {
-    font-family: "Courier New", Courier, monospace;
+    font-family: "Courier", monospace;
     text-align: center;
     background-color: var(--white);
     color: var(--black);
