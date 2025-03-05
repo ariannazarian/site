@@ -12,7 +12,9 @@
     font-family: 'SequelRounded';
     src: url('/assets/fonts/sequelrounded.woff2') format('woff2'),
          url('/assets/fonts/sequelrounded.woff') format('woff');
-    font-display: swap; /* Ensures text is visible while font loads */
+    font-display: swap;
+    font-weight: normal;
+    font-style: normal;
 }
 
 /* General styling */
