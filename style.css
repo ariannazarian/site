@@ -103,6 +103,7 @@ nav a:hover {
 
 /* Ensure "at" and "dot" are italicized */
 .email em {
+    color: black;
     font-style: italic;
 }
 
