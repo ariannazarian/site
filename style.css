@@ -11,8 +11,8 @@
 body {
     font-family: "Courier New", Courier, monospace;
     text-align: center;
-    background-color: var(--white);
-    color: var(--black);
+    background-color: var(--black);
+    color: var(--white);
     margin: 0;
     padding: 0;
     user-select: none; /* Disables text selection */
@@ -50,13 +50,13 @@ a {
 
 /* 🔹 Ensure the header still looks correct */
 header {
-    background-color: var(--black);
+    background-color: var(--white);
     padding: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: var(--white);
+    color: var(--black);
 }
 
 /* Navigation */
@@ -103,7 +103,7 @@ nav a:hover {
 
 /* Ensure "at" and "dot" are italicized, black and non-bold */
 .email em {
-    color: black;
+    color: white;
     font-style: italic;
     font-weight: normal;
 }
@@ -116,7 +116,7 @@ nav a:hover {
 
 /* Hover effect */
 .clickable:hover {
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
 
 /* The Eternal Watch - No space between it and frozen time */
@@ -287,14 +287,14 @@ nav a:hover {
 footer a.clickable {
     font-weight: bold;
     font-size: 16px;
-    color: black;
+    color: white;
     text-decoration: none;
     transition: opacity 0.3s ease, text-shadow 0.3s ease;
 }
 
 /* 🔹 Maintain hover effect */
 footer a.clickable:hover {
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
 
 /* Smooth transition when switching images */
