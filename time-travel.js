@@ -252,26 +252,5 @@ document.addEventListener("DOMContentLoaded", () => {
             element.innerText = element.innerText === translations[element.id][0] ? translations[element.id][1] : translations[element.id][0];
         });
     }); 
-    document.addEventListener("DOMContentLoaded", function () {
-        const imgElement = document.getElementById("header-img"); // PNG fallback
-        const sourceElement = document.getElementById("header-source"); // WebP source
-    
-        const images = [
-            { webp: "assets/images/no-admittance.webp", png: "assets/images/no-admittance.png" },
-            { webp: "assets/images/pinkfinger.webp", png: "assets/images/pinkfinger.png" }
-        ];
-    
-        let currentIndex = 0; // Start with "no-admittance"
-    
-        imgElement.style.cursor = "pointer"; // Indicate clickability
-    
-        imgElement.addEventListener("click", function () {
-            // Toggle index between 0 and 1
-            currentIndex = (currentIndex + 1) % images.length;
-    
-            // Update both WebP and PNG sources
-            sourceElement.srcset = images[currentIndex].webp;
-            imgElement.src = images[currentIndex].png;
-        });
-    });
+   
 });
