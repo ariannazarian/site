@@ -253,7 +253,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }); 
     document.addEventListener("DOMContentLoaded", function () {
-        const headerImage = document.getElementById("header-image");
+        const headerPicture = document.getElementById("header-image");
+        const sourceElement = headerPicture.querySelector("source");
+        const imgElement = headerPicture.querySelector("img");
+    
         const imageSequence = [
             { webp: "assets/images/no-admittance.webp", png: "assets/images/no-admittance.png" },
             { webp: "assets/images/pinkfinger.webp", png: "assets/images/pinkfinger.png" },
@@ -262,13 +265,19 @@ document.addEventListener("DOMContentLoaded", () => {
     
         let currentIndex = 0; // Start with "no-admittance"
     
-        headerImage.addEventListener("click", function () {
+        headerPicture.addEventListener("click", function () {
             // Cycle to the next image
             currentIndex = (currentIndex + 1) % imageSequence.length;
     
-            // Update the <source> and <img> elements
-            headerImage.querySelector("source").srcset = imageSequence[currentIndex].webp;
-            headerImage.querySelector("img").src = imageSequence[currentIndex].png;
+            // Update both the WebP and PNG images
+            sourceElement.setAttribute("srcset", imageSequence[currentIndex].webp);
+            imgElement.setAttribute("src", imageSequence[currentIndex].png);
+    
+            // Ensure the browser correctly reloads the new image
+            imgElement.onload = function () {
+                imgElement.classList.add("fade-in");
+                setTimeout(() => imgElement.classList.remove("fade-in"), 300);
+            };
         });
     });
     
