@@ -51,7 +51,7 @@ a {
 /* 🔹 Ensure the header still looks correct */
 header {
     background-color: var(--white);
-    padding: 15px;
+    padding: 10px 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -59,41 +59,11 @@ header {
     color: var(--black);
 }
 
-/* Navigation */
-nav {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 5px;
-}
-
-/* Navigation links */
-nav a {
-    font-size: var(--text-size);
-    font-weight: bold;
-    color: var(--white) !important; /* Ensures links stay white */
-    text-decoration: none;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
-}
-
-/* Prevent visited links from changing color */
-nav a:visited {
-    color: var(--white) !important;
-}
-
-/* Hover effect */
-nav a:hover {
-    text-decoration: underline;
-    color: #f4f4f4;
-    text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.6);
-}
-
 /* Email & personal text */
-.email {
+header .email {
     color: var(--usc-cardinal);
     font-size: var(--text-size);
-    margin-bottom: 5px;
+    margin: 5px 0;
 }
 
 /* Force lowercase "a" in email */
@@ -102,10 +72,17 @@ nav a:hover {
 }
 
 /* Ensure "at" and "dot" are italicized, black and non-bold */
-.email em {
+header .email em {
     color: black;
     font-style: italic;
     font-weight: normal;
+}
+
+header .personal-text {
+    color: black;
+    font-size: var(--text-size);
+    margin-top: 3px; /* Reduce space above */
+    text-align: center;
 }
 
 /* Clickable elements */
