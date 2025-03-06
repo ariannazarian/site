@@ -6,11 +6,9 @@
     <title>Arian Nazarian's Website</title>
     <link rel="stylesheet" href="style.css">
     
-    <!-- Preload key assets conditionally for performance -->
-    <link rel="preload" as="image" href="assets/images/no-admittance.webp" type="image/webp">
-    <noscript>
-        <link rel="preload" as="image" href="assets/images/no-admittance.png">
-    </noscript>
+    <!-- Preload key assets for performance -->
+    <link rel="preload" as="image" href="assets/images/no-admittance.webp">
+    <link rel="preload" as="image" href="assets/images/no-admittance.png">
 
     <!-- Favicons -->
     <link rel="icon" type="image/png" href="assets/icons/favicon-96x96.png" sizes="96x96" />
@@ -28,27 +26,25 @@
 <body>
     <div id="top"></div>
     <header>
-        <picture id="header-image" role="img" aria-labelledby="header-description">
+        <picture id="header-image" role="button" aria-label="Toggle header image">
             <source id="header-source" srcset="assets/images/no-admittance.webp" type="image/webp">
             <img id="header-img" src="assets/images/no-admittance.png" 
                  alt="No Admittance Except on Party Business" 
                  class="header-image" loading="lazy" tabindex="0">
         </picture>
-        <p id="header-description" class="visually-hidden">
-            This image cycles through different graphics when clicked.
-        </p>
-
+    
         <!-- Email Address in Header -->
         <h2 class="email">
             <label for="popup-ariann" class="clickable bold-text">ARIANN</label> <em>at</em> 
             <label for="popup-usc" class="clickable bold-text">USC</label> <em>dot</em> 
             <label for="popup-edu" class="clickable bold-text">EDU</label>
         </h2>
-
+    
         <!-- Personal Website Description -->
         <p class="personal-text">
             This is my <a href="personal.html" class="clickable">personal</a> website where I share my <a href="work.html" class="clickable">work</a>.
         </p>
+        
     </header>
 
     <main>
@@ -61,18 +57,18 @@
         <input type="radio" id="popup-edu" name="popup-group" class="popup-radio">
     
         <!-- Pop-ups -->
-        <div class="popup" id="popup-ariann-box" role="dialog" aria-labelledby="popup-ariann-label">
-            <p id="popup-ariann-label">Hello, I'm Arian! Let's explore the "<em>curious and curiouser</em>" together.</p>
+        <div class="popup" id="popup-ariann-box">
+            <p>Hello, I'm Arian! Let's explore the "<em>curious and curiouser</em>" together.</p>
             <label for="popup-reset" class="close-button">close</label>
         </div>
-
-        <div class="popup" id="popup-usc-box" role="dialog" aria-labelledby="popup-usc-label">
-            <p id="popup-usc-label">Stay (M.S.)<em>FINE</em> and <strong>Fight On</strong>! :)</p>
+    
+        <div class="popup" id="popup-usc-box">
+            <p>Stay (M.S.)<em>FINE</em> and <strong>Fight On</strong>! :)</p>
             <label for="popup-reset" class="close-button">close</label>
         </div>
-
-        <div class="popup" id="popup-edu-box" role="dialog" aria-labelledby="popup-edu-label">
-            <p id="popup-edu-label"><strong>Financial Engineering, M.S.</strong> (2025–)<br> <em>University of Southern California</em></p>
+    
+        <div class="popup" id="popup-edu-box">
+            <p><strong>Financial Engineering, M.S.</strong> (2025–)<br> <em>University of Southern California</em></p>
 
             <p><strong>Economics, B.A.</strong> (2024)<br> <em>University of California, Riverside</em><br> <em>The London School of Economics</em></p>
 
@@ -94,8 +90,31 @@
                 The Eternal Watch <span id="eternal-arrow" class="blink-arrow">▼</span>
             </h2>
             <h2 id="current-time" class="clickable" role="button"></h2>
-
+            
             <div id="hidden-text" class="hidden">
+                <div class="fade-group">
+                    <p class="watch-text toggle-text bold-text clickable" id="num-nimis-erravi">NUM NIMIS ERRAVI</p>
+                    <p class="watch-description">
+                        The machine’s workings have broken, its dial frozen—fixed upon my arrival in month, week, day, and hour. As I drift across years of measured turning, I long to meet this moment's return. No—this moment shall return, and somehow, I with it.
+                    </p>
+                </div>
+                
+                <div class="fade-group">
+                    <p class="watch-text toggle-text bold-text clickable" id="iterum-nos-convenimus">ITERUM NOS CONVENIMUS</p>
+                    <p class="watch-description">
+                        With no small astonishment, I behold the machine’s restraint, for though it bears me backwards, it does so with unyielding precision.
+                        An unmoving face stands as both beacon and shackle, tethering my descent through history to when time’s ceaseless reflections turn to greet their likeness.
+                    </p>
+                </div>
+
+                <div class="fade-group">
+                    <p class="watch-text toggle-text bold-text clickable" id="quo-vel-quando-vadis">QUO VEL QUANDO VADIS</p>
+                    <p class="watch-description">
+                        Thus, I am no master of time, but its prisoner—immutably bound to instants where pasts converge.
+                    </p>
+                </div>
+
+                <!-- "This time traveller's watch..." starts hidden and fades in after last story text -->
                 <p id="reveal-matching-alt" class="clickable bold-text hidden">
                     This time traveller's watch can take you there… or rather, to then. <span id="watch-arrow" class="blink-arrow">▼</span>
                 </p>
@@ -103,12 +122,13 @@
 
             <p id="matching-years" class="hidden"></p>
 
+            <!-- Travel quote now starts hidden and is toggled by "This time traveller's watch..." -->
             <p id="travel-quote" class="hidden">"All we have to decide is what to do with the time that is given us."<br>- J.R.R. Tolkien, <em>The Lord of the Rings</em></p>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 Arian Nazarian | <a href="#top" class="clickable" aria-label="Back to Top">Top ▲</a></p>
+        <p>&copy; 2025 Arian Nazarian | <a href="#top" class="clickable">Top ▲</a></p>
     </footer>    
 </body>
 </html>
