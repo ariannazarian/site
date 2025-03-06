@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const imgElement = document.getElementById("header-img"); // The visible PNG fallback
-    const pictureElement = document.getElementById("header-image"); // The <picture> element
+    let currentIndex = 0;
 
     const images = [
         { webp: "assets/images/no-admittance.webp", png: "assets/images/no-admittance.png" },
@@ -8,15 +7,16 @@ document.addEventListener("DOMContentLoaded", function () {
         { webp: "assets/images/anpiano.webp", png: "assets/images/anpiano.png" }
     ];
 
-    let currentIndex = 0; // Start with "no-admittance"
+    document.body.addEventListener("click", function (event) {
+        const pictureElement = document.getElementById("header-image");
 
-    imgElement.style.cursor = "pointer"; // Show that the image is clickable
+        // Ensure the click is on the header image
+        if (!pictureElement || !event.target.closest("#header-img")) return;
 
-    imgElement.addEventListener("click", function () {
         // Toggle index to cycle through images
         currentIndex = (currentIndex + 1) % images.length;
 
-        // Create a completely new <picture> element to force browser re-render
+        // Create a new <picture> element
         const newPicture = document.createElement("picture");
         newPicture.id = "header-image";
         newPicture.setAttribute("role", "button");
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const newImg = document.createElement("img");
         newImg.id = "header-img";
         newImg.src = images[currentIndex].png;
-        newImg.alt = "Sign reading 'No Admittance Except on Party Business'"; // Keep description for accessibility
+        newImg.alt = "Sign reading 'No Admittance Except on Party Business'";
         newImg.classList.add("header-image");
         newImg.setAttribute("loading", "lazy");
         newImg.setAttribute("tabindex", "0");
@@ -43,8 +43,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Replace the old <picture> with the new one
         pictureElement.replaceWith(newPicture);
-
-        // Re-add event listener to the new image
-        newImg.addEventListener("click", arguments.callee);
     });
 });
