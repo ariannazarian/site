@@ -213,8 +213,8 @@ nav a:hover {
     transition: opacity 3s ease-in;
 }
 
-/* Hide radio buttons */
-.popup-radio {
+/* Hide checkboxes */
+.popup-checkbox {
     display: none;
 }
 
@@ -223,7 +223,7 @@ nav a:hover {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Centers the pop-up */
+    transform: translate(-50%, -50%);
     background: #990000; /* USC Cardinal */
     color: #FFCC00; /* USC Gold */
     padding: 15px;
@@ -231,17 +231,17 @@ nav a:hover {
     font-size: 16px;
     text-align: center;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-    width: 50%; /* Default width for desktops */
-    max-width: 400px; /* Prevents it from being too wide */
-    max-height: 80vh; /* Ensures it never gets too tall */
-    overflow-y: auto; /* Allows scrolling inside pop-up if content is long */
+    width: 50%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
-/* Show the correct pop-up when its radio is selected */
+/* Show pop-ups when checkboxes are checked */
 #popup-ariann:checked ~ #popup-ariann-box,
 #popup-usc:checked ~ #popup-usc-box,
 #popup-edu:checked ~ #popup-edu-box {
@@ -268,12 +268,11 @@ nav a:hover {
     background: #FFD700; /* Brighter gold */
 }
 
-/* 🔹 Mobile-friendly adjustments */
+/* Mobile-friendly adjustments */
 @media (max-width: 768px) {
     .popup {
-        width: 80%; /* Wider pop-ups for better readability */
-        max-width: 90%; /* Ensures they don’t get too narrow */
-        padding: 20px; /* Slightly larger padding for better readability */
+        width: 80%;
+        max-width: 90%;
+        padding: 20px;
     }
 }
-

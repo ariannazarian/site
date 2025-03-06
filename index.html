@@ -32,34 +32,26 @@
             <label for="popup-edu" class="clickable bold-text">EDU</label>
         </h2>
     
-        <!-- Hidden radio buttons for toggling pop-ups -->
-        <input type="radio" id="popup-ariann" name="popup-group" class="popup-radio">
-        <input type="radio" id="popup-usc" name="popup-group" class="popup-radio">
-        <input type="radio" id="popup-edu" name="popup-group" class="popup-radio">
+        <!-- Hidden checkboxes for toggling pop-ups -->
+        <input type="checkbox" id="popup-ariann" class="popup-checkbox">
+        <input type="checkbox" id="popup-usc" class="popup-checkbox">
+        <input type="checkbox" id="popup-edu" class="popup-checkbox">
     
         <!-- Pop-ups -->
         <div class="popup" id="popup-ariann-box">
-            <p>Hello, I'm Arian! Let's explore the curious and curiouser together. 
-            </p>
-            <label for="popup-close" class="close-button">close</label>
+            <p>Hello, I'm Arian! Let's explore the curious and curiouser together.</p>
+            <label for="popup-ariann" class="close-button">Close</label>
         </div>
     
         <div class="popup" id="popup-usc-box">
             <p>Staying (MS)FINE and Fighting On! :D</p>
-            <label for="popup-close" class="close-button">close</label>
+            <label for="popup-usc" class="close-button">Close</label>
         </div>
     
         <div class="popup" id="popup-edu-box">
-            <p>I am pursuing an MS in Financial Engineering at the University of Southern California. Previously, I studied at the London School of Economics and UC Riverside, where I earned a BA in Economics. I also hold an AA-T in Economics and an AS-T in Film, Television, and Electronic Media from Pasadena City College. And if we’re counting everything, I attended preschool at USC—so really, it’s all come full circle.
-            </p>
-            <label for="popup-close" class="close-button">close</label>
+            <p>I am pursuing an MS in Financial Engineering at the University of Southern California. Previously, I studied at the London School of Economics and UC Riverside, where I earned a BA in Economics. I also hold an AA-T in Economics and an AS-T in Film, Television, and Electronic Media from Pasadena City College. And if we’re counting everything, I attended preschool at USC—so really, it’s all come full circle.</p>
+            <label for="popup-edu" class="close-button">Close</label>
         </div>
-    
-        <!-- "Close all" option (hidden radio input) -->
-        <input type="radio" id="popup-close" name="popup-group" class="popup-radio">
-    
-        <!-- Transparent overlay to close pop-up when clicking anywhere -->
-        <label for="usc-popup-toggle" class="popup-overlay"></label>
                    
         <p class="personal-text">This is my personal website where I share my work.</p>
 
