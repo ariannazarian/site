@@ -27,23 +27,18 @@
 
     <main>
         <h2 class="email">
-            <label for="popup-ariann-toggle" class="clickable bold-text">ARIANN</label> <em>at</em> 
-            <label for="popup-usc-toggle" class="clickable bold-text">USC</label> <em>dot</em> 
-            <label for="popup-edu-toggle" class="clickable bold-text">EDU</label>
+            <label for="popup-ariann" class="clickable bold-text">ARIANN</label> <em>at</em> 
+            <label for="popup-usc" class="clickable bold-text">USC</label> <em>dot</em> 
+            <label for="popup-edu" class="clickable bold-text">EDU</label>
         </h2>
     
-        <!-- Hidden reset checkbox (resets all pop-ups) -->
-        <input type="checkbox" id="popup-reset" class="popup-checkbox">
+        <!-- Hidden reset radio (this allows toggling off the currently open pop-up) -->
+        <input type="radio" id="popup-reset" name="popup-group" class="popup-radio" checked>
     
         <!-- Hidden radio buttons for each pop-up -->
         <input type="radio" id="popup-ariann" name="popup-group" class="popup-radio">
         <input type="radio" id="popup-usc" name="popup-group" class="popup-radio">
         <input type="radio" id="popup-edu" name="popup-group" class="popup-radio">
-    
-        <!-- Hidden toggle checkboxes (to allow clicking same text to disable) -->
-        <input type="checkbox" id="popup-ariann-toggle" class="popup-checkbox">
-        <input type="checkbox" id="popup-usc-toggle" class="popup-checkbox">
-        <input type="checkbox" id="popup-edu-toggle" class="popup-checkbox">
     
         <!-- Pop-ups -->
         <div class="popup" id="popup-ariann-box">
@@ -58,7 +53,7 @@
     
         <div class="popup" id="popup-edu-box">
             <p>I am pursuing an MS in Financial Engineering at the University of Southern California. Previously, I studied at the London School of Economics and UC Riverside, where I earned a BA in Economics. I also hold an AA-T in Economics and an AS-T in Film, Television, and Electronic Media from Pasadena City College. And if we’re counting everything, I attended preschool at USC—so really, it’s all come full circle.</p>
-            <label for="popup-reset" class="close-button">lose</label>
+            <label for="popup-reset" class="close-button">close</label>
         </div>
 
         <!-- Audio Element -->
