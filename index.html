@@ -28,12 +28,20 @@
     <main>
         <h2 class="email">
             <span class="clickable bold-text">ARIANN</span> <em>at</em> 
-            <span id="usc-text" class="clickable bold-text">USC</span> <em>dot</em> 
+            <label for="usc-popup-toggle" class="clickable bold-text">USC</label> <em>dot</em> 
             <span id="edu-text" class="clickable bold-text">EDU</span>
         </h2>
     
-        <!-- The fixed-position pop-up -->
-        <div id="usc-popup" class="popup">Fight on! :D</div>
+        <!-- Hidden checkbox for toggling pop-up -->
+        <input type="checkbox" id="usc-popup-toggle" class="popup-checkbox">
+    
+        <!-- Transparent overlay to close pop-up when clicking anywhere -->
+        <label for="usc-popup-toggle" class="popup-overlay"></label>
+    
+        <!-- The pop-up itself -->
+        <div class="popup">
+            Fight on! :D
+        </div>
                    
         <p class="personal-text">This is my personal website where I share my work.</p>
 

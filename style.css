@@ -213,11 +213,15 @@ nav a:hover {
     transition: opacity 3s ease-in;
 }
 
-/* Pop-up box (fixed position) */
-.popup {
+/* Hide checkbox (used for toggling pop-up) */
+.popup-checkbox {
     display: none;
-    position: fixed; /* Ensures it stays in place while scrolling */
-    top: 20px; /* Adjust this if needed */
+}
+
+/* Style the pop-up */
+.popup {
+    position: fixed; /* Stays in place while scrolling */
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
     background: #990000; /* USC Cardinal */
@@ -227,21 +231,29 @@ nav a:hover {
     font-size: 16px;
     text-align: center;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-    z-index: 1000; /* Ensures it stays above everything */
+    width: auto;
+    z-index: 1000;
     opacity: 0;
+    visibility: hidden;
     transition: opacity 0.3s ease-in-out;
 }
 
-/* Show the pop-up */
-.popup.active {
-    display: block;
+/* Full-page overlay to close pop-up when clicking anywhere */
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 999; /* Ensures it's behind the pop-up */
+}
+
+/* Show the pop-up & overlay when checkbox is checked */
+.popup-checkbox:checked + .popup,
+.popup-checkbox:checked ~ .popup-overlay {
     opacity: 1;
-    transition: opacity 0.3s ease-in-out;
+    visibility: visible;
+    display: block;
 }
-
-/* Fade-out effect when hiding */
-.popup.fade-out {
-    opacity: 0;
-    transition: opacity 2s ease-out; /* Smooth fade-out */
-}
-

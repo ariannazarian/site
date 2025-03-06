@@ -253,44 +253,4 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }); 
    
-let popup = document.getElementById("usc-popup");
-let uscText = document.getElementById("usc-text");
-let hideTimeout; // Variable to store timeout reference
-
-uscText.addEventListener("click", function(event) {
-    event.stopPropagation(); // Prevents triggering document click listener
-
-    if (popup.classList.contains("active")) {
-        // If the pop-up is already active, fade it out
-        popup.classList.add("fade-out");
-        setTimeout(() => {
-            popup.classList.remove("active", "fade-out");
-        }, 2000); // 2s fade-out effect
-    } else {
-        // Clear any previous hide timeout to prevent early disappearance
-        clearTimeout(hideTimeout);
-
-        // Show the pop-up
-        popup.classList.add("active");
-
-        // Start a fresh 5s timer to hide the pop-up
-        hideTimeout = setTimeout(() => {
-            popup.classList.add("fade-out");
-            setTimeout(() => {
-                popup.classList.remove("active", "fade-out");
-            }, 2000); // 2s fade-out
-        }, 5000);
-    }
-});
-
-// Hide pop-up when clicking outside
-document.addEventListener("click", function(event) {
-    if (!uscText.contains(event.target) && !popup.contains(event.target)) {
-        popup.classList.add("fade-out");
-        setTimeout(() => {
-            popup.classList.remove("active", "fade-out");
-        }, 2000); // 2s fade-out
-    }
-});
-
 });
