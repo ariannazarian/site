@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const images = [
         { webp: "assets/images/no-admittance.webp", png: "assets/images/no-admittance.png" },
-        { webp: "assets/images/pinkfinger.webp", png: "assets/images/pinkfinger.png" }
+        { webp: "assets/images/pinkfinger.webp", png: "assets/images/pinkfinger.png" },
         { webp: "assets/images/anpiano.webp", png: "assets/images/anpiano.png" }
     ];
 
