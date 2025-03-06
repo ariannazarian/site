@@ -66,6 +66,19 @@ header .email {
     margin: 5px 0;
 }
 
+/* 🔹 Ensure only clickable elements inside .email have a USC Gold hover effect */
+header .email label {
+    font-weight: bold;
+    color: var(--usc-cardinal);
+    text-decoration: none;
+    transition: text-shadow 0.3s ease-in-out;
+}
+
+/* 🔹 Custom hover effect: USC Gold text shadow */
+header .email label:hover {
+    text-shadow: 2px 2px 6px #FFCC00;
+}
+
 /* Ensure "at" and "dot" are italicized, black and non-bold */
 header .email em {
     color: black;
