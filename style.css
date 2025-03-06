@@ -47,7 +47,6 @@ a {
         max-width: 300px; /* Prevents it from becoming too large */
     }
 }
-
 /* 🔹 Ensure the header still looks correct */
 header {
     background-color: var(--white);
@@ -79,13 +78,14 @@ header .email label:hover {
     text-shadow: 2px 2px 6px #FFCC00;
 }
 
-/* Ensure "at" and "dot" are italicized, black and non-bold */
+/* 🔹 Ensure "at" and "dot" are italicized, black, and non-bold */
 header .email em {
     color: black;
     font-style: italic;
     font-weight: normal;
 }
 
+/* 🔹 Style for personal-text */
 header .personal-text {
     color: black;
     font-size: var(--text-size);
@@ -274,14 +274,15 @@ header .personal-text {
 }
 
 /* Close button inside each pop-up */
-.close-button {
+.popup .close-button {
     display: block;
     margin-top: 10px;
     background: #FFCC00; /* USC Gold */
     color: #990000; /* USC Cardinal */
     padding: 5px 10px;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
     text-align: center;
 }
