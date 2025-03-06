@@ -252,5 +252,24 @@ document.addEventListener("DOMContentLoaded", () => {
             element.innerText = element.innerText === translations[element.id][0] ? translations[element.id][1] : translations[element.id][0];
         });
     }); 
-   
+    document.addEventListener("DOMContentLoaded", function () {
+        const headerImage = document.getElementById("header-image");
+        const imageSequence = [
+            { webp: "assets/images/no-admittance.webp", png: "assets/images/no-admittance.png" },
+            { webp: "assets/images/pinkfinger.webp", png: "assets/images/pinkfinger.png" },
+            { webp: "assets/images/anmondrian.webp", png: "assets/images/anmondrian.png" }
+        ];
+    
+        let currentIndex = 0; // Start with "no-admittance"
+    
+        headerImage.addEventListener("click", function () {
+            // Cycle to the next image
+            currentIndex = (currentIndex + 1) % imageSequence.length;
+    
+            // Update the <source> and <img> elements
+            headerImage.querySelector("source").srcset = imageSequence[currentIndex].webp;
+            headerImage.querySelector("img").src = imageSequence[currentIndex].png;
+        });
+    });
+    
 });
