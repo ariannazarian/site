@@ -229,7 +229,7 @@ nav a:hover {
     padding: 15px;
     border-radius: 8px;
     font-size: 16px;
-    text-align: justified;
+    text-align: justify;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
     width: 50%;
     max-width: 400px;
@@ -241,13 +241,30 @@ nav a:hover {
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
-/* Show pop-ups when checkboxes are checked */
+/* Show pop-ups when their checkbox is checked */
 #popup-ariann:checked ~ #popup-ariann-box,
 #popup-usc:checked ~ #popup-usc-box,
 #popup-edu:checked ~ #popup-edu-box {
     opacity: 1;
     visibility: visible;
     display: block;
+}
+
+/* Hide all pop-ups if the reset checkbox is checked */
+#popup-reset:checked ~ .popup {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Hide all other pop-ups when one is opened */
+#popup-ariann:checked ~ #popup-usc-box,
+#popup-ariann:checked ~ #popup-edu-box,
+#popup-usc:checked ~ #popup-ariann-box,
+#popup-usc:checked ~ #popup-edu-box,
+#popup-edu:checked ~ #popup-ariann-box,
+#popup-edu:checked ~ #popup-usc-box {
+    opacity: 0;
+    visibility: hidden;
 }
 
 /* Close button inside each pop-up */
