@@ -66,11 +66,6 @@ header .email {
     margin: 5px 0;
 }
 
-/* Force lowercase "a" in email */
-.lowercase {
-    text-transform: lowercase;
-}
-
 /* Ensure "at" and "dot" are italicized, black and non-bold */
 header .email em {
     color: black;
@@ -84,6 +79,39 @@ header .personal-text {
     margin-top: 3px; /* Reduce space above */
     text-align: center;
 }
+
+/* 🔹 Ensure only clickable elements in .personal-text remain bold */
+.personal-text a {
+    font-weight: bold; /* Keeps only the links bold */
+    color: black; /* Ensures links stay black */
+    text-decoration: none; /* Removes underline */
+    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* 🔹 Prevent visited links from changing color */
+.personal-text a:visited {
+    color: black !important; /* Keeps the links black even after clicking */
+    font-weight: bold; /* Ensures they remain bold */
+}
+
+/* 🔹 Maintain the same hover effect as other clickable elements */
+.personal-text a:hover {
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* 🔹 Ensure clickable elements on 'work.html' and 'personal.html' also remain black and bold */
+.back-arrow, .work-page a, .personal-page a {
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* 🔹 Apply the same hover effect to these elements */
+.back-arrow:hover, .work-page a:hover, .personal-page a:hover {
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
 
 /* Clickable elements */
 .clickable {
