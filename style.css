@@ -80,18 +80,18 @@ header .personal-text {
     text-align: center;
 }
 
-/* 🔹 Ensure only clickable elements in .personal-text remain bold */
+/* 🔹 Ensure only clickable elements in .personal-text remain bold, black, and formatted correctly */
 .personal-text a {
-    font-weight: bold; /* Keeps only the links bold */
+    font-weight: bold;
     color: black; /* Ensures links stay black */
-    text-decoration: none; /* Removes underline */
+    text-decoration: none !important; /* Removes underline */
     transition: opacity 0.3s ease, text-shadow 0.3s ease;
 }
 
 /* 🔹 Prevent visited links from changing color */
 .personal-text a:visited {
     color: black !important; /* Keeps the links black even after clicking */
-    font-weight: bold; /* Ensures they remain bold */
+    font-weight: bold;
 }
 
 /* 🔹 Maintain the same hover effect as other clickable elements */
@@ -99,19 +99,18 @@ header .personal-text {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* 🔹 Ensure clickable elements on 'work.html' and 'personal.html' also remain black and bold */
-.back-arrow, .work-page a, .personal-page a {
+/* 🔹 Ensure back navigation links remain bold and black */
+.back-arrow, nav a {
     font-weight: bold;
-    color: black;
-    text-decoration: none;
+    color: black !important;
+    text-decoration: none !important; /* Removes underline */
     transition: opacity 0.3s ease, text-shadow 0.3s ease;
 }
 
-/* 🔹 Apply the same hover effect to these elements */
-.back-arrow:hover, .work-page a:hover, .personal-page a:hover {
+/* 🔹 Apply hover effect to match other clickable elements */
+.back-arrow:hover, nav a:hover {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
-
 
 /* Clickable elements */
 .clickable {
