@@ -213,8 +213,8 @@ nav a:hover {
     transition: opacity 3s ease-in;
 }
 
-/* Hide radio buttons */
-.popup-radio {
+/* Hide checkboxes */
+.popup-checkbox, .popup-radio {
     display: none;
 }
 
@@ -252,6 +252,25 @@ nav a:hover {
 
 /* Hide all pop-ups when reset is checked */
 #popup-reset:checked ~ .popup {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Hide all other pop-ups when a new one is selected */
+#popup-ariann:checked ~ #popup-usc-box,
+#popup-ariann:checked ~ #popup-edu-box,
+#popup-usc:checked ~ #popup-ariann-box,
+#popup-usc:checked ~ #popup-edu-box,
+#popup-edu:checked ~ #popup-ariann-box,
+#popup-edu:checked ~ #popup-usc-box {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Toggle pop-up OFF if the same label is clicked again */
+#popup-ariann-toggle:checked ~ #popup-reset,
+#popup-usc-toggle:checked ~ #popup-reset,
+#popup-edu-toggle:checked ~ #popup-reset {
     opacity: 0;
     visibility: hidden;
 }
