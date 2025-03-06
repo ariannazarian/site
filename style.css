@@ -280,6 +280,7 @@ nav a:hover {
         width: 80%;
         max-width: 90%;
         padding: 20px;
+        text-align: left;
     }
 }
 /* 🔹 Style specifically for "Back to Top" link */
