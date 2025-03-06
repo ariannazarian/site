@@ -282,4 +282,17 @@ nav a:hover {
         padding: 20px;
     }
 }
+/* 🔹 Style specifically for "Back to Top" link */
+footer a.clickable {
+    font-weight: bold;
+    font-size: 16px;
+    color: black;
+    text-decoration: none;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* 🔹 Maintain hover effect */
+footer a.clickable:hover {
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
 
