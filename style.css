@@ -236,4 +236,12 @@ nav a:hover {
 .popup.active {
     display: block;
     opacity: 1;
+    transition: opacity 0.3s ease-in-out;
 }
+
+/* Fade-out effect when hiding */
+.popup.fade-out {
+    opacity: 0;
+    transition: opacity 2s ease-out; /* Smooth fade-out */
+}
+
