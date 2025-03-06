@@ -27,18 +27,34 @@
 
     <main>
         <h2 class="email">
-            <span class="clickable bold-text">ARIANN</span> <em>at</em> 
-            <label for="usc-popup-toggle" class="clickable bold-text">USC</label> <em>dot</em> 
-            <span id="edu-text" class="clickable bold-text">EDU</span>
+            <label for="popup-ariann" class="clickable bold-text">ARIANN</label> <em>at</em> 
+            <label for="popup-usc" class="clickable bold-text">USC</label> <em>dot</em> 
+            <label for="popup-edu" class="clickable bold-text">EDU</label>
         </h2>
     
-        <!-- Hidden checkbox for toggling pop-up -->
-        <input type="checkbox" id="usc-popup-toggle" class="popup-checkbox">
+        <!-- Hidden radio buttons for toggling pop-ups -->
+        <input type="radio" id="popup-ariann" name="popup-group" class="popup-radio">
+        <input type="radio" id="popup-usc" name="popup-group" class="popup-radio">
+        <input type="radio" id="popup-edu" name="popup-group" class="popup-radio">
     
-        <!-- The pop-up itself -->
-        <div class="popup">
-            Fight on! :D
+        <!-- Pop-ups -->
+        <div class="popup" id="popup-ariann-box">
+            <p>Hello from ARIANN!</p>
+            <label for="popup-close" class="close-button">Close</label>
         </div>
+    
+        <div class="popup" id="popup-usc-box">
+            <p>Fight on! :D</p>
+            <label for="popup-close" class="close-button">Close</label>
+        </div>
+    
+        <div class="popup" id="popup-edu-box">
+            <p>Degrees Information Here</p>
+            <label for="popup-close" class="close-button">Close</label>
+        </div>
+    
+        <!-- "Close all" option (hidden radio input) -->
+        <input type="radio" id="popup-close" name="popup-group" class="popup-radio">
     
         <!-- Transparent overlay to close pop-up when clicking anywhere -->
         <label for="usc-popup-toggle" class="popup-overlay"></label>
