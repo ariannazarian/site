@@ -252,5 +252,31 @@ document.addEventListener("DOMContentLoaded", () => {
             element.innerText = element.innerText === translations[element.id][0] ? translations[element.id][1] : translations[element.id][0];
         });
     });
-
+    document.getElementById("usc-text").addEventListener("click", function(event) {
+        let popup = document.getElementById("usc-popup");
+    
+        // Position the pop-up near "USC"
+        let rect = event.target.getBoundingClientRect();
+        popup.style.top = `${rect.bottom + window.scrollY + 5}px`;
+        popup.style.left = `${rect.left + window.scrollX}px`;
+    
+        // Show the pop-up
+        popup.classList.add("active");
+    
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            popup.classList.remove("active");
+        }, 5000);
+    });
+    
+    // Hide pop-up when clicking outside
+    document.addEventListener("click", function(event) {
+        let popup = document.getElementById("usc-popup");
+        let uscText = document.getElementById("usc-text");
+    
+        // If clicking outside "USC" and the pop-up, hide it
+        if (!uscText.contains(event.target) && !popup.contains(event.target)) {
+            popup.classList.remove("active");
+        }
+    });    
 });

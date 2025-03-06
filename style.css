@@ -212,3 +212,26 @@ nav a:hover {
     opacity: 0;
     transition: opacity 3s ease-in;
 }
+
+/* Pop-up box */
+.popup {
+    display: none;
+    position: absolute;
+    background: #990000; /* USC Cardinal */
+    color: #FFCC00; /* USC Gold */
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    width: auto;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Show the pop-up when active */
+.popup.active {
+    display: block;
+    opacity: 1;
+}
