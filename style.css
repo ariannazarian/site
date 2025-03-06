@@ -250,12 +250,12 @@ nav a:hover {
 /* Close button inside each pop-up */
 .close-button {
     display: block;
-    margin-top: 4px;
+    margin-top: 10px;
     background: #FFCC00; /* USC Gold */
     color: #990000; /* USC Cardinal */
-    padding: 2px 4px;
-    border-radius: 2px;
-    font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
     cursor: pointer;
     text-align: center;
 }
