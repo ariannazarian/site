@@ -32,13 +32,13 @@
             <label for="popup-edu" class="clickable bold-text">EDU</label>
         </h2>
     
-        <!-- Hidden reset checkbox -->
-        <input type="checkbox" id="popup-reset" class="popup-checkbox">
+        <!-- Hidden reset radio (this allows toggling off the currently open pop-up) -->
+        <input type="radio" id="popup-reset" name="popup-group" class="popup-radio" checked>
     
-        <!-- Hidden checkboxes for toggling pop-ups -->
-        <input type="checkbox" id="popup-ariann" class="popup-checkbox">
-        <input type="checkbox" id="popup-usc" class="popup-checkbox">
-        <input type="checkbox" id="popup-edu" class="popup-checkbox">
+        <!-- Hidden radio buttons for each pop-up -->
+        <input type="radio" id="popup-ariann" name="popup-group" class="popup-radio">
+        <input type="radio" id="popup-usc" name="popup-group" class="popup-radio">
+        <input type="radio" id="popup-edu" name="popup-group" class="popup-radio">
     
         <!-- Pop-ups -->
         <div class="popup" id="popup-ariann-box">

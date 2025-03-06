@@ -213,8 +213,8 @@ nav a:hover {
     transition: opacity 3s ease-in;
 }
 
-/* Hide checkboxes */
-.popup-checkbox {
+/* Hide radio buttons */
+.popup-radio {
     display: none;
 }
 
@@ -241,7 +241,7 @@ nav a:hover {
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
-/* Show pop-ups when their checkbox is checked */
+/* Show the correct pop-up when its radio is selected */
 #popup-ariann:checked ~ #popup-ariann-box,
 #popup-usc:checked ~ #popup-usc-box,
 #popup-edu:checked ~ #popup-edu-box {
@@ -250,19 +250,8 @@ nav a:hover {
     display: block;
 }
 
-/* Hide all pop-ups if the reset checkbox is checked */
+/* Hide all pop-ups when reset is checked */
 #popup-reset:checked ~ .popup {
-    opacity: 0;
-    visibility: hidden;
-}
-
-/* Hide all other pop-ups when one is opened */
-#popup-ariann:checked ~ #popup-usc-box,
-#popup-ariann:checked ~ #popup-edu-box,
-#popup-usc:checked ~ #popup-ariann-box,
-#popup-usc:checked ~ #popup-edu-box,
-#popup-edu:checked ~ #popup-ariann-box,
-#popup-edu:checked ~ #popup-usc-box {
     opacity: 0;
     visibility: hidden;
 }
