@@ -221,17 +221,20 @@ nav a:hover {
 /* Style the pop-ups */
 .popup {
     position: fixed;
-    top: 20px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%); /* Centers the pop-up */
     background: #990000; /* USC Cardinal */
     color: #FFCC00; /* USC Gold */
-    padding: 10px 15px;
-    border-radius: 5px;
+    padding: 15px;
+    border-radius: 8px;
     font-size: 16px;
     text-align: center;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-    width: auto;
+    width: 50%; /* Default width for desktops */
+    max-width: 400px; /* Prevents it from being too wide */
+    max-height: 80vh; /* Ensures it never gets too tall */
+    overflow-y: auto; /* Allows scrolling inside pop-up if content is long */
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
@@ -263,5 +266,14 @@ nav a:hover {
 /* Close button hover effect */
 .close-button:hover {
     background: #FFD700; /* Brighter gold */
+}
+
+/* 🔹 Mobile-friendly adjustments */
+@media (max-width: 768px) {
+    .popup {
+        width: 80%; /* Wider pop-ups for better readability */
+        max-width: 90%; /* Ensures they don’t get too narrow */
+        padding: 20px; /* Slightly larger padding for better readability */
+    }
 }
 
