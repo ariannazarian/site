@@ -213,30 +213,27 @@ nav a:hover {
     transition: opacity 3s ease-in;
 }
 
-/* Hide checkbox (used for toggling) */
-.popup-checkbox {
-    display: none;
-}
-
-/* Style the pop-up */
+/* Pop-up box (fixed position) */
 .popup {
-    position: absolute;
+    display: none;
+    position: fixed; /* Ensures it stays in place while scrolling */
+    top: 20px; /* Adjust this if needed */
+    left: 50%;
+    transform: translateX(-50%);
     background: #990000; /* USC Cardinal */
     color: #FFCC00; /* USC Gold */
-    padding: 8px 12px;
+    padding: 10px 15px;
     border-radius: 5px;
     font-size: 16px;
     text-align: center;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-    width: auto;
-    z-index: 10;
+    z-index: 1000; /* Ensures it stays above everything */
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
-    visibility: hidden;
 }
 
-/* Show the pop-up when checkbox is checked */
-.popup-checkbox:checked + .popup {
+/* Show the pop-up */
+.popup.active {
+    display: block;
     opacity: 1;
-    visibility: visible;
 }

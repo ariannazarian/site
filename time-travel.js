@@ -251,14 +251,9 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             element.innerText = element.innerText === translations[element.id][0] ? translations[element.id][1] : translations[element.id][0];
         });
-    });
+    }); 
     document.getElementById("usc-text").addEventListener("click", function(event) {
         let popup = document.getElementById("usc-popup");
-    
-        // Position the pop-up near "USC"
-        let rect = event.target.getBoundingClientRect();
-        popup.style.top = `${rect.bottom + window.scrollY + 5}px`;
-        popup.style.left = `${rect.left + window.scrollX}px`;
     
         // Show the pop-up
         popup.classList.add("active");
