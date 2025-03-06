@@ -4,79 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arian Nazarian's Website</title>
-    <link rel="stylesheet" href="style.css">
     
-    <!-- Preload key assets for performance -->
+    <!-- Preload key assets early for performance -->
     <link rel="preload" as="image" href="assets/images/no-admittance.webp">
     <link rel="preload" as="image" href="assets/images/no-admittance.png">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
 
     <!-- Favicons -->
-    <link rel="icon" type="image/png" href="assets/icons/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
-    <link rel="shortcut icon" href="assets/icons/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
-    
-    <meta name="apple-mobile-web-app-title" content="ANweb" />
-    <link rel="manifest" href="assets/icons/site.webmanifest" />
+    <link rel="icon" type="image/png" href="assets/icons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+    <link rel="shortcut icon" href="assets/icons/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+    <link rel="manifest" href="assets/icons/site.webmanifest">
 
-    <!-- Async load JavaScript for performance -->
+    <!-- Improve mobile experience -->
+    <meta name="apple-mobile-web-app-title" content="ANweb">
+
+    <!-- Load JavaScript efficiently -->
     <script src="main-site.js" defer></script>
     <script src="time-travel.js" defer></script>
 </head>
 <body>
     <div id="top"></div>
+
     <header>
         <picture id="header-image" role="button" aria-label="Toggle header image">
-            <source id="header-source" srcset="assets/images/no-admittance.webp" type="image/webp">
+            <source srcset="assets/images/no-admittance.webp" type="image/webp">
             <img id="header-img" src="assets/images/no-admittance.png" 
-                 alt="No Admittance Except on Party Business" 
+                 alt="Sign reading 'No Admittance Except on Party Business'" 
                  class="header-image" loading="lazy" tabindex="0">
         </picture>
-    
-        <!-- Email Address in Header -->
+
+        <!-- Email Address with Accessible Labels -->
         <h2 class="email">
-            <label for="popup-ariann" class="clickable bold-text">ARIANN</label> <em>at</em> 
-            <label for="popup-usc" class="clickable bold-text">USC</label> <em>dot</em> 
-            <label for="popup-edu" class="clickable bold-text">EDU</label>
+            <label for="popup-ariann" class="clickable bold-text" role="button" tabindex="0">ARIANN</label> <em>at</em> 
+            <label for="popup-usc" class="clickable bold-text" role="button" tabindex="0">USC</label> <em>dot</em> 
+            <label for="popup-edu" class="clickable bold-text" role="button" tabindex="0">EDU</label>
         </h2>
-    
-        <!-- Personal Website Description -->
+
         <p class="personal-text">
             This is my <a href="personal.html" class="clickable">personal</a> website where I share my <a href="work.html" class="clickable">work</a>.
         </p>
-        
     </header>
 
     <main>
-        <!-- Hidden reset radio (this allows toggling off the currently open pop-up) -->
+        <!-- Hidden radio toggles for pop-ups -->
         <input type="radio" id="popup-reset" name="popup-group" class="popup-radio" checked>
-    
-        <!-- Hidden radio buttons for each pop-up -->
         <input type="radio" id="popup-ariann" name="popup-group" class="popup-radio">
         <input type="radio" id="popup-usc" name="popup-group" class="popup-radio">
         <input type="radio" id="popup-edu" name="popup-group" class="popup-radio">
-    
-        <!-- Pop-ups -->
+
+        <!-- Pop-up Sections -->
         <div class="popup" id="popup-ariann-box">
             <p>Hello, I'm Arian! Let's explore the "<em>curious and curiouser</em>" together.</p>
-            <label for="popup-reset" class="close-button">close</label>
+            <label for="popup-reset" class="close-button" role="button" tabindex="0">Close</label>
         </div>
-    
+
         <div class="popup" id="popup-usc-box">
             <p>Stay (M.S.)<em>FINE</em> and <strong>Fight On</strong>! :)</p>
-            <label for="popup-reset" class="close-button">close</label>
+            <label for="popup-reset" class="close-button" role="button" tabindex="0">Close</label>
         </div>
-    
+
         <div class="popup" id="popup-edu-box">
             <p><strong>Financial Engineering, M.S.</strong> (2025–)<br> <em>University of Southern California</em></p>
-
             <p><strong>Economics, B.A.</strong> (2024)<br> <em>University of California, Riverside</em><br> <em>The London School of Economics</em></p>
-
             <p><strong>Economics, A.A.-T</strong> (2021)<br><strong>Film Production, A.S.-T</strong> (2021)<br> <em>Pasadena City College</em></p>
-
             <p>...and if we’re counting everything, I also attended preschool at USC—so really, it’s all come full circle.</p>
-
-            <label for="popup-reset" class="close-button">close</label>
+            <label for="popup-reset" class="close-button" role="button" tabindex="0">Close</label>
         </div>
 
         <!-- Audio Element -->
@@ -86,21 +82,21 @@
 
         <!-- The Eternal Watch Section -->
         <section id="eternal-watch">
-            <h2 id="eternal-title" class="clickable" role="button">
+            <h2 id="eternal-title" class="clickable" role="button" tabindex="0">
                 The Eternal Watch <span id="eternal-arrow" class="blink-arrow">▼</span>
             </h2>
-            <h2 id="current-time" class="clickable" role="button"></h2>
+            <h2 id="current-time" class="clickable" role="button" tabindex="0"></h2>
             
             <div id="hidden-text" class="hidden">
                 <div class="fade-group">
-                    <p class="watch-text toggle-text bold-text clickable" id="num-nimis-erravi">NUM NIMIS ERRAVI</p>
+                    <p class="watch-text toggle-text bold-text clickable" id="num-nimis-erravi" role="button" tabindex="0">NUM NIMIS ERRAVI</p>
                     <p class="watch-description">
                         The machine’s workings have broken, its dial frozen—fixed upon my arrival in month, week, day, and hour. As I drift across years of measured turning, I long to meet this moment's return. No—this moment shall return, and somehow, I with it.
                     </p>
                 </div>
-                
+
                 <div class="fade-group">
-                    <p class="watch-text toggle-text bold-text clickable" id="iterum-nos-convenimus">ITERUM NOS CONVENIMUS</p>
+                    <p class="watch-text toggle-text bold-text clickable" id="iterum-nos-convenimus" role="button" tabindex="0">ITERUM NOS CONVENIMUS</p>
                     <p class="watch-description">
                         With no small astonishment, I behold the machine’s restraint, for though it bears me backwards, it does so with unyielding precision.
                         An unmoving face stands as both beacon and shackle, tethering my descent through history to when time’s ceaseless reflections turn to greet their likeness.
@@ -108,21 +104,19 @@
                 </div>
 
                 <div class="fade-group">
-                    <p class="watch-text toggle-text bold-text clickable" id="quo-vel-quando-vadis">QUO VEL QUANDO VADIS</p>
+                    <p class="watch-text toggle-text bold-text clickable" id="quo-vel-quando-vadis" role="button" tabindex="0">QUO VEL QUANDO VADIS</p>
                     <p class="watch-description">
                         Thus, I am no master of time, but its prisoner—immutably bound to instants where pasts converge.
                     </p>
                 </div>
 
-                <!-- "This time traveller's watch..." starts hidden and fades in after last story text -->
-                <p id="reveal-matching-alt" class="clickable bold-text hidden">
+                <p id="reveal-matching-alt" class="clickable bold-text hidden" role="button" tabindex="0">
                     This time traveller's watch can take you there… or rather, to then. <span id="watch-arrow" class="blink-arrow">▼</span>
                 </p>
             </div>
 
             <p id="matching-years" class="hidden"></p>
 
-            <!-- Travel quote now starts hidden and is toggled by "This time traveller's watch..." -->
             <p id="travel-quote" class="hidden">"All we have to decide is what to do with the time that is given us."<br>- J.R.R. Tolkien, <em>The Lord of the Rings</em></p>
         </section>
     </main>
