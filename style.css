@@ -297,3 +297,8 @@ footer a.clickable:hover {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
+/* Smooth transition when switching images */
+.header-image {
+    transition: opacity 0.3s ease-in-out;
+}
+
