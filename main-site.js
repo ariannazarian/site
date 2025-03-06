@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let currentIndex = 0;
+    const imgElement = document.getElementById("header-img"); // The visible PNG fallback
+    const sourceElement = document.getElementById("header-source"); // WebP source
 
     const images = [
         { webp: "assets/images/no-admittance.webp", png: "assets/images/no-admittance.png" },
@@ -7,41 +8,20 @@ document.addEventListener("DOMContentLoaded", function () {
         { webp: "assets/images/anpiano.webp", png: "assets/images/anpiano.png" }
     ];
 
-    document.body.addEventListener("click", function (event) {
-        const pictureElement = document.getElementById("header-image");
+    let currentIndex = 0; // Start with "no-admittance"
 
-        // Ensure the click is on the header image
-        if (!pictureElement || !event.target.closest("#header-img")) return;
+    imgElement.style.cursor = "pointer"; // Show that the image is clickable
 
-        // Toggle index to cycle through images
+    imgElement.addEventListener("click", function () {
+        // Toggle index between 0 and 1
         currentIndex = (currentIndex + 1) % images.length;
 
-        // Create a new <picture> element
-        const newPicture = document.createElement("picture");
-        newPicture.id = "header-image";
-        newPicture.setAttribute("role", "button");
-        newPicture.setAttribute("aria-label", "Toggle header image");
+        // Update WebP and PNG sources
+        sourceElement.srcset = images[currentIndex].webp;
+        imgElement.src = images[currentIndex].png;
 
-        // Create new <source> for WebP
-        const newSource = document.createElement("source");
-        newSource.srcset = images[currentIndex].webp;
-        newSource.type = "image/webp";
-
-        // Create new <img> for PNG fallback
-        const newImg = document.createElement("img");
-        newImg.id = "header-img";
-        newImg.src = images[currentIndex].png;
-        newImg.alt = "Sign reading 'No Admittance Except on Party Business'";
-        newImg.classList.add("header-image");
-        newImg.setAttribute("loading", "lazy");
-        newImg.setAttribute("tabindex", "0");
-        newImg.style.cursor = "pointer";
-
-        // Append new elements to <picture>
-        newPicture.appendChild(newSource);
-        newPicture.appendChild(newImg);
-
-        // Replace the old <picture> with the new one
-        pictureElement.replaceWith(newPicture);
+        // Force the browser to reload the image (fixes caching issues)
+        imgElement.removeAttribute("src");
+        imgElement.setAttribute("src", images[currentIndex].png);
     });
 });

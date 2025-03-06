@@ -5,32 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>work | Arian Nazarian</title>
     <link rel="stylesheet" href="style.css">
-
-    <script src="main-site.js" defer></script>
 </head>
+<script src="main-site.js" defer></script>
 <body>
     <header>
         <picture id="header-image" role="button" aria-label="Toggle header image">
-            <source srcset="assets/images/no-admittance.webp" type="image/webp">
+            <source id="header-source" srcset="assets/images/no-admittance.webp" type="image/webp">
             <img id="header-img" src="assets/images/no-admittance.png" 
-                 alt="Sign reading 'No Admittance Except on Party Business'" 
+                 alt="No Admittance Except on Party Business" 
                  class="header-image" loading="lazy" tabindex="0">
         </picture>
-        
-        <nav aria-label="Main navigation">
-            <a href="index.html" class="clickable"><span class="back-arrow" role="button">&lt;</span> work</a>
-        </nav>
+        <nav>
+            <a href="index.html"><span class="back-arrow">&lt;</span> work</a>
+        </nav>        
     </header>
-
+    
     <main>
-        <p class="category-quote">
-            "It's the job that's never started as takes longest to finish."<br>
-            - J.R.R. Tolkien, <em>The Lord of the Rings</em>
-        </p>
+        <p class="category-quote">"It's the job that's never started as takes longest to finish."<br>- J.R.R. Tolkien, <em>The Lord of the Rings</em></p>
     </main>
-
     <footer>
-        <p>&copy; 2025 Arian Nazarian | <a href="#top" class="clickable" role="button">Top ▲</a></p>
+        <p>&copy; 2025 Arian Nazarian | <a href="#top" class="clickable">Top ▲</a></p>
     </footer>    
 </body>
 </html>
