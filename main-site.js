@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const imgElement = document.getElementById("header-img"); // The visible PNG fallback
     const sourceElement = document.getElementById("header-source"); // WebP source
+    const pictureElement = document.getElementById("header-image"); // The entire <picture> element
 
     const images = [
         { webp: "assets/images/no-admittance.webp", png: "assets/images/no-admittance.png" },
@@ -16,11 +17,19 @@ document.addEventListener("DOMContentLoaded", function () {
         // Toggle index between 0 and 1
         currentIndex = (currentIndex + 1) % images.length;
 
-        // Update WebP and PNG sources
-        sourceElement.srcset = images[currentIndex].webp;
+        // Create a new <source> element to properly update WebP
+        const newSource = document.createElement("source");
+        newSource.id = "header-source";
+        newSource.srcset = images[currentIndex].webp;
+        newSource.type = "image/webp";
+
+        // Replace the old source element
+        sourceElement.replaceWith(newSource);
+
+        // Update PNG fallback
         imgElement.src = images[currentIndex].png;
 
-        // Force the browser to reload the image (fixes caching issues)
+        // Ensure browser reloads the new image (fixes caching issues)
         imgElement.removeAttribute("src");
         imgElement.setAttribute("src", images[currentIndex].png);
     });
