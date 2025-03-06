@@ -255,7 +255,7 @@ nav a:hover {
     color: #990000; /* USC Cardinal */
     padding: 2px 4px;
     border-radius: 2px;
-    font-size: 8px;
+    font-size: 16px;
     cursor: pointer;
     text-align: center;
 }
