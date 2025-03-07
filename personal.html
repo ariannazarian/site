@@ -39,28 +39,36 @@
         </div>
         
         <script>
-            function loadVideo(el, videoId) {
-                // Stop all other playing videos before loading a new one
-                document.querySelectorAll('.video-thumbnail').forEach(vid => {
-                    if (vid !== el) {
-                        vid.innerHTML = vid.dataset.originalContent; // Restore original thumbnail
-                    }
-                });
-    
-                // Store original thumbnail for restoration later
-                if (!el.dataset.originalContent) {
-                    el.dataset.originalContent = el.innerHTML;
-                }
-    
-                // Set the width of the iframe to match the original thumbnail width
-                const width = el.offsetWidth; 
-    
-                // Replace thumbnail with iframe (keeping the same width)
-                el.innerHTML = `<iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
-                                src="https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0"
-                                frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen></iframe>`;
-            }
+            document.addEventListener("DOMContentLoaded", function () {
+    // Store the original HTML content of each video thumbnail when the page loads
+    document.querySelectorAll('.video-thumbnail').forEach(vid => {
+        vid.dataset.originalContent = vid.innerHTML;
+    });
+});
+
+function loadVideo(el, videoId) {
+    // Stop all other playing videos before loading a new one
+    document.querySelectorAll('.video-thumbnail').forEach(vid => {
+        if (vid !== el && vid.dataset.originalContent) {
+            vid.innerHTML = vid.dataset.originalContent; // Restore original thumbnail
+        }
+    });
+
+    // Ensure the clicked element stores its original content
+    if (!el.dataset.originalContent) {
+        el.dataset.originalContent = el.innerHTML;
+    }
+
+    // Set the width of the iframe to match the original thumbnail width
+    const width = el.offsetWidth;
+
+    // Replace thumbnail with iframe (keeping the same width)
+    el.innerHTML = `<iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0"
+                    frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>`;
+}
+
         </script>
         
         <style>
