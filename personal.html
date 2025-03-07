@@ -136,14 +136,15 @@ function toggleVideo(index) {
 .video-container {
     display: none;
     aspect-ratio: 16 / 9;
-    margin-bottom: 5px; /* Less space below videos */
+    margin-bottom: 2px; /* Further reduced space below videos */
 }
 
+/* Further reduced space below thumbnails */
 .video-thumbnail {
     position: relative;
     width: 50%;
     max-width: 800px;
-    margin: 10px auto 0 auto; /* Removed extra bottom space */
+    margin: 5px auto 2px auto; /* Less space below */
     cursor: pointer;
     aspect-ratio: 16 / 9;
 }
@@ -155,15 +156,15 @@ function toggleVideo(index) {
     display: block;
 }
 
-/* 🔹 Optimized Play Button */
+/* 🔹 Optimized Play Button (Increased Size on Desktop) */
 .play-button {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: black;
-    width: 14%; /* Slightly larger, but balanced */
-    height: 14%; /* Adjusted for proper proportions */
+    width: 18%; /* Increased from 14% to make it larger */
+    height: 18%; /* Increased height for better proportions */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -171,21 +172,15 @@ function toggleVideo(index) {
     transition: transform 0.2s ease-in-out, background 0.2s ease-in-out;
 }
 
-/* 🔹 Properly Sized White Triangle Inside the Play Button */
+/* 🔹 Larger White Triangle Inside the Play Button (Desktop) */
 .play-button::before {
     content: "";
     display: block;
     width: 0;
     height: 0;
-    border-left: 50% solid white;
-    border-top: 25% solid transparent;
-    border-bottom: 25% solid transparent;
-}
-
-/* 🔹 Play Button Hover Effect Restored */
-.play-button:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translate(-50%, -50%) scale(1.1);
+    border-left: 60% solid white; /* Increased from 50% */
+    border-top: 30% solid transparent;
+    border-bottom: 30% solid transparent;
 }
 
 /* 🔹 Adjust Play Button for Mobile Screens */
@@ -195,13 +190,21 @@ function toggleVideo(index) {
     }
 
     .play-button {
-        width: 16%; /* Larger on mobile for better tap area */
-        height: 16%;
+        width: 20%; /* Larger on mobile */
+        height: 20%;
     }
 
     .play-button::before {
-        border-left-width: 55%;
+        border-left-width: 65%;
+        border-top-width: 32%;
+        border-bottom-width: 32%;
     }
+}
+
+/* 🔹 Play Button Hover Effect */
+.play-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%) scale(1.1);
 }
 
 /* 🔹 Blinking Down/Up Arrow (Matching Eternal Watch) */
@@ -215,7 +218,6 @@ function toggleVideo(index) {
     0% { opacity: 1; }
     100% { opacity: 0.3; }
 }
-
         </style>
     </main>    
     <footer>
