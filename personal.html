@@ -136,14 +136,14 @@ function toggleVideo(index) {
 .video-container {
     display: none;
     aspect-ratio: 16 / 9;
-    margin-bottom: 10px; /* Reduces excessive space below videos */
+    margin-bottom: 5px; /* Less space below videos */
 }
 
 .video-thumbnail {
     position: relative;
     width: 50%;
     max-width: 800px;
-    margin: 10px auto 5px auto; /* Less space below */
+    margin: 10px auto 0 auto; /* Removed extra bottom space */
     cursor: pointer;
     aspect-ratio: 16 / 9;
 }
@@ -155,59 +155,66 @@ function toggleVideo(index) {
     display: block;
 }
 
-/* 🔹 Larger Play Button - Scales Dynamically */
+/* 🔹 Optimized Play Button */
 .play-button {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: black;
-    width: 16%; /* Increased size for better visibility */
-    height: 10%;
+    width: 14%; /* Slightly larger, but balanced */
+    height: 14%; /* Adjusted for proper proportions */
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 2px; /* Slightly softened edges */
+    border-radius: 2px;
+    transition: transform 0.2s ease-in-out, background 0.2s ease-in-out;
 }
 
-/* 🔹 White Triangle Inside the Play Button */
+/* 🔹 Properly Sized White Triangle Inside the Play Button */
 .play-button::before {
     content: "";
     display: block;
     width: 0;
     height: 0;
-    border-left: 50% solid white; /* Triangle size scales with button */
+    border-left: 50% solid white;
     border-top: 25% solid transparent;
     border-bottom: 25% solid transparent;
 }
 
-    /* 🔹 Make the Play Button Larger for Mobile Screens */
-    @media (max-width: 768px) {
+/* 🔹 Play Button Hover Effect Restored */
+.play-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* 🔹 Adjust Play Button for Mobile Screens */
+@media (max-width: 768px) {
     .video-thumbnail {
         width: 80%;
     }
 
     .play-button {
-        width: 20%; /* Slightly larger on mobile */
+        width: 16%; /* Larger on mobile for better tap area */
+        height: 16%;
     }
 
-    /* Adjust only the necessary triangle properties */
     .play-button::before {
         border-left-width: 55%;
     }
-    }
+}
 
-    /* 🔹 Blinking Down/Up Arrow (Matching Eternal Watch) */
-    .toggle-arrow {
-        display: inline-block;
-        animation: blink 1s infinite alternate;
-        margin-left: 5px;
-    }
+/* 🔹 Blinking Down/Up Arrow (Matching Eternal Watch) */
+.toggle-arrow {
+    display: inline-block;
+    animation: blink 1s infinite alternate;
+    margin-left: 5px;
+}
 
-    @keyframes blink {
-        0% { opacity: 1; }
-        100% { opacity: 0.3; }
-    }
+@keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
 
         </style>
     </main>    
