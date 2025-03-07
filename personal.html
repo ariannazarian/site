@@ -39,25 +39,27 @@
             font-weight: bold;
             color: white; /* Adjust if needed */
             margin-bottom: 5px;
-    }
+        }
+
+        .video-container {
+            width: 50%; /* Ensures it stays at 50% width on larger screens */
+            margin: 0 auto; /* Centers the video */
+        }
+
+        .video-container iframe {
+            width: 100%; /* Makes the iframe responsive within its container */
+            height: auto;
+            aspect-ratio: 16 / 9; /* Keeps video aspect ratio */
+            display: block;
+        }
+
+        /* Expands to 80% ONLY on screens smaller than 768px (mobile) */
+        @media (max-width: 768px) {
             .video-container {
-                width: 50%; /* Default width */
-                max-width: 1970px; /* Prevents it from being too large */
-                margin: 0 auto; /* Centers the video */
+                width: 80%;
             }
-        
-            .video-container iframe {
-                width: 100%; /* Makes the iframe responsive */
-                height: auto;
-                aspect-ratio: 16 / 9; /* Keeps video aspect ratio */
-                display: block;
-            }
-        
-            @media (max-width: 1970px) {
-                .video-container {
-                    width: 80%; /* Expands to 80% width on mobile */
-                }
-            }
+        }
+
         </style>
         
     </main>
