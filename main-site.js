@@ -17,9 +17,9 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (document.body.classList.contains("personal-page")) {
         // Personal Page Images (Example: Modify as needed)
         images = [
-            { webp: "assets/images/no-admittance.webp", png: "assets/images/no-admittance.png" },
-            { webp: "assets/images/pinkfinger.webp", png: "assets/images/pinkfinger.png" },
-            { webp: "assets/images/anpiano.webp", png: "assets/images/anpiano.png" }
+            { webp: "assets/images/riskybusiness.webp", png: "assets/images/riskybusiness.png" },
+            { webp: "assets/images/foodfight.webp", png: "assets/images/foodfight.png" },
+            { webp: "assets/images/pizzabros.webp", png: "assets/images/pizzabros.png" }
         ];
     } else {
         // Default to Main Page Images
