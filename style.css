@@ -320,3 +320,15 @@ footer a.clickable:hover {
 .header-image {
     transition: opacity 0.3s ease-in-out;
 }
+
+/* Blinking Down/Up Arrow (Stops After First Click) */
+.blink-arrow {
+    display: inline-block;
+    animation: blink 1s infinite alternate;
+    margin-left: 5px;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
