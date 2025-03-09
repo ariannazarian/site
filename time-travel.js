@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let hasStartedOnce = false;
     let hasRevealedStoryOnce = false;
     let hasRevealedYearsOnce = false;
-    let hasToggledMathOnce = false; // Track if math toggle has been used
     let hasRevealedLatinOnce = false;
     let hasRevealedQuoteOnce = false;
     let hasRevealedWatchOnce = false;
@@ -70,42 +69,35 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
     document.querySelector("#reveal-matching-alt").addEventListener("click", toggleMatchingYears);
-    document.querySelector("#math-toggle").addEventListener("click", toggleMathSection);
-
 
     function toggleMatchingYears() {
         let matchingYears = document.querySelector("#matching-years");
         let travelQuote = document.querySelector("#travel-quote");
-        let mathToggle = document.querySelector("#math-toggle");
         let arrow = document.querySelector("#watch-arrow");
         let expanded = matchingYears.style.display === "block";
-    
+
         if (!hasToggledYearsOnce) {
             arrow.classList.remove("blink-arrow"); // Stop blinking after first toggle
             hasToggledYearsOnce = true;
         }
-    
+
         if (expanded) {
             matchingYears.style.display = "none";
             travelQuote.style.display = "none";
-            mathToggle.style.display = "none"; // Hide math toggle as well
             arrow.innerText = "▼";
         } else {
             matchingYears.style.display = "block";
             travelQuote.style.display = "block";
-            mathToggle.style.display = "block"; // Ensure math toggle appears
             arrow.innerText = "▲";
-    
+
             if (!hasRevealedYearsOnce) {
                 revealMatchingYearsWithFade(() => {
                     if (!hasRevealedQuoteOnce) {
-                        fadeInTravelQuoteAndMath(); // Now ensures both fade in
+                        fadeInTravelQuote();
                         hasRevealedQuoteOnce = true;
                     } else {
                         travelQuote.style.opacity = 1;
-                        mathToggle.style.opacity = 1;
                         travelQuote.style.transition = "none";
-                        mathToggle.style.transition = "none";
                     }
                 });
                 hasRevealedYearsOnce = true;
@@ -115,51 +107,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     el.style.transition = "none";
                 });
                 travelQuote.style.opacity = 1;
-                mathToggle.style.opacity = 1;
                 travelQuote.style.transition = "none";
-                mathToggle.style.transition = "none";
             }
         }
     }
-    
-    function toggleMathSection() {
-        let mathContent = document.querySelector("#math-content");
-        let mathArrow = document.querySelector("#math-arrow");
-        let travelQuote = document.querySelector("#travel-quote");
-        let expanded = mathContent.style.display === "block";
-    
-        if (!hasToggledMathOnce) {
-            mathArrow.classList.remove("blink-arrow"); // Stop blinking after first toggle
-            hasToggledMathOnce = true;
-        }
-    
-        if (expanded) {
-            mathContent.style.opacity = "0";
-            setTimeout(() => {
-                mathContent.style.display = "none";
-            }, 300);
-            mathArrow.innerText = "▼";
-        } else {
-            mathContent.style.display = "block";
-            mathContent.style.opacity = "0";
-            mathContent.style.transition = "opacity 3s ease-in";
-            setTimeout(() => {
-                mathContent.style.opacity = "1";
-            }, 50);
-            mathArrow.innerText = "▲";
-        }
-    
-        // Ensure the travel quote also fades in if it hasn't already
-        if (travelQuote.style.display === "none") {
-            travelQuote.style.display = "block";
-            travelQuote.style.opacity = "0";
-            travelQuote.style.transition = "opacity 3s ease-in";
-            setTimeout(() => {
-                travelQuote.style.opacity = "1";
-            }, 50);
-        }
-    }
-    
 
     function revealMatchingYearsWithFade(callback) {
         let matchingYears = document.querySelector("#matching-years");
@@ -251,21 +202,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function fadeInTravelQuoteAndMath() {
+    function fadeInTravelQuote() {
         let travelQuote = document.querySelector("#travel-quote");
-        let mathToggle = document.querySelector("#math-toggle"); // Ensure the toggle text appears
-        let mathContent = document.querySelector("#math-content"); // Ensure content loads smoothly
-    
         travelQuote.style.display = "block";
-        mathToggle.style.display = "block";
-        mathContent.style.display = "none"; // Ensure content is hidden at first
-    
         setTimeout(() => {
             travelQuote.style.opacity = 1;
-            mathToggle.style.opacity = 1;
         }, 50);
     }
-    
 
     function playAudioWithFadeIn() {
         if (!audio) return;
