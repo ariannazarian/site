@@ -1,49 +1,56 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const imgElement = document.getElementById("header-img"); // The visible PNG fallback
-    const sourceElement = document.getElementById("header-source"); // WebP source
+    const imgElement = document.getElementById("header-img"); // Select the header image
+    if (!imgElement) return; // Exit if no header image is found
 
-    if (!imgElement || !sourceElement) return; // Exit if header image elements are missing
+    // Detect current page by checking the body class once
+    let pageType = document.body.className;
 
-    // Detect current page by checking the body class
-    let images = [];
+    // Define images based on page type
+    const images = {
+        "work-page": [
+            "assets/images/lumondesk.webp",
+            "assets/images/bighousebunny.webp",
+            "assets/images/latexsnl.webp"
+        ],
+        "personal-page": [
+            "assets/images/riskybusiness.webp",
+            "assets/images/foodfight.webp",
+            "assets/images/pizzabros.webp"
+        ],
+        "default": [
+            "assets/images/no-admittance.webp",
+            "assets/images/pinkfinger.webp",
+            "assets/images/anpiano.webp"
+        ]
+    };
 
-    if (document.body.classList.contains("work-page")) {
-        // Work Page Images
-        images = [
-            { webp: "assets/images/lumondesk.webp", png: "assets/images/lumondesk.png" },
-            { webp: "assets/images/bighousebunny.webp", png: "assets/images/bighousebunny.png" },
-            { webp: "assets/images/latexsnl.webp", png: "assets/images/latexsnl.png" }
-        ];
-    } else if (document.body.classList.contains("personal-page")) {
-        // Personal Page Images (Example: Modify as needed)
-        images = [
-            { webp: "assets/images/riskybusiness.webp", png: "assets/images/riskybusiness.png" },
-            { webp: "assets/images/foodfight.webp", png: "assets/images/foodfight.png" },
-            { webp: "assets/images/pizzabros.webp", png: "assets/images/pizzabros.png" }
-        ];
-    } else {
-        // Default to Main Page Images
-        images = [
-            { webp: "assets/images/no-admittance.webp", png: "assets/images/no-admittance.png" },
-            { webp: "assets/images/pinkfinger.webp", png: "assets/images/pinkfinger.png" },
-            { webp: "assets/images/anpiano.webp", png: "assets/images/anpiano.png" }
-        ];
+    let currentIndex = 0;
+    let activeImages = images[pageType] || images["default"]; // Select correct image set
+
+    imgElement.style.cursor = "pointer"; // Indicate interactivity
+
+    // Preload the next image in sequence to improve swap speed
+    function preloadNextImage(index) {
+        let img = new Image();
+        img.src = activeImages[(index + 1) % activeImages.length];
     }
 
-    let currentIndex = 0; // Start with "no-admittance"
-
-    imgElement.style.cursor = "pointer"; // Show that the image is clickable
-
+    // Handle image cycling
     imgElement.addEventListener("click", function () {
-        // Toggle index between 0 and 1
-        currentIndex = (currentIndex + 1) % images.length;
-
-        // Update WebP and PNG sources
-        sourceElement.srcset = images[currentIndex].webp;
-        imgElement.src = images[currentIndex].png;
-
-        // Force the browser to reload the image (fixes caching issues)
-        imgElement.removeAttribute("src");
-        imgElement.setAttribute("src", images[currentIndex].png);
+        currentIndex = (currentIndex + 1) % activeImages.length;
+        imgElement.src = activeImages[currentIndex];
+        preloadNextImage(currentIndex); // Preload the next image in sequence
     });
+
+    // 🔹 Ensure ARIA updates dynamically for pop-ups
+    document.querySelectorAll(".popup-radio").forEach((radio) => {
+        radio.addEventListener("change", () => {
+            document.querySelectorAll(".popup").forEach((popup) => {
+                popup.setAttribute("aria-hidden", !radio.checked);
+            });
+        });
+    });
+
+    // Preload the next image initially
+    preloadNextImage(currentIndex);
 });

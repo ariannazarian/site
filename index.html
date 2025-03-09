@@ -17,68 +17,69 @@
     <meta name="apple-mobile-web-app-title" content="ANweb" />
     <link rel="manifest" href="assets/icons/site.webmanifest" />
 
-    <!-- Async load JavaScript for performance -->
+       <!-- Async load JavaScript for performance -->
     <script src="main-site.js" defer></script>
-</head>
-<body>
-    <div id="top"></div>
-    <header>
-        <picture id="header-image" role="button" aria-label="Toggle header image">
-            <img id="header-img" src="assets/images/no-admittance.webp" 
-                alt="No Admittance Except on Party Business" 
-                class="header-image" loading="eager" fetchpriority="high">
-        </picture>
-    
-        <!-- Email Address in Header -->
-        <h2 class="email">
-            <label for="popup-ariann" class="clickable bold-text">ARIANN</label> <em>at</em> 
-            <label for="popup-usc" class="clickable bold-text">USC</label> <em>dot</em> 
-            <label for="popup-edu" class="clickable bold-text">EDU</label>
-        </h2>
-    
-        <!-- Personal Website Description -->
-        <p class="personal-text">
-            This is my <a href="personal.html" class="clickable">personal</a> website where I share my <a href="work.html" class="clickable">work</a>.
-        </p>
+    </head>
+    <body>
+        <div id="top"></div>
+        <header>
+            <picture id="header-image" role="button" aria-label="Toggle header image">
+                <img id="header-img" src="assets/images/no-admittance.webp" 
+                    alt="No Admittance Except on Party Business" 
+                    class="header-image" loading="eager" fetchpriority="high">
+            </picture>
         
-    </header>
-
-    <main>
-        <!-- Hidden reset radio (this allows toggling off the currently open pop-up) -->
-        <input type="radio" id="popup-reset" name="popup-group" class="popup-radio" checked>
+            <!-- Email Address in Header -->
+            <h2 class="email">
+                <label for="popup-ariann" class="clickable bold-text">ARIANN</label> <em>at</em> 
+                <label for="popup-usc" class="clickable bold-text">USC</label> <em>dot</em> 
+                <label for="popup-edu" class="clickable bold-text">EDU</label>
+            </h2>
+        
+            <!-- Personal Website Description -->
+            <p class="personal-text">
+                This is my <a href="personal.html" class="clickable">personal</a> website where I share my <a href="work.html" class="clickable">work</a>.
+            </p>
+            
+        </header>
     
-        <!-- Hidden radio buttons for each pop-up -->
-        <input type="radio" id="popup-ariann" name="popup-group" class="popup-radio">
-        <input type="radio" id="popup-usc" name="popup-group" class="popup-radio">
-        <input type="radio" id="popup-edu" name="popup-group" class="popup-radio">
+        <main>
+            <!-- Hidden reset radio (this allows toggling off the currently open pop-up) -->
+            <input type="radio" id="popup-reset" name="popup-group" class="popup-radio" checked>
+        
+            <!-- Hidden radio buttons for each pop-up -->
+            <input type="radio" id="popup-ariann" name="popup-group" class="popup-radio">
+            <input type="radio" id="popup-usc" name="popup-group" class="popup-radio">
+            <input type="radio" id="popup-edu" name="popup-group" class="popup-radio">
+        
+            <!-- Pop-ups -->
+            <div class="popup" id="popup-ariann-box" role="dialog" aria-label="Welcome message from Arian" aria-hidden="true">
+                <p>Hello, I'm Arian! Let's explore the "<em>curious and curiouser</em>" together.</p>
+                <label for="popup-reset" class="close-button">close</label>
+            </div>
+        
+            <div class="popup" id="popup-usc-box" role="dialog" aria-label="USC Fight On! slogan" aria-hidden="true">
+                <p>Stay (M.S.)<em>FINE</em> and <strong>Fight On</strong>! :)</p>
+                <label for="popup-reset" class="close-button">close</label>
+            </div>
+        
+            <div class="popup" id="popup-edu-box" role="dialog" aria-label="Arian's education history" aria-hidden="true">
+                <p><strong>Financial Engineering, M.S.</strong> (2025–)<br> <em>University of Southern California</em></p>
     
-        <!-- Pop-ups -->
-        <div class="popup" id="popup-ariann-box" role="dialog" aria-label="Welcome message from Arian" aria-hidden="true">
-            <p>Hello, I'm Arian! Let's explore the "<em>curious and curiouser</em>" together.</p>
-            <label for="popup-reset" class="close-button">close</label>
-        </div>
+                <p><strong>Economics, B.A.</strong> (2024)<br> <em>University of California, Riverside</em><br> <em>The London School of Economics</em></p>
     
-        <div class="popup" id="popup-usc-box" role="dialog" aria-label="USC Fight On! slogan" aria-hidden="true">
-            <p>Stay (M.S.)<em>FINE</em> and <strong>Fight On</strong>! :)</p>
-            <label for="popup-reset" class="close-button">close</label>
-        </div>
+                <p><strong>Economics, A.A.-T</strong> (2021)<br><strong>Film Production, A.S.-T</strong> (2021)<br> <em>Pasadena City College</em></p>
     
-        <div class="popup" id="popup-edu-box" role="dialog" aria-label="Arian's education history" aria-hidden="true">
-            <p><strong>Financial Engineering, M.S.</strong> (2025–)<br> <em>University of Southern California</em></p>
-
-            <p><strong>Economics, B.A.</strong> (2024)<br> <em>University of California, Riverside</em><br> <em>The London School of Economics</em></p>
-
-            <p><strong>Economics, A.A.-T</strong> (2021)<br><strong>Film Production, A.S.-T</strong> (2021)<br> <em>Pasadena City College</em></p>
-
-            <p>...and if we’re counting everything, I also attended preschool at USC—so really, it’s all come full circle.</p>
-
-            <label for="popup-reset" class="close-button">close</label>
-        </div>
-        <p class="category-quote">"It's the job that's never started as takes longest to finish."<br>- J.R.R. Tolkien, <em>The Lord of the Rings</em></p>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 Arian Nazarian | <a href="#top" class="clickable">Top ▲</a></p>
-    </footer>    
-</body>
-</html>
+                <p>...and if we’re counting everything, I also attended preschool at USC—so really, it’s all come full circle.</p>
+    
+                <label for="popup-reset" class="close-button">close</label>
+            </div>
+            <p class="category-quote">"It's the job that's never started as takes longest to finish."<br>- J.R.R. Tolkien, <em>The Lord of the Rings</em></p>
+        </main>
+    
+        <footer>
+            <p>&copy; 2025 Arian Nazarian | <a href="#top" class="clickable">Top ▲</a></p>
+        </footer>    
+    </body>
+    </html>
+    
