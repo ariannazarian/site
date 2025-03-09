@@ -48,14 +48,14 @@
         </div>
     
         <script>
-    document.addEventListener("DOMContentLoaded", function () {
+           document.addEventListener("DOMContentLoaded", function () {
     // Store the original HTML content of each video thumbnail when the page loads
     document.querySelectorAll('.video-thumbnail').forEach(vid => {
         vid.dataset.originalContent = vid.innerHTML;
     });
 });
 
-    function loadVideo(el, videoId) {
+function loadVideo(el, videoId) {
     // Stop all other playing videos before loading a new one
     document.querySelectorAll('.video-thumbnail').forEach(vid => {
         if (vid !== el && vid.dataset.originalContent) {
@@ -111,8 +111,7 @@ function toggleVideo(index) {
 }
 
 
-    </script>
-    
+        </script>
     </main>    
     <footer>
         <p>&copy; 2025 Arian Nazarian | <a href="#top" class="clickable">Top ▲</a></p>

@@ -54,5 +54,3 @@ document.addEventListener("DOMContentLoaded", function () {
     // Preload the next image initially
     preloadNextImage(currentIndex);
 });
-
-
