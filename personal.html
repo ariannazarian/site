@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>personal | Arian Nazarian</title>
     <link rel="stylesheet" href="style.css">
-
-    <!-- JavaScript (Now Only `main-site.js` Since It Handles Video) -->
-    <script src="main-site.js" defer></script>
 </head>
+<script src="main-site.js" defer></script>
 <body class="personal-page">
     <header>
         <img id="header-img" src="assets/images/riskybusiness.webp" 
@@ -22,31 +20,31 @@
     <main>
         <div class="video-wrapper">
             <!-- Video 1 -->
-            <p class="video-title clickable" role="button" aria-expanded="false">
+            <p class="video-title clickable" onclick="toggleVideo(0)">
                 <em>In a Lil Pickle</em>, 2018 
                 <span class="toggle-arrow">▼</span>
             </p>
             <div class="video-container">
-                <div class="video-thumbnail" role="button" aria-label="Play In a Lil Pickle">
+                <div class="video-thumbnail" onclick="loadVideo(this, 'sC6eCwCiWEw')" role="button" aria-label="Play In a Lil Pickle">
                     <img src="https://img.youtube.com/vi/sC6eCwCiWEw/hqdefault.jpg" alt="In a Lil Pickle short film thumbnail.">
                     <div class="play-button">▶</div>
                 </div>
             </div>
     
             <!-- Video 2 -->
-            <p class="video-title clickable" role="button" aria-expanded="false">
+            <p class="video-title clickable" onclick="toggleVideo(1)">
                 <em>Free Pizza</em>, 2018 
                 <span class="toggle-arrow">▼</span>
             </p>
             <div class="video-container">
-                <div class="video-thumbnail" role="button" aria-label="Play Free Pizza">
+                <div class="video-thumbnail" onclick="loadVideo(this, '0yFkQ1g7qp4')" role="button" aria-label="Play Free Pizza">
                     <img src="https://img.youtube.com/vi/0yFkQ1g7qp4/hqdefault.jpg" alt="Free Pizza short film thumbnail.">
                     <div class="play-button">▶</div>
                 </div>
             </div>
         </div>
+    
     </main>    
-
     <footer>
         <p>&copy; 2025 Arian Nazarian | <a href="#top" class="clickable">Top ▲</a></p>
     </footer>    
