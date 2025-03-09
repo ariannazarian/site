@@ -155,28 +155,25 @@ function loadVideo(el, videoId) {
 function toggleVideo(index) {
     const videos = document.querySelectorAll('.video-container');
     const arrows = document.querySelectorAll('.toggle-arrow');
+    const videoTitles = document.querySelectorAll(".video-title");
     const videoThumbnail = videos[index].querySelector(".video-thumbnail");
 
-    if (videos[index].style.display === "none" || videos[index].style.display === "") {
-        videos[index].style.display = "block";
-        arrows[index].textContent = "▲"; // Change arrow to up
+    let isExpanded = videos[index].classList.toggle("hidden");
 
-        // If the video was previously played and removed, reload its original thumbnail (but NOT autoplay)
-        if (videoThumbnail.dataset.videoId) {
-            loadVideo(videoThumbnail, videoThumbnail.dataset.videoId);
-        }
-    } else {
-        videos[index].style.display = "none";
-        arrows[index].textContent = "▼"; // Change arrow to down
+    arrows[index].textContent = isExpanded ? "▼" : "▲"; // Change arrow direction
 
-        // Find and pause the video inside the container
-        const iframe = videos[index].querySelector("iframe");
-        if (iframe) {
-            iframe.src = ""; // Reset the iframe's src to stop the video
-        }
+    if (!isExpanded && videoThumbnail.dataset.videoId) {
+        loadVideo(videoThumbnail, videoThumbnail.dataset.videoId);
     }
 
-    // Stop blinking after first click
+    const iframe = videos[index].querySelector("iframe");
+    if (isExpanded && iframe) {
+        iframe.src = ""; // Reset iframe src to stop video
+    }
+
     arrows[index].classList.remove("blink-arrow");
-    arrows[index].style.animation = "none"; // Ensures blinking stops completely
+    arrows[index].style.animation = "none";
+
+    // 🔹 Update ARIA attribute dynamically
+    videoTitles[index].setAttribute("aria-expanded", !isExpanded);
 }

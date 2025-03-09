@@ -365,16 +365,6 @@ footer a.clickable:hover {
     transition: opacity 0.3s ease, text-shadow 0.3s ease;
 }
 
-/* Hover effect for video titles (matching Eternal Watch style) */
-.video-title:hover {
-    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
-}
-
-/* Video containers start hidden */
-.video-container {
-    display: none;
-}
-
 .video-thumbnail {
     position: relative;
     width: 50%;
