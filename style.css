@@ -333,25 +333,6 @@ footer a.clickable:hover {
     100% { opacity: 0.3; }
 }
 
-/* Hover effect for video titles (matching Eternal Watch style) */
-.video-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    margin-bottom: 2px;
-    cursor: pointer; /* Make title clickable */
-    transition: opacity 0.3s ease, text-shadow 0.3s ease;
-}
-
-.video-title:hover {
-    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
-}
-
-/* Video containers start hidden */
-.video-container {
-    display: none;
-}
-
 .video-wrapper {
     text-align: center;
 }
@@ -363,6 +344,16 @@ footer a.clickable:hover {
     margin-bottom: 5px;
     cursor: pointer; /* Make title clickable */
     transition: opacity 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Hover effect for video titles (matching Eternal Watch style) */
+.video-title:hover {
+    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
+}
+
+/* Video containers start hidden */
+.video-container {
+    display: none;
 }
 
 .video-thumbnail {
@@ -422,3 +413,4 @@ footer a.clickable:hover {
         width: 80%;
     }
 }
+
