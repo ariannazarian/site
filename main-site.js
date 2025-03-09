@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 popup.setAttribute("aria-hidden", !radio.checked);
             });
         });
-    });
+    });    
 
     // Preload the next image initially
     preloadNextImage(currentIndex);
