@@ -63,11 +63,25 @@
 
         <p id="matching-years" class="hidden"></p>
 
-        <!-- Travel quote now starts hidden and is toggled by "This time traveller's watch..." -->
-        <p id="travel-quote" class="hidden">"All we have to decide is what to do with the time that is given us."<br>- J.R.R. Tolkien, <em>The Lord of the Rings</em></p>
-    </section>
-    <main>
-    </main>
+           <!-- Travel Quote Section -->
+    <p id="travel-quote" class="hidden">
+        "All we have to decide is what to do with the time that is given us."
+        <br>- J.R.R. Tolkien, <em>The Lord of the Rings</em>
+    </p>
+</section>
+
+<!-- Move the Mathematical Breakdown Outside of #eternal-watch -->
+<main>
+    <!-- The Mathematical Breakdown Toggle (Uses Existing Styles) -->
+    <p id="math-toggle" class="clickable bold-text">
+        The Math Behind the Eternal Watch <span class="blink-arrow" id="math-arrow">▼</span>
+    </p>
+
+    <!-- Hidden PDF Viewer (Initially Hidden) -->
+    <div id="math-content" class="hidden">
+        <iframe src="assets/docs/eternalmath.pdf" width="100%" height="500px"></iframe>
+    </div>
+</main>
     <footer>
         <p>&copy; 2025 Arian Nazarian | <a href="#top" class="clickable">Top ▲</a></p>
     </footer>    
