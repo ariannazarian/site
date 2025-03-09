@@ -1,11 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const imgElement = document.getElementById("header-img"); // Select the header image
-    if (!imgElement) return; // Exit if no header image is found
+    const imgElement = document.getElementById("header-img");
+    if (!imgElement) return; 
 
-    // Detect current page by checking the body class once
     let pageType = document.body.className;
 
-    // Define images based on page type
     const images = {
         "work-page": [
             "assets/images/lumondesk.webp",
@@ -25,32 +23,93 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     let currentIndex = 0;
-    let activeImages = images[pageType] || images["default"]; // Select correct image set
+    let activeImages = images[pageType] || images["default"];
 
-    imgElement.style.cursor = "pointer"; // Indicate interactivity
+    imgElement.style.cursor = "pointer";
 
-    // Preload the next image in sequence to improve swap speed
     function preloadNextImage(index) {
         let img = new Image();
         img.src = activeImages[(index + 1) % activeImages.length];
     }
 
-    // Handle image cycling
     imgElement.addEventListener("click", function () {
         currentIndex = (currentIndex + 1) % activeImages.length;
         imgElement.src = activeImages[currentIndex];
-        preloadNextImage(currentIndex); // Preload the next image in sequence
+        preloadNextImage(currentIndex);
     });
 
-    // 🔹 Ensure ARIA updates dynamically for pop-ups
     document.querySelectorAll(".popup-radio").forEach((radio) => {
         radio.addEventListener("change", () => {
             document.querySelectorAll(".popup").forEach((popup) => {
                 popup.setAttribute("aria-hidden", !radio.checked);
             });
         });
-    });    
+    });
 
-    // Preload the next image initially
     preloadNextImage(currentIndex);
+
+    // 🔹 Video Handling (Only Run on Personal Page)
+    if (document.body.classList.contains("personal-page")) {
+        setupVideoHandling();
+    }
 });
+
+// 🔹 VIDEO FUNCTIONS
+function setupVideoHandling() {
+    document.querySelectorAll(".video-title").forEach((title, index) => {
+        title.addEventListener("click", function () {
+            toggleVideo(index);
+        });
+    });
+
+    document.querySelectorAll('.video-thumbnail').forEach(vid => {
+        vid.dataset.originalContent = vid.innerHTML;
+    });
+}
+
+function loadVideo(el, videoId) {
+    document.querySelectorAll('.video-thumbnail').forEach(vid => {
+        if (vid !== el && vid.dataset.originalContent) {
+            vid.innerHTML = vid.dataset.originalContent;
+        }
+    });
+
+    if (!el.dataset.originalContent) {
+        el.dataset.originalContent = el.innerHTML;
+    }
+
+    el.dataset.videoId = videoId;
+    const width = el.offsetWidth;
+
+    el.innerHTML = `<iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
+                    src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0"
+                    frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>`;
+}
+
+function toggleVideo(index) {
+    const videos = document.querySelectorAll('.video-container');
+    const arrows = document.querySelectorAll('.toggle-arrow');
+    const videoTitles = document.querySelectorAll(".video-title");
+    const videoThumbnail = videos[index].querySelector(".video-thumbnail");
+
+    let isExpanded = videos[index].style.display !== "none";
+
+    videos[index].style.display = isExpanded ? "none" : "block";
+    arrows[index].textContent = isExpanded ? "▼" : "▲";
+
+    if (!isExpanded && videoThumbnail.dataset.videoId) {
+        loadVideo(videoThumbnail, videoThumbnail.dataset.videoId);
+    }
+
+    const iframe = videos[index].querySelector("iframe");
+    if (isExpanded && iframe) {
+        iframe.src = ""; 
+    }
+
+    arrows[index].classList.remove("blink-arrow");
+    arrows[index].style.animation = "none";
+
+    // 🔹 Update ARIA attribute dynamically
+    videoTitles[index].setAttribute("aria-expanded", !isExpanded);
+}

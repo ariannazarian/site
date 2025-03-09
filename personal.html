@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>personal | Arian Nazarian</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- JavaScript (Now Only `main-site.js` Since It Handles Video) -->
+    <script src="main-site.js" defer></script>
 </head>
-<script src="main-site.js" defer></script>
 <body class="personal-page">
     <header>
         <img id="header-img" src="assets/images/riskybusiness.webp" 
              alt="Tom Cruise in the 1983 film Risky Business holding a turkey leg" 
-             class="header-image" loading="lazy" tabindex="0">
+             class="header-image" loading="eager" fetchpriority="high" tabindex="0">
         <nav>
             <a href="index.html"><span class="back-arrow">&lt;</span> personal</a>
         </nav>
@@ -20,177 +22,31 @@
     <main>
         <div class="video-wrapper">
             <!-- Video 1 -->
-            <p class="video-title clickable" onclick="toggleVideo(0)">
+            <p class="video-title clickable" role="button" aria-expanded="false">
                 <em>In a Lil Pickle</em>, 2018 
                 <span class="toggle-arrow">▼</span>
             </p>
             <div class="video-container">
-                <div class="video-thumbnail" onclick="loadVideo(this, 'sC6eCwCiWEw')" role="button" aria-label="Play In a Lil Pickle">
+                <div class="video-thumbnail" role="button" aria-label="Play In a Lil Pickle">
                     <img src="https://img.youtube.com/vi/sC6eCwCiWEw/hqdefault.jpg" alt="In a Lil Pickle short film thumbnail.">
                     <div class="play-button">▶</div>
                 </div>
             </div>
     
             <!-- Video 2 -->
-            <p class="video-title clickable" onclick="toggleVideo(1)">
+            <p class="video-title clickable" role="button" aria-expanded="false">
                 <em>Free Pizza</em>, 2018 
                 <span class="toggle-arrow">▼</span>
             </p>
             <div class="video-container">
-                <div class="video-thumbnail" onclick="loadVideo(this, '0yFkQ1g7qp4')" role="button" aria-label="Play Free Pizza">
+                <div class="video-thumbnail" role="button" aria-label="Play Free Pizza">
                     <img src="https://img.youtube.com/vi/0yFkQ1g7qp4/hqdefault.jpg" alt="Free Pizza short film thumbnail.">
                     <div class="play-button">▶</div>
                 </div>
             </div>
         </div>
-    
-        <script>
-           document.addEventListener("DOMContentLoaded", function () {
-    // Store the original HTML content of each video thumbnail when the page loads
-    document.querySelectorAll('.video-thumbnail').forEach(vid => {
-        vid.dataset.originalContent = vid.innerHTML;
-    });
-});
-
-function loadVideo(el, videoId) {
-    // Stop all other playing videos before loading a new one
-    document.querySelectorAll('.video-thumbnail').forEach(vid => {
-        if (vid !== el && vid.dataset.originalContent) {
-            vid.innerHTML = vid.dataset.originalContent; // Restore original thumbnail
-        }
-    });
-
-    // Ensure the clicked element stores its original content
-    if (!el.dataset.originalContent) {
-        el.dataset.originalContent = el.innerHTML;
-    }
-
-    // Store the video ID for future toggles
-    el.dataset.videoId = videoId;
-
-    // Set the width of the iframe to match the original thumbnail width
-    const width = el.offsetWidth;
-
-    // Replace thumbnail with iframe (keeping the same width)
-    el.innerHTML = `<iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
-                    src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0"
-                    frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen></iframe>`;
-}
-
-function toggleVideo(index) {
-    const videos = document.querySelectorAll('.video-container');
-    const arrows = document.querySelectorAll('.toggle-arrow');
-    const videoThumbnail = videos[index].querySelector(".video-thumbnail");
-
-    if (videos[index].style.display === "none" || videos[index].style.display === "") {
-        videos[index].style.display = "block";
-        arrows[index].textContent = "▲"; // Change arrow to up
-
-        // If the video was previously played and removed, reload its original thumbnail (but NOT autoplay)
-        if (videoThumbnail.dataset.videoId) {
-            loadVideo(videoThumbnail, videoThumbnail.dataset.videoId);
-        }
-    } else {
-        videos[index].style.display = "none";
-        arrows[index].textContent = "▼"; // Change arrow to down
-
-        // Find and pause the video inside the container
-        const iframe = videos[index].querySelector("iframe");
-        if (iframe) {
-            iframe.src = ""; // Reset the iframe's src to stop the video
-        }
-    }
-
-    // Stop blinking after first click
-    arrows[index].classList.remove("blink-arrow");
-    arrows[index].style.animation = "none"; // Ensures blinking stops completely
-}
-        </script>
-    
-    <style>
-        .video-wrapper {
-            text-align: center;
-        }
-
-        .video-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 5px;
-            cursor: pointer; /* Make title clickable */
-            transition: opacity 0.3s ease, text-shadow 0.3s ease;
-        }
-
-        /* Hover effect for video titles (matching Eternal Watch style) */
-        .video-title:hover {
-            text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
-        }
-
-        /* Video containers start hidden */
-        .video-container {
-            display: none;
-        }
-
-        .video-thumbnail {
-            position: relative;
-            width: 50%;
-            max-width: 800px;
-            margin: 10px auto;
-            cursor: pointer;
-            aspect-ratio: 16 / 9;
-        }
-
-        .video-thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* Rectangle Play Button */
-        .play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgb(0, 0, 0);
-            color: white;
-            font-size: 32px;
-            padding: 8px 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: Arial, sans-serif;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Blinking Down/Up Arrow (Matching Eternal Watch) */
-        .toggle-arrow {
-            display: inline-block;
-            animation: blink 1s infinite alternate;
-            margin-left: 5px;
-        }
-
-        @keyframes blink {
-            0% { opacity: 1; }
-            100% { opacity: 0.3; }
-        }
-
-        /* Hover Effect for Play Button */
-        .play-button:hover {
-            background: rgba(0, 0, 0, 0.9);
-            transform: translate(-50%, -50%) scale(1.1);
-        }
-
-        /* Responsive Sizing */
-        @media (max-width: 768px) {
-            .video-thumbnail {
-                width: 80%;
-            }
-        }
-    </style>
     </main>    
+
     <footer>
         <p>&copy; 2025 Arian Nazarian | <a href="#top" class="clickable">Top ▲</a></p>
     </footer>    
