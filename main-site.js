@@ -119,12 +119,6 @@ function toggleVideo(index) {
 
 document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("contextmenu", function (event) {
-        event.preventDefault(); // Disable right-click everywhere
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    document.addEventListener("contextmenu", function (event) {
         event.preventDefault(); // Disable right-click globally
     });
 
@@ -132,7 +126,11 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault(); // Prevent dragging any element
     });
 
+    document.addEventListener("dragover", function (event) {
+        event.preventDefault(); // Prevent files from being dragged over the page
+    });
+
     document.addEventListener("drop", function (event) {
-        event.preventDefault(); // Prevent dropping files onto the page
+        event.preventDefault(); // Prevent files from being dropped onto the page
     });
 });
