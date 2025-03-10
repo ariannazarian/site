@@ -139,24 +139,25 @@ function toggleVideo(index) {
     let arrow = arrows[index];
     let title = videoTitles[index];
 
-    if (video.classList.contains("hidden")) {
-        video.classList.remove("hidden");
-        video.style.display = "block"; // Ensure it appears
-        video.style.opacity = "1"; // Reset opacity
-        video.style.visibility = "visible"; // Ensure it's visible
+    // Toggle the hidden class properly
+    let isExpanded = video.classList.contains("hidden");
+    video.classList.toggle("hidden", !isExpanded);
+
+    // Ensure video appears properly by resetting inline display (if needed)
+    if (!isExpanded) {
+        video.style.display = "block";
     } else {
-        video.classList.add("hidden");
-        video.style.display = "none"; // Hide it completely
+        video.style.display = "none";
     }
 
     // Toggle arrow direction
-    arrow.textContent = video.classList.contains("hidden") ? "▼" : "▲";
+    arrow.textContent = isExpanded ? "▼" : "▲";
 
     // Stop blinking after first click
     arrow.classList.remove("blink-arrow");
     arrow.style.animation = "none";
 
     // Update ARIA attributes for accessibility
-    title.setAttribute("aria-expanded", video.classList.contains("hidden") ? "false" : "true");
+    title.setAttribute("aria-expanded", !isExpanded);
 }
 
