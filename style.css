@@ -413,3 +413,12 @@ footer a.clickable:hover {
         width: 80%;
     }
 }
+
+.popup-image {
+    width: 100%; /* Makes image responsive within the pop-up */
+    max-width: 300px; /* Prevents it from becoming too large */
+    height: auto; /* Keeps correct aspect ratio */
+    display: block; /* Ensures no extra space below */
+    margin: 10px auto; /* Centers the image inside the pop-up */
+    border-radius: 8px; /* Optional: Rounds corners for a clean look */
+}
