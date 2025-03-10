@@ -93,8 +93,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // 🔹 VIDEO FUNCTIONS (Ensuring Click Listeners Are Attached)
 function setupVideoHandling() {
-    document.querySelectorAll(".video-title").forEach((title, index) => {
+    document.querySelectorAll(".video-title").forEach((title) => {
         title.addEventListener("click", function () {
+            let index = parseInt(this.dataset.index);
             toggleVideo(index);
         });
     });
@@ -102,15 +103,24 @@ function setupVideoHandling() {
     document.querySelectorAll('.video-thumbnail').forEach((thumbnail) => {
         thumbnail.dataset.originalContent = thumbnail.innerHTML;
 
-        // 🔹 Add event listener for play button clicks
+        // Attach event listener dynamically to load video correctly
         thumbnail.addEventListener("click", function () {
-            let videoId = this.querySelector("img").src.split("/vi/")[1].split("/")[0];
+            let videoId = this.dataset.videoId;
             loadVideo(this, videoId);
         });
     });
 }
 
 function loadVideo(el, videoId) {
+    console.log("loadVideo called for videoId:", videoId); // Debugging
+
+    // Ensure the clicked element has a valid video ID
+    if (!videoId) {
+        console.error("No valid video ID found.");
+        return;
+    }
+
+    // Stop all other playing videos before loading a new one
     document.querySelectorAll('.video-thumbnail').forEach(vid => {
         if (vid !== el && vid.dataset.originalContent) {
             vid.innerHTML = vid.dataset.originalContent;
@@ -124,11 +134,15 @@ function loadVideo(el, videoId) {
     el.dataset.videoId = videoId;
     const width = el.offsetWidth;
 
-    el.innerHTML = `<iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
-                    src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0"
-                    frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen></iframe>`;
+    console.log("Replacing thumbnail with iframe"); // Debugging
+
+    el.innerHTML = `
+        <iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
+        src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0"
+        frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen></iframe>`;
 }
+
 
 function toggleVideo(index) {
     const videos = document.querySelectorAll('.video-container');

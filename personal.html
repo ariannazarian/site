@@ -21,24 +21,26 @@
     <main>
         <div class="video-wrapper">
             <!-- Video 1 -->
-            <p class="video-title clickable" onclick="toggleVideo(0)">
+            <p class="video-title clickable" data-index="0">
+
                 <em>In a Lil Pickle</em>, 2018 
                 <span class="toggle-arrow">▼</span>
             </p>
             <div class="video-container">
-                <div class="video-thumbnail" onclick="loadVideo(this, 'sC6eCwCiWEw')" role="button" aria-label="Play In a Lil Pickle">
+                <div class="video-thumbnail" data-video-id="sC6eCwCiWEw" role="button" aria-label="Play In a Lil Pickle">
                     <img src="https://img.youtube.com/vi/sC6eCwCiWEw/hqdefault.jpg" alt="In a Lil Pickle short film thumbnail.">
                     <div class="play-button">▶</div>
                 </div>
             </div>
     
             <!-- Video 2 -->
-            <p class="video-title clickable" onclick="toggleVideo(1)">
+            <p class="video-title clickable" data-index="1">
+
                 <em>Free Pizza</em>, 2018 
                 <span class="toggle-arrow">▼</span>
             </p>
             <div class="video-container">
-                <div class="video-thumbnail" onclick="loadVideo(this, '0yFkQ1g7qp4')" role="button" aria-label="Play Free Pizza">
+                <div class="video-thumbnail" data-video-id="0yFkQ1g7qp4" role="button" aria-label="Play Free Pizza">
                     <img src="https://img.youtube.com/vi/0yFkQ1g7qp4/hqdefault.jpg" alt="Free Pizza short film thumbnail.">
                     <div class="play-button">▶</div>
                 </div>
