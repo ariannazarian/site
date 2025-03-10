@@ -118,22 +118,24 @@ function toggleVideo(index) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    // 🔹 Disable Right-Click Everywhere
     document.addEventListener("contextmenu", function (event) {
-        event.preventDefault();
+        event.preventDefault(); // Disable right-click globally
     });
 
-    // 🔹 Prevent Dragging and Dropping
     document.addEventListener("dragstart", function (event) {
-        event.preventDefault();
+        event.preventDefault(); // Prevent dragging any element
+    });
+
+    document.addEventListener("dragenter", function (event) {
+        event.preventDefault(); // Prevent files from being dragged onto the page
     });
 
     document.addEventListener("dragover", function (event) {
-        event.preventDefault();
+        event.preventDefault(); // Prevent default behavior when dragging
     });
 
     document.addEventListener("drop", function (event) {
-        event.preventDefault();
+        event.preventDefault(); // Prevent files from being dropped onto the page
     });
 
     // 🔹 Block DevTools Shortcuts (F12 & Ctrl+Shift+I)
