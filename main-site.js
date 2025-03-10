@@ -126,36 +126,5 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault(); // Prevent dragging any element
     });
 
-    // 🔹 Block DevTools Shortcuts (F12 & Ctrl+Shift+I)
-    document.addEventListener("keydown", function (event) {
-        if (event.key === "F12" || (event.ctrlKey && event.shiftKey && event.key === "I")) {
-            event.preventDefault();
-        }
-    });
-
-    // 🔹 Block View Source Shortcut (Ctrl+U)
-    document.addEventListener("keydown", function (event) {
-        if (event.ctrlKey && event.key === "u") {
-            event.preventDefault();
-        }
-    });
-
-    // 🔹 Detect DevTools Open & Clear Console
-    (function() {
-        let devtools = false;
-        let element = new Image();
-        Object.defineProperty(element, "id", {
-            get: function() {
-                devtools = true;
-                throw new Error("DevTools detected!");
-            }
-        });
-
-        setInterval(function() {
-            if (devtools) {
-                console.clear();
-                alert("DevTools are disabled on this site.");
-            }
-        }, 1000);
-    })();
+    
 });
