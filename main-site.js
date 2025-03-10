@@ -137,10 +137,10 @@ function loadVideo(el, videoId) {
     console.log("Replacing thumbnail with iframe"); // Debugging
 
     el.innerHTML = `
-    <iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
-    src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0"
-    frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
-    allowfullscreen></iframe>`;
+        <iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
+        src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0"
+        frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen></iframe>`;
 }
 
 
@@ -174,4 +174,3 @@ function toggleVideo(index) {
     // Update ARIA attributes for accessibility
     title.setAttribute("aria-expanded", !isExpanded);
 }
-
