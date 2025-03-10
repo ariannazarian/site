@@ -118,19 +118,54 @@ function toggleVideo(index) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    // 🔹 Disable Right-Click Everywhere
     document.addEventListener("contextmenu", function (event) {
-        event.preventDefault(); // Disable right-click globally
+        event.preventDefault();
     });
 
+    // 🔹 Prevent Dragging and Dropping
     document.addEventListener("dragstart", function (event) {
-        event.preventDefault(); // Prevent dragging any element
+        event.preventDefault();
     });
 
     document.addEventListener("dragover", function (event) {
-        event.preventDefault(); // Prevent files from being dragged over the page
+        event.preventDefault();
     });
 
     document.addEventListener("drop", function (event) {
-        event.preventDefault(); // Prevent files from being dropped onto the page
+        event.preventDefault();
     });
+
+    // 🔹 Block DevTools Shortcuts (F12 & Ctrl+Shift+I)
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "F12" || (event.ctrlKey && event.shiftKey && event.key === "I")) {
+            event.preventDefault();
+        }
+    });
+
+    // 🔹 Block View Source Shortcut (Ctrl+U)
+    document.addEventListener("keydown", function (event) {
+        if (event.ctrlKey && event.key === "u") {
+            event.preventDefault();
+        }
+    });
+
+    // 🔹 Detect DevTools Open & Clear Console
+    (function() {
+        let devtools = false;
+        let element = new Image();
+        Object.defineProperty(element, "id", {
+            get: function() {
+                devtools = true;
+                throw new Error("DevTools detected!");
+            }
+        });
+
+        setInterval(function() {
+            if (devtools) {
+                console.clear();
+                alert("DevTools are disabled on this site.");
+            }
+        }, 1000);
+    })();
 });
