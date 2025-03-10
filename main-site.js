@@ -135,10 +135,29 @@ function toggleVideo(index) {
     const arrows = document.querySelectorAll('.toggle-arrow');
     const videoTitles = document.querySelectorAll(".video-title");
 
-    let isExpanded = videos[index].classList.toggle("hidden"); // 🔹 Use class toggle instead of display property
+    let video = videos[index]; 
+    let arrow = arrows[index];
+    let title = videoTitles[index];
 
-    arrows[index].textContent = isExpanded ? "▼" : "▲";  // Toggle arrow direction
+    // Toggle the hidden class properly
+    let isExpanded = video.classList.contains("hidden");
+    video.classList.toggle("hidden", !isExpanded);
 
-    // 🔹 Update ARIA attributes for accessibility
-    videoTitles[index].setAttribute("aria-expanded", !isExpanded);
+    // Ensure video appears properly by resetting inline display (if needed)
+    if (!isExpanded) {
+        video.style.display = "block";
+    } else {
+        video.style.display = "none";
+    }
+
+    // Toggle arrow direction
+    arrow.textContent = isExpanded ? "▼" : "▲";
+
+    // Stop blinking after first click
+    arrow.classList.remove("blink-arrow");
+    arrow.style.animation = "none";
+
+    // Update ARIA attributes for accessibility
+    title.setAttribute("aria-expanded", !isExpanded);
 }
+
