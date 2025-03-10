@@ -423,8 +423,3 @@ footer a.clickable:hover {
     border-radius: 8px; /* Optional: Rounds corners for a clean look */
 }
 
-.video-container.force-visible {
-    display: block !important;
-    opacity: 1;
-    visibility: visible;
-}

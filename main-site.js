@@ -8,6 +8,33 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault(); // Prevent dragging
     });
 
+    // 🔹 Block DevTools Shortcuts (F12 & Ctrl+Shift+I, Cmd+Option+I)
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "F12" || 
+            (event.ctrlKey && event.shiftKey && event.key === "I") || 
+            (event.metaKey && event.altKey && event.key === "I")) {
+            event.preventDefault();
+        }
+    });
+
+    // 🔹 Block View Source Shortcut (Ctrl+U)
+    document.addEventListener("keydown", function (event) {
+        if (event.ctrlKey && event.key === "u") {
+            event.preventDefault();
+        }
+    });
+
+    // 🔹 Detect DevTools Open (Only Show Warning, No Function Breakage)
+    (function() {
+        let element = new Image();
+        Object.defineProperty(element, "id", {
+            get: function() {
+                console.clear();
+                alert("DevTools are disabled on this site.");
+            }
+        });
+    })();
+
     // 🔹 Handle Image Cycling
     const imgElement = document.getElementById("header-img");
     if (imgElement) {
@@ -84,19 +111,9 @@ function setupVideoHandling() {
 }
 
 function loadVideo(el, videoId) {
-    console.log("loadVideo called for videoId:", videoId); // Debugging
-
-    // Ensure the clicked element is a video thumbnail and has an image
-    let img = el.querySelector("img");
-    if (!img || !img.src.includes("img.youtube.com")) {
-        console.error("Thumbnail image is missing or incorrect.");
-        return;
-    }
-
-    // Stop all other playing videos before loading a new one
     document.querySelectorAll('.video-thumbnail').forEach(vid => {
         if (vid !== el && vid.dataset.originalContent) {
-            vid.innerHTML = vid.dataset.originalContent; // Restore original thumbnail
+            vid.innerHTML = vid.dataset.originalContent;
         }
     });
 
@@ -107,14 +124,11 @@ function loadVideo(el, videoId) {
     el.dataset.videoId = videoId;
     const width = el.offsetWidth;
 
-    console.log("Replacing thumbnail with iframe"); // Debugging
-
     el.innerHTML = `<iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
                     src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0"
                     frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
                     allowfullscreen></iframe>`;
 }
-
 
 function toggleVideo(index) {
     const videos = document.querySelectorAll('.video-container');
@@ -125,17 +139,17 @@ function toggleVideo(index) {
     let arrow = arrows[index];
     let title = videoTitles[index];
 
-    console.log(`Toggling video container ${index}`); // Debugging
-
     if (video.classList.contains("hidden")) {
         video.classList.remove("hidden");
-        video.classList.add("force-visible"); // Ensure visibility
+        video.style.display = "block"; // Ensure it appears
+        video.style.opacity = "1"; // Reset opacity
+        video.style.visibility = "visible"; // Ensure it's visible
     } else {
         video.classList.add("hidden");
-        video.classList.remove("force-visible"); // Hide properly
+        video.style.display = "none"; // Hide it completely
     }
-    
 
+    // Toggle arrow direction
     arrow.textContent = video.classList.contains("hidden") ? "▼" : "▲";
 
     // Stop blinking after first click
@@ -145,5 +159,4 @@ function toggleVideo(index) {
     // Update ARIA attributes for accessibility
     title.setAttribute("aria-expanded", video.classList.contains("hidden") ? "false" : "true");
 }
-
 
