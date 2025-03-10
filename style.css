@@ -423,3 +423,7 @@ footer a.clickable:hover {
     border-radius: 8px; /* Optional: Rounds corners for a clean look */
 }
 
+img {
+    -webkit-touch-callout: none; /* Disables the iOS long-press save menu */
+    user-select: none; /* Prevents selection */
+}
