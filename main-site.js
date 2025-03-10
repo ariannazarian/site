@@ -126,5 +126,4 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault(); // Prevent dragging any element
     });
 
-    
 });
