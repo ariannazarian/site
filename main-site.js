@@ -116,3 +116,9 @@ function toggleVideo(index) {
     arrows[index].classList.remove("blink-arrow");
     arrows[index].style.animation = "none"; // Ensures blinking stops completely
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("contextmenu", function (event) {
+        event.preventDefault(); // Disable right-click everywhere
+    });
+});
