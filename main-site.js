@@ -126,18 +126,6 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault(); // Prevent dragging any element
     });
 
-    document.addEventListener("dragenter", function (event) {
-        event.preventDefault(); // Prevent files from being dragged onto the page
-    });
-
-    document.addEventListener("dragover", function (event) {
-        event.preventDefault(); // Prevent default behavior when dragging
-    });
-
-    document.addEventListener("drop", function (event) {
-        event.preventDefault(); // Prevent files from being dropped onto the page
-    });
-
     // 🔹 Block DevTools Shortcuts (F12 & Ctrl+Shift+I)
     document.addEventListener("keydown", function (event) {
         if (event.key === "F12" || (event.ctrlKey && event.shiftKey && event.key === "I")) {
