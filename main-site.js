@@ -119,11 +119,6 @@ function toggleVideo(index) {
 
 document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("contextmenu", function (event) {
-        event.preventDefault(); // Disable right-click globally
+        event.preventDefault(); // Disable right-click everywhere
     });
-
-    document.addEventListener("dragstart", function (event) {
-        event.preventDefault(); // Prevent dragging any element
-    });
-
 });
