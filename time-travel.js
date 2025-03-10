@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let weekday = now.getDay();
         let currentYear = new Date().getFullYear();
 
-        let years = Array.from({ length: currentYear - 1892 }, (_, i) => i + 1892)
+        let years = Array.from({ length: currentYear - 1880 }, (_, i) => i + 1880)
                          .filter(year => new Date(year, month - 1, day).getDay() === weekday);
 
         years.forEach((year, index) => {
