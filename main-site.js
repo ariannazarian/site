@@ -163,7 +163,7 @@ function toggleVideo(index) {
         video.classList.add("hidden");
         video.style.display = "none";
 
-        // 🔹 Auto-Pause the YouTube video without resetting playback
+        // 🔹 Auto-Pause the Video Without Resetting Playback
         const iframe = video.querySelector("iframe");
         if (iframe) {
             let iframeSrc = iframe.src;
@@ -182,4 +182,3 @@ function toggleVideo(index) {
     // Update ARIA attributes for accessibility
     title.setAttribute("aria-expanded", !isHidden);
 }
-
