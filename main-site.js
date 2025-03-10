@@ -84,9 +84,19 @@ function setupVideoHandling() {
 }
 
 function loadVideo(el, videoId) {
+    console.log("loadVideo called for videoId:", videoId); // Debugging
+
+    // Ensure the clicked element is a video thumbnail and has an image
+    let img = el.querySelector("img");
+    if (!img || !img.src.includes("img.youtube.com")) {
+        console.error("Thumbnail image is missing or incorrect.");
+        return;
+    }
+
+    // Stop all other playing videos before loading a new one
     document.querySelectorAll('.video-thumbnail').forEach(vid => {
         if (vid !== el && vid.dataset.originalContent) {
-            vid.innerHTML = vid.dataset.originalContent;
+            vid.innerHTML = vid.dataset.originalContent; // Restore original thumbnail
         }
     });
 
@@ -97,11 +107,14 @@ function loadVideo(el, videoId) {
     el.dataset.videoId = videoId;
     const width = el.offsetWidth;
 
+    console.log("Replacing thumbnail with iframe"); // Debugging
+
     el.innerHTML = `<iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
                     src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0"
                     frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
                     allowfullscreen></iframe>`;
 }
+
 
 function toggleVideo(index) {
     const videos = document.querySelectorAll('.video-container');
@@ -112,17 +125,17 @@ function toggleVideo(index) {
     let arrow = arrows[index];
     let title = videoTitles[index];
 
+    console.log(`Toggling video container ${index}`); // Debugging
+
     if (video.classList.contains("hidden")) {
         video.classList.remove("hidden");
-        video.style.display = "block"; // Ensure it appears
-        video.style.opacity = "1"; // Reset opacity
-        video.style.visibility = "visible"; // Ensure it's visible
+        video.classList.add("force-visible"); // Ensure visibility
     } else {
         video.classList.add("hidden");
-        video.style.display = "none"; // Hide it completely
+        video.classList.remove("force-visible"); // Hide properly
     }
+    
 
-    // Toggle arrow direction
     arrow.textContent = video.classList.contains("hidden") ? "▼" : "▲";
 
     // Stop blinking after first click
@@ -132,4 +145,5 @@ function toggleVideo(index) {
     // Update ARIA attributes for accessibility
     title.setAttribute("aria-expanded", video.classList.contains("hidden") ? "false" : "true");
 }
+
 

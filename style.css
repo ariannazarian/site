@@ -422,3 +422,9 @@ footer a.clickable:hover {
     margin: 10px auto; /* Centers the image inside the pop-up */
     border-radius: 8px; /* Optional: Rounds corners for a clean look */
 }
+
+.video-container.force-visible {
+    display: block !important;
+    opacity: 1;
+    visibility: visible;
+}
