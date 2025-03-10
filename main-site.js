@@ -153,15 +153,21 @@ function toggleVideo(index) {
     let arrow = arrows[index];
     let title = videoTitles[index];
 
-    // Toggle the hidden class properly
-    let isExpanded = video.classList.contains("hidden");
-    video.classList.toggle("hidden", !isExpanded);
+    let isExpanded = !video.classList.contains("hidden");
 
-    // Ensure video appears properly by resetting inline display (if needed)
+    video.classList.toggle("hidden", isExpanded);
+
+    // Toggle display state properly
     if (!isExpanded) {
         video.style.display = "block";
     } else {
         video.style.display = "none";
+
+        // 🔹 Auto-Pause the YouTube video when hiding
+        const iframe = video.querySelector("iframe");
+        if (iframe) {
+            iframe.src = iframe.src; // Reset the src, which stops playback
+        }
     }
 
     // Toggle arrow direction
@@ -174,3 +180,4 @@ function toggleVideo(index) {
     // Update ARIA attributes for accessibility
     title.setAttribute("aria-expanded", !isExpanded);
 }
+
