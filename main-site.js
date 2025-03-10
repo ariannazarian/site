@@ -139,13 +139,14 @@ function toggleVideo(index) {
     let arrow = arrows[index];
     let title = videoTitles[index];
 
-    // Toggle the hidden class properly
     if (video.classList.contains("hidden")) {
         video.classList.remove("hidden");
-        video.style.display = "block"; // Ensure visibility
+        video.style.display = "block"; // Ensure it appears
+        video.style.opacity = "1"; // Reset opacity
+        video.style.visibility = "visible"; // Ensure it's visible
     } else {
         video.classList.add("hidden");
-        video.style.display = "none"; // Hide video
+        video.style.display = "none"; // Hide it completely
     }
 
     // Toggle arrow direction
@@ -158,3 +159,4 @@ function toggleVideo(index) {
     // Update ARIA attributes for accessibility
     title.setAttribute("aria-expanded", video.classList.contains("hidden") ? "false" : "true");
 }
+

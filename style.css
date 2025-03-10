@@ -351,9 +351,11 @@ footer a.clickable:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
 
-/* Video containers start hidden */
 .video-container {
-    display: none;
+    display: none; /* Start hidden */
+    opacity: 1; /* Ensure it fully appears */
+    visibility: visible; /* Ensure it's not hidden */
+    transition: opacity 0.3s ease-in-out; /* Smooth fade-in */
 }
 
 .video-thumbnail {
