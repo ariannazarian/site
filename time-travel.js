@@ -131,16 +131,16 @@ document.addEventListener("DOMContentLoaded", () => {
             span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
             span.classList.add("year-item");
             span.style.opacity = 0;
-            span.style.transition = "opacity 1.5s ease-in";
+            span.style.transition = "opacity 2s ease-in";
 
             matchingYears.appendChild(span);
 
             setTimeout(() => {
                 span.style.opacity = 1;
                 if (index === years.length - 1 && callback) {
-                    setTimeout(callback, 750);
+                    setTimeout(callback, 500);
                 }
-            }, index * 750);
+            }, index * 500);
         });
 
         setTimeout(() => {
