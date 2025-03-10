@@ -351,11 +351,9 @@ footer a.clickable:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
 
+/* Video containers start hidden */
 .video-container {
-    display: none; /* Start hidden */
-    opacity: 1; /* Ensure it fully appears */
-    visibility: visible; /* Ensure it's not hidden */
-    transition: opacity 0.3s ease-in-out; /* Smooth fade-in */
+    display: none;
 }
 
 .video-thumbnail {
@@ -423,8 +421,4 @@ footer a.clickable:hover {
     display: block; /* Ensures no extra space below */
     margin: 10px auto; /* Centers the image inside the pop-up */
     border-radius: 8px; /* Optional: Rounds corners for a clean look */
-}
-
-.hidden {
-    display: none !important;
 }
