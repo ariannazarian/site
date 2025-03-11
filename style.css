@@ -231,7 +231,7 @@ header .personal-text {
     transition: opacity 3s ease-in;
 }
 /* 🔹 Hide radio buttons */
-.index-page .popup-radio {
+.popup-radio {
     display: none;
 }
 
@@ -259,16 +259,16 @@ header .personal-text {
 }
 
 /* 🔹 Show the correct pop-up when its radio is selected */
-.index-page #popup-ariann:checked ~ #popup-ariann-box,
-.index-page #popup-usc:checked ~ #popup-usc-box,
-.index-page #popup-edu:checked ~ #popup-edu-box {
+#popup-ariann:checked ~ #popup-ariann-box,
+#popup-usc:checked ~ #popup-usc-box,
+#popup-edu:checked ~ #popup-edu-box {
     opacity: 1;
     visibility: visible;
     display: block;
 }
 
 /* 🔹 Hide all pop-ups when reset is checked */
-.index-page #popup-reset:checked ~ .popup {
+#popup-reset:checked ~ .popup {
     opacity: 0;
     visibility: hidden;
 }
