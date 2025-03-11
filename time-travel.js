@@ -288,8 +288,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 video.load(); // Load the video
             }
             video.classList.remove("hidden"); // Show the video
+
+            // Reset video to start and play it
+            video.pause();
+            video.currentTime = 0;
+            setTimeout(() => {
+                let playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        console.warn("Autoplay prevented. User interaction may be required.");
+                    });
+                }
+            }, 100); // Small delay to ensure reset works
         } else {
-            video.classList.add("hidden"); // Hide the video when pop-up is closed
+            video.pause(); // Stop video when pop-up is closed
+            video.currentTime = 0; // Reset position
+            video.classList.add("hidden"); // Hide the video
         }
     });
 });
+
