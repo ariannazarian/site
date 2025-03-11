@@ -11,13 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let hasToggledEternalOnce = false;
     let hasToggledYearsOnce = false;
 
-    function getFrozenPSTDate() {
+    function getFrozenUTCDate() {
         let now = new Date(frozenTime);
-        let utcOffset = now.getTimezoneOffset() / 60;
-        let pstOffset = 8;
-        now.setHours(now.getHours() + (utcOffset - pstOffset));
-
+    
         return now.toLocaleString("en-US", {
+            timeZone: "UTC", // Force UTC display
             weekday: "long",
             month: "long",
             day: "numeric",
@@ -26,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
             second: "2-digit",
             hour12: false
         });
-    }
+    }    
 
     document.querySelector("#current-time").innerText = getFrozenPSTDate();
 
