@@ -295,13 +295,15 @@ header .personal-text {
 
 /* Mobile-friendly adjustments */
 @media (max-width: 768px) {
-    .popup {
+    .popup,
+    .work-page .popup {
         width: 80%;
         max-width: 90%;
         padding: 20px;
         text-align: left;
     }
 }
+
 /* 🔹 Style specifically for "Back to Top" link */
 footer a.clickable {
     font-weight: bold;
@@ -506,6 +508,7 @@ img, a {
     height: auto;
     display: block;
     margin: 10px auto;
+    border-radius: 8px;
 }
 
 /* Initially hide the video */
