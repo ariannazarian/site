@@ -230,13 +230,12 @@ header .personal-text {
     opacity: 0;
     transition: opacity 3s ease-in;
 }
-
-/* Hide radio buttons */
+/* 🔹 Hide radio buttons */
 .index-page .popup-radio {
     display: none;
 }
 
-/* Style the pop-ups */
+/* 🔹 Style the pop-ups */
 .index-page .popup {
     position: fixed;
     top: 50%;
@@ -259,22 +258,22 @@ header .personal-text {
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
-/* Show the correct pop-up when its radio is selected */
-#popup-ariann:checked ~ #popup-ariann-box,
-#popup-usc:checked ~ #popup-usc-box,
-#popup-edu:checked ~ #popup-edu-box {
+/* 🔹 Show the correct pop-up when its radio is selected */
+.index-page #popup-ariann:checked ~ #popup-ariann-box,
+.index-page #popup-usc:checked ~ #popup-usc-box,
+.index-page #popup-edu:checked ~ #popup-edu-box {
     opacity: 1;
     visibility: visible;
     display: block;
 }
 
-/* Hide all pop-ups when reset is checked */
-#popup-reset:checked ~ .index-page .popup {
+/* 🔹 Hide all pop-ups when reset is checked */
+.index-page #popup-reset:checked ~ .popup {
     opacity: 0;
     visibility: hidden;
 }
 
-/* Close button inside each pop-up */
+/* 🔹 Close button inside each pop-up */
 .index-page .popup .close-button {
     display: block;
     margin-top: 10px;
@@ -288,12 +287,12 @@ header .personal-text {
     text-align: center;
 }
 
-/* Close button hover effect */
+/* 🔹 Close button hover effect */
 .index-page .close-button:hover {
     background: #FFD700; /* Brighter gold */
 }
 
-/* Mobile-friendly adjustments */
+/* 🔹 Mobile-friendly adjustments */
 @media (max-width: 768px) {
     .index-page .popup {
         width: 80%;
