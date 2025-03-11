@@ -260,12 +260,13 @@ header .personal-text {
 }
 
 /* Show the correct pop-up when its radio is selected */
-.index-page .popup-radio:checked + .popup {
+#popup-ariann:checked ~ #popup-ariann-box,
+#popup-usc:checked ~ #popup-usc-box,
+#popup-edu:checked ~ #popup-edu-box {
     opacity: 1;
     visibility: visible;
     display: block;
 }
-
 
 /* Hide all pop-ups when reset is checked */
 .index-page #popup-reset:checked ~ .popup {
