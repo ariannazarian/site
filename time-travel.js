@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
             minute: "2-digit",
             second: "2-digit",
             hour12: false
-        });
+        }) + " UTC"; // Append UTC to the string
     }    
 
     document.querySelector("#current-time").innerText = getFrozenUTCDate();
