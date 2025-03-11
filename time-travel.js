@@ -113,57 +113,57 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function revealMatchingYearsWithFade(callback) {
-        let matchingYearsContainer = document.querySelector("#matching-years");
-        let matchingYearsList = document.querySelector("#matching-years-list");
-        let coordinateReflections = document.querySelector("#coordinate-reflections");
-    
-        matchingYearsList.innerHTML = ""; // Clear previous years
-        matchingYearsContainer.style.display = "block"; // Reveal the section
-    
-        let now = new Date(frozenTime);
-        let month = now.getMonth() + 1;
-        let day = now.getDate();
-        let weekday = now.getDay();
-        let currentYear = new Date().getFullYear();
-    
-        let years = Array.from({ length: currentYear - 1880 }, (_, i) => i + 1880)
-                         .filter(year => new Date(year, month - 1, day).getDay() === weekday);
-    
-        // Ensure "Coordinate Reflections" is clickable and triggers the pop-up
-        coordinateReflections.addEventListener("click", () => {
+    let matchingYearsContainer = document.querySelector("#matching-years");
+    let matchingYearsList = document.querySelector("#matching-years-list");
+    let coordinateReflections = document.querySelector("#coordinate-reflections");
+
+    matchingYearsList.innerHTML = ""; // Clear previous years
+    matchingYearsContainer.style.display = "block"; // Reveal the section
+
+    let now = new Date(frozenTime);
+    let month = now.getMonth() + 1;
+    let day = now.getDate();
+    let weekday = now.getDay();
+    let currentYear = new Date().getFullYear();
+
+    let years = Array.from({ length: currentYear - 1880 }, (_, i) => i + 1880)
+                     .filter(year => new Date(year, month - 1, day).getDay() === weekday);
+
+    // Ensure "Coordinate Reflections" is clickable and triggers the pop-up
+    coordinateReflections.addEventListener("click", () => {
+        document.getElementById("popup-years").checked = true;
+    });
+
+    years.forEach((year, index) => {
+        let span = document.createElement("span");
+        span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
+        span.classList.add("year-item", "clickable");
+        span.dataset.year = year;
+        span.style.opacity = 0;
+        span.style.transition = "opacity 1.8s ease-in";
+
+        // Click event to show the pop-up
+        span.addEventListener("click", () => {
             document.getElementById("popup-years").checked = true;
         });
-    
-        years.forEach((year, index) => {
-            let span = document.createElement("span");
-            span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
-            span.classList.add("year-item", "clickable");
-            span.dataset.year = year;
-            span.style.opacity = 0;
-            span.style.transition = "opacity 1.8s ease-in";
-    
-            // Click event to show the pop-up
-            span.addEventListener("click", () => {
-                document.getElementById("popup-years").checked = true;
-            });
-    
-            matchingYearsList.appendChild(span);
-    
-            setTimeout(() => {
-                span.style.opacity = 1;
-                if (index === years.length - 1 && callback) {
-                    setTimeout(callback, 600);
-                }
-            }, index * 600);
-        });
-    
+
+        matchingYearsList.appendChild(span);
+
         setTimeout(() => {
-            document.querySelectorAll(".year-item").forEach(el => {
-                el.style.transition = "none";
-            });
-        }, years.length * 1000 + 500);
-    }
-    
+            span.style.opacity = 1;
+            if (index === years.length - 1 && callback) {
+                setTimeout(callback, 600);
+            }
+        }, index * 600);
+    });
+
+    setTimeout(() => {
+        document.querySelectorAll(".year-item").forEach(el => {
+            el.style.transition = "none";
+        });
+    }, years.length * 1000 + 500);
+}
+
     
 
     function fadeInStoryGroups(callback) {
