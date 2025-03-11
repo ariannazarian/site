@@ -128,6 +128,20 @@ document.addEventListener("DOMContentLoaded", () => {
         let years = Array.from({ length: currentYear - 1880 }, (_, i) => i + 1880)
                          .filter(year => new Date(year, month - 1, day).getDay() === weekday);
     
+        if (years.length > 0) {
+            // Add "Coordinate Reflections:" before the first year
+            let label = document.createElement("strong");
+            label.textContent = "Coordinate Reflections: ";
+            label.classList.add("clickable", "bold-text");
+    
+            // Make "Coordinate Reflections" also trigger the pop-up
+            label.addEventListener("click", () => {
+                document.getElementById("popup-years").checked = true;
+            });
+    
+            matchingYearsList.appendChild(label);
+        }
+    
         years.forEach((year, index) => {
             let span = document.createElement("span");
             span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
@@ -157,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }, years.length * 1000 + 500);
     }
+    
     
 
 
