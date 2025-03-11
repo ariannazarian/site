@@ -427,3 +427,72 @@ img, a {
     -webkit-touch-callout: none; /* Disables long-press actions on iOS */
     user-select: none; /* Prevents selection */
 }
+
+/* 🔹 Work Page Pop-Up Styling */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--white); /* White background */
+    color: var(--black); /* Black text */
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: left;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    width: 50%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+/* 🔹 Show the correct pop-up when its radio is selected */
+.popup-radio:checked + .popup {
+    opacity: 1;
+    visibility: visible;
+    display: block;
+}
+
+/* 🔹 Hide all pop-ups when reset is checked */
+#popup-reset:checked ~ .popup {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* 🔹 Close button styling */
+.close-button {
+    display: block;
+    margin-top: 10px;
+    background: var(--black); /* Black background */
+    color: var(--white); /* White text */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* 🔹 Close button hover effect */
+.close-button:hover {
+    background: #333; /* Slightly lighter black for hover effect */
+}
+
+/* 🔹 Clickable matching years */
+.year-item {
+    font-weight: bold;
+    color: var(--white);
+    text-decoration: none;
+    cursor: pointer;
+    transition: text-shadow 0.3s ease;
+}
+
+/* 🔹 Matching years hover effect */
+.year-item:hover {
+    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
+}

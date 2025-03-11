@@ -113,28 +113,64 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function revealMatchingYearsWithFade(callback) {
-        let matchingYears = document.querySelector("#matching-years");
-        matchingYears.innerHTML = `<strong>Coordinate reflections:</strong> `;
-        matchingYears.style.display = "block";
-
+        let matchingYearsContainer = document.querySelector("#matching-years");
+        let matchingYearsList = document.createElement("span");
+        matchingYearsContainer.innerHTML = `<strong>Coordinate reflections:</strong> `;
+        matchingYearsContainer.style.display = "block";
+        matchingYearsContainer.appendChild(matchingYearsList);
+    
+        let popupsContainer = document.querySelector("#year-popups");
+        popupsContainer.innerHTML = ""; // Clear previous pop-ups
+    
         let now = new Date(frozenTime);
         let month = now.getMonth() + 1;
         let day = now.getDate();
         let weekday = now.getDay();
         let currentYear = new Date().getFullYear();
-
+    
         let years = Array.from({ length: currentYear - 1880 }, (_, i) => i + 1880)
                          .filter(year => new Date(year, month - 1, day).getDay() === weekday);
-
+    
         years.forEach((year, index) => {
             let span = document.createElement("span");
             span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
-            span.classList.add("year-item");
+            span.classList.add("year-item", "clickable");
+            span.dataset.year = year;
             span.style.opacity = 0;
             span.style.transition = "opacity 1.8s ease-in";
-
-            matchingYears.appendChild(span);
-
+    
+            // Create corresponding pop-up elements
+            let popupId = `popup-year-${year}`;
+            let popupInput = document.createElement("input");
+            popupInput.type = "radio";
+            popupInput.id = popupId;
+            popupInput.name = "year-popup-group";
+            popupInput.classList.add("popup-radio");
+    
+            let popupDiv = document.createElement("div");
+            popupDiv.classList.add("popup");
+            popupDiv.id = `${popupId}-box`;
+            popupDiv.setAttribute("role", "dialog");
+            popupDiv.setAttribute("aria-label", `Historical details for ${year}`);
+            popupDiv.setAttribute("aria-hidden", "true");
+    
+            let popupContent = `
+                <p><strong>Historical details for ${year}:</strong></p>
+                <p>Some interesting historical context about ${year} can go here.</p>
+                <label for="popup-reset" class="close-button">close</label>
+            `;
+    
+            popupDiv.innerHTML = popupContent;
+    
+            // Click event to show pop-up
+            span.addEventListener("click", () => {
+                document.getElementById(popupId).checked = true;
+            });
+    
+            matchingYearsList.appendChild(span);
+            popupsContainer.appendChild(popupInput);
+            popupsContainer.appendChild(popupDiv);
+    
             setTimeout(() => {
                 span.style.opacity = 1;
                 if (index === years.length - 1 && callback) {
@@ -142,13 +178,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }, index * 600);
         });
-
+    
         setTimeout(() => {
             document.querySelectorAll(".year-item").forEach(el => {
                 el.style.transition = "none";
             });
         }, years.length * 1000 + 500);
     }
+    
 
     function fadeInStoryGroups(callback) {
         let fadeGroups = document.querySelectorAll(".fade-group");

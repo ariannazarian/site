@@ -62,7 +62,16 @@
             </p>
         </div>
 
-        <p id="matching-years" class="hidden"></p>
+        <p id="matching-years" class="hidden">
+            <strong>Coordinate reflections:</strong> 
+            <span id="matching-years-list"></span>
+        </p>
+        
+        <!-- Hidden radio reset to close pop-ups -->
+        <input type="radio" id="popup-reset" name="year-popup-group" class="popup-radio" checked>
+        
+        <!-- Hidden container for pop-ups -->
+        <div id="year-popups"></div>        
 
         <!-- Travel quote now starts hidden and is toggled by "This time traveller's watch..." -->
         <p id="travel-quote" class="hidden">"All we have to decide is what to do with the time that is given us."<br>- J.R.R. Tolkien, <em>The Lord of the Rings</em></p>
