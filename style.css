@@ -515,3 +515,23 @@ img, a {
     display: none;
 }
 
+/* Ensure the Mathematical Framework link stays bold, same color, and no underline */
+a.clickable.bold-text {
+    font-size: var(--text-size);
+    font-weight: bold;
+    color: var(--white) !important; /* Ensures it never changes */
+    text-decoration: none !important; /* Prevents underlining */
+    transition: text-shadow 0.3s ease;
+}
+
+/* Prevent visited links from changing color */
+a.clickable.bold-text:visited {
+    color: var(--white) !important;
+    font-weight: bold;
+    text-decoration: none !important;
+}
+
+/* Maintain hover effect */
+a.clickable.bold-text:hover {
+    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
+}
