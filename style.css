@@ -508,5 +508,9 @@ img, a {
     margin: 10px auto;
 }
 
+/* Initially hide the video */
+.hidden {
+    display: none;
+}
 
 
