@@ -483,20 +483,6 @@ img, a {
     background: #333; /* Slightly lighter black for hover effect */
 }
 
-/* 🔹 Clickable matching years */
-.work-page .year-item {
-    font-weight: bold;
-    color: var(--white);
-    text-decoration: none;
-    cursor: pointer;
-    transition: text-shadow 0.3s ease;
-}
-
-/* 🔹 Matching years hover effect */
-.work-page .year-item:hover {
-    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
-}
-
 /* 🔹 Clickable coordinate reflections & matching years */
 .work-page #coordinate-reflections,
 .work-page .year-item {
@@ -512,3 +498,5 @@ img, a {
 .work-page .year-item:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
+
+
