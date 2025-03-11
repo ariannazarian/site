@@ -116,25 +116,24 @@ document.addEventListener("DOMContentLoaded", () => {
         let matchingYears = document.querySelector("#matching-years");
         matchingYears.innerHTML = `<strong>Coordinate reflections:</strong> `;
         matchingYears.style.display = "block";
-
+    
         let now = new Date(frozenTime);
         let month = now.getMonth() + 1;
         let day = now.getDate();
         let weekday = now.getDay();
         let currentYear = new Date().getFullYear();
-
+    
         let years = Array.from({ length: currentYear - 1880 }, (_, i) => i + 1880)
                          .filter(year => new Date(year, month - 1, day).getDay() === weekday);
-
+    
         years.forEach((year, index) => {
             let span = document.createElement("span");
-            span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
-            span.classList.add("year-item");
+            span.innerHTML = `<label for="popup-video" class="year-item toggle-text bold-text clickable">${year}</label>${index < years.length - 1 ? ", " : ""}`;
             span.style.opacity = 0;
             span.style.transition = "opacity 1.8s ease-in";
-
+    
             matchingYears.appendChild(span);
-
+    
             setTimeout(() => {
                 span.style.opacity = 1;
                 if (index === years.length - 1 && callback) {
@@ -142,13 +141,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }, index * 600);
         });
-
+    
         setTimeout(() => {
             document.querySelectorAll(".year-item").forEach(el => {
                 el.style.transition = "none";
             });
         }, years.length * 1000 + 500);
-    }
+    }    
+    
 
     function fadeInStoryGroups(callback) {
         let fadeGroups = document.querySelectorAll(".fade-group");

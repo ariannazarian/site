@@ -68,6 +68,16 @@
         <p id="travel-quote" class="hidden">"All we have to decide is what to do with the time that is given us."<br>- J.R.R. Tolkien, <em>The Lord of the Rings</em></p>
     </section>
     <main>
+        <!-- Hidden radio button for WebM pop-up -->
+<input type="radio" id="popup-video" name="popup-group" class="popup-radio">
+
+<!-- WebM Video Pop-up -->
+<div class="popup popup-video" id="popup-video-box" role="dialog" aria-label="Snippets of London through the years" aria-hidden="true">
+    <video autoplay loop muted playsinline class="popup-video-content">
+        <source src="assets/images/london-time.webm" type="video/webm">
+    </video>
+    <label for="popup-reset" class="close-button">close</label>
+</div>
     </main>
     <footer>
         <p>&copy; 2025 Arian Nazarian | <a href="#top" class="clickable">Top ▲</a></p>
