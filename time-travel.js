@@ -274,38 +274,21 @@ document.addEventListener("DOMContentLoaded", () => {
             element.innerText = element.innerText === translations[element.id][0] ? translations[element.id][1] : translations[element.id][0];
         });
     }); 
-
+   
     let popupYears = document.getElementById("popup-years");
     let video = document.getElementById("popup-video");
-    let sources = video.querySelectorAll("source");
 
-    function loadAndPlayVideo() {
-        // Set the video source only once
-        sources.forEach(source => {
-            if (!source.dataset.loaded) {
+    popupYears.addEventListener("change", function () {
+        if (popupYears.checked) {
+            // Load video source only when the pop-up is revealed
+            let source = video.querySelector("source");
+            if (!source.src) {
                 source.src = source.dataset.src;
-                source.dataset.loaded = true;
+                video.load(); // Load the video
             }
-        });
-
-        video.load(); // Load the video
-        video.play(); // Start playing
-        video.classList.remove("hidden"); // Make it visible
-    }
-
-    function pauseVideo() {
-        video.pause(); // Stop playing when the pop-up is closed
-        video.classList.add("hidden"); // Hide the video
-    }
-
-    // Listen for radio button changes
-    document.querySelectorAll("input[name='year-popup-group']").forEach(input => {
-        input.addEventListener("change", function () {
-            if (popupYears.checked) {
-                loadAndPlayVideo();
-            } else {
-                pauseVideo();
-            }
-        });
+            video.classList.remove("hidden"); // Show the video
+        } else {
+            video.classList.add("hidden"); // Hide the video when pop-up is closed
+        }
     });
 });
