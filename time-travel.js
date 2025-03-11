@@ -275,7 +275,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }); 
    
-    let popupYears = document.getElementById("popup-years");
     let video = document.getElementById("popup-video");
     let source = video.querySelector("source");
 
