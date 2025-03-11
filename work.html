@@ -72,17 +72,18 @@
 
         <!-- The singular pop-up for all matching years -->
         <input type="radio" id="popup-years" name="year-popup-group" class="popup-radio">
-        <div class="popup" id="popup-years-box" role="dialog" aria-label="Historical details" aria-hidden="true">
-            <p><strong>London 1880s-Present</strong></p>
-            <!-- Lazy-loaded looping animation -->
-            <video id="popup-video" class="hidden" loop autoplay muted playsinline>
-                <source data-src="assets/images/london-time.webm" type="video/webm">
-                Your browser does not support the video tag.
-            </video>
-            <p>Maybe AI isn't so bad after all.</p>
-
-            <label for="popup-reset" class="close-button">close</label>
-        </div>
+            <div class="popup" id="popup-years-box" role="dialog" aria-label="An animation showing snippets of London from 1880s to Present Day" aria-hidden="true">
+                <p><strong>London 1880s-Present</strong></p>
+                
+                <!-- Lazy-loaded looping animation with WebM -->
+                <video id="popup-video" class="hidden" loop muted playsinline>
+                    <source data-src="assets/images/london-time.webm" type="video/webm">
+                    Your browser does not support the video tag.
+                </video>
+                
+                <p>Maybe AI isn't so bad after all.</p>
+                <label for="popup-reset" class="close-button">close</label>
+            </div>
 
         <!-- Travel quote now starts hidden and is toggled by "This time traveller's watch..." -->
         <p id="travel-quote" class="hidden">"All we have to decide is what to do with the time that is given us."<br>- J.R.R. Tolkien, <em>The Lord of the Rings</em></p>

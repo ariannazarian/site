@@ -274,10 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
             element.innerText = element.innerText === translations[element.id][0] ? translations[element.id][1] : translations[element.id][0];
         });
     }); 
-   
-});
 
-document.addEventListener("DOMContentLoaded", function () {
     let popupYears = document.getElementById("popup-years");
     let video = document.getElementById("popup-video");
     let sources = video.querySelectorAll("source");
