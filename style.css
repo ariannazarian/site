@@ -269,7 +269,7 @@ header .personal-text {
 }
 
 /* Hide all pop-ups when reset is checked */
-#popup-reset:checked ~ .popup {
+#popup-reset:checked ~ .index-page .popup {
     opacity: 0;
     visibility: hidden;
 }
