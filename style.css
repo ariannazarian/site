@@ -293,12 +293,11 @@ header .personal-text {
     background: #FFD700; /* Brighter gold */
 }
 
-/* Mobile-friendly adjustments */
 @media (max-width: 768px) {
     .popup,
     .work-page .popup {
-        width: 80%;
-        max-width: 90%;
+        width: 80% !important;  /* Override the default width */
+        max-width: 90% !important;  /* Allow it to scale fully like index pop-ups */
         padding: 20px;
         text-align: left;
     }
