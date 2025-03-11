@@ -129,10 +129,12 @@ document.addEventListener("DOMContentLoaded", () => {
                          .filter(year => new Date(year, month - 1, day).getDay() === weekday);
     
         if (years.length > 0) {
-            // Add "Coordinate Reflections:" before the first year
+            // Add "Coordinate Reflections:" before the first year with fade-in effect
             let label = document.createElement("strong");
             label.textContent = "Coordinate Reflections: ";
             label.classList.add("clickable", "bold-text");
+            label.style.opacity = 0;
+            label.style.transition = "opacity 1.8s ease-in";
     
             // Make "Coordinate Reflections" also trigger the pop-up
             label.addEventListener("click", () => {
@@ -140,6 +142,11 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     
             matchingYearsList.appendChild(label);
+    
+            // Apply fade-in effect
+            setTimeout(() => {
+                label.style.opacity = 1;
+            }, 600); // Matches first-year fade timing
         }
     
         years.forEach((year, index) => {
@@ -171,9 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }, years.length * 1000 + 500);
     }
-    
-    
-
 
     function fadeInStoryGroups(callback) {
         let fadeGroups = document.querySelectorAll(".fade-group");
