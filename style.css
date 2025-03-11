@@ -232,12 +232,12 @@ header .personal-text {
 }
 
 /* Hide radio buttons */
-.popup-radio {
+.index-page .popup-radio {
     display: none;
 }
 
 /* Style the pop-ups */
-.popup {
+.index-page .popup {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -260,22 +260,21 @@ header .personal-text {
 }
 
 /* Show the correct pop-up when its radio is selected */
-#popup-ariann:checked ~ #popup-ariann-box,
-#popup-usc:checked ~ #popup-usc-box,
-#popup-edu:checked ~ #popup-edu-box {
+.index-page .popup-radio:checked + .popup {
     opacity: 1;
     visibility: visible;
     display: block;
 }
 
+
 /* Hide all pop-ups when reset is checked */
-#popup-reset:checked ~ .popup {
+.index-page #popup-reset:checked ~ .popup {
     opacity: 0;
     visibility: hidden;
 }
 
 /* Close button inside each pop-up */
-.popup .close-button {
+.index-page .popup .close-button {
     display: block;
     margin-top: 10px;
     background: #FFCC00; /* USC Gold */
@@ -289,19 +288,20 @@ header .personal-text {
 }
 
 /* Close button hover effect */
-.close-button:hover {
+.index-page .close-button:hover {
     background: #FFD700; /* Brighter gold */
 }
 
 /* Mobile-friendly adjustments */
 @media (max-width: 768px) {
-    .popup {
+    .index-page .popup {
         width: 80%;
         max-width: 90%;
         padding: 20px;
         text-align: left;
     }
 }
+
 /* 🔹 Style specifically for "Back to Top" link */
 footer a.clickable {
     font-weight: bold;
