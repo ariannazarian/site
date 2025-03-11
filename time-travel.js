@@ -301,9 +301,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (mathToggle) {
         mathToggle.addEventListener("click", function () {
-            const isHidden = mathContent.style.display === "none" || mathContent.style.display === "";
-            mathContent.style.display = isHidden ? "block" : "none";
-            mathArrow.textContent = isHidden ? "▲" : "▼";
+            const isHidden = mathContent.classList.toggle("hidden");
+            mathArrow.textContent = isHidden ? "▼" : "▲";
 
             // Stop blinking after first click
             mathArrow.classList.remove("blink-arrow");

@@ -515,8 +515,8 @@ img, a {
     display: none;
 }
 
-/* Styling for "Mathematical Background" clickable element */
-#math-background-toggle {
+/* Styling for "Mathematical Framework" clickable element */
+#math-framework-toggle {
     font-size: var(--text-size);
     font-weight: bold;
     text-align: center;
@@ -526,7 +526,7 @@ img, a {
 }
 
 /* Hover effect (matches other clickable elements) */
-#math-background-toggle:hover {
+#math-framework-toggle:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
 
@@ -540,8 +540,8 @@ img, a {
     animation: none !important;
 }
 
-/* Hidden state for the PDF container */
-#math-framework-content {
+/* Hide Mathematical Framework content initially using the .hidden class */
+#math-framework-content.hidden {
     display: none;
     margin-top: 10px;
 }
@@ -551,4 +551,3 @@ img, a {
     border: none;
     max-width: 100%;
 }
-
