@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }    
 
-    document.querySelector("#current-time").innerText = getFrozenPSTDate();
+    document.querySelector("#current-time").innerText = getFrozenUTCDate();
 
     function toggleEternalWatch() {
         let hiddenText = document.querySelector("#hidden-text");
