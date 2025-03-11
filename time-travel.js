@@ -118,7 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let coordinateReflections = document.querySelector("#coordinate-reflections");
     
         matchingYearsList.innerHTML = ""; // Clear previous years
-        matchingYearsContainer.style.display = "block"; // Reveal the section
+        coordinateReflections.style.display = "none"; // Keep hidden until toggled
+        matchingYearsContainer.style.display = "none"; // Keep entire section hidden initially
     
         let now = new Date(frozenTime);
         let month = now.getMonth() + 1;
@@ -128,6 +129,12 @@ document.addEventListener("DOMContentLoaded", () => {
     
         let years = Array.from({ length: currentYear - 1880 }, (_, i) => i + 1880)
                          .filter(year => new Date(year, month - 1, day).getDay() === weekday);
+    
+        // Only reveal "Coordinate Reflections" when "This time traveller’s watch..." is clicked
+        document.querySelector("#reveal-matching-alt").addEventListener("click", () => {
+            matchingYearsContainer.style.display = "block"; // Reveal section
+            coordinateReflections.style.display = "inline"; // Ensure "Coordinate Reflections" appears first
+        });
     
         // Ensure "Coordinate Reflections" is clickable and triggers the pop-up
         coordinateReflections.addEventListener("click", () => {
