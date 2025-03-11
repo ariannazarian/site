@@ -116,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let matchingYearsContainer = document.querySelector("#matching-years");
         matchingYears.innerHTML = `<strong>Coordinate reflections:</strong> `;
         matchingYears.style.display = "block";
+    let matchingYearsList = document.querySelector("#matching-years-list");
     let popupsContainer = document.querySelector("#year-popups");
 
     matchingYearsList.innerHTML = ""; // Clear previous years
