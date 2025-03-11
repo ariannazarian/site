@@ -540,3 +540,15 @@ img, a {
     animation: none !important;
 }
 
+/* Hidden state for the PDF container */
+#math-framework-content {
+    display: none;
+    margin-top: 10px;
+}
+
+/* Ensure iframe scales properly */
+#math-pdf {
+    border: none;
+    max-width: 100%;
+}
+

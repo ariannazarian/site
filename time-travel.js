@@ -295,14 +295,15 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const mathToggle = document.getElementById("math-background-toggle");
+    const mathToggle = document.getElementById("math-framework-toggle");
     const mathArrow = document.getElementById("math-arrow");
-    const mathContent = document.getElementById("math-background-content");
+    const mathContent = document.getElementById("math-framework-content");
 
     if (mathToggle) {
         mathToggle.addEventListener("click", function () {
-            const isHidden = mathContent.classList.toggle("hidden");
-            mathArrow.textContent = isHidden ? "▼" : "▲";
+            const isHidden = mathContent.style.display === "none" || mathContent.style.display === "";
+            mathContent.style.display = isHidden ? "block" : "none";
+            mathArrow.textContent = isHidden ? "▲" : "▼";
 
             // Stop blinking after first click
             mathArrow.classList.remove("blink-arrow");
