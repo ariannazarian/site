@@ -307,10 +307,6 @@ document.addEventListener("DOMContentLoaded", function () {
             // Stop blinking after first click
             mathArrow.classList.remove("blink-arrow");
         });
-
-        // Ensure the element is visible once the Eternal Watch is revealed
-        document.getElementById("hidden-text").addEventListener("transitionend", function () {
-            mathToggle.classList.remove("hidden");
-        });
     }
 });
+
