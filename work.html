@@ -64,14 +64,21 @@
 
         <!-- Matching Years Section -->
         <p id="matching-years" class="hidden">
-            <strong>Coordinate reflections:</strong> <span id="matching-years-list"></span>
+            <span id="coordinate-reflections" class="clickable bold-text">Coordinate reflections:</span>
+            <span id="matching-years-list"></span>
         </p>
 
-        <!-- Hidden radio reset to close year pop-ups -->
+        <!-- Hidden radio reset to close pop-up -->
         <input type="radio" id="popup-reset" name="year-popup-group" class="popup-radio" checked>
 
-        <!-- Hidden container for pop-ups -->
-        <div id="year-popups"></div>
+        <!-- The singular pop-up for all matching years -->
+        <input type="radio" id="popup-years" name="year-popup-group" class="popup-radio">
+        <div class="popup" id="popup-years-box" role="dialog" aria-label="Historical details" aria-hidden="true">
+            <p><strong>Historical details:</strong></p>
+            <p>Some interesting historical context related to this date.</p>
+            <label for="popup-reset" class="close-button">close</label>
+        </div>
+
 
 
         <!-- Travel quote now starts hidden and is toggled by "This time traveller's watch..." -->

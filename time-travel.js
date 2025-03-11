@@ -115,11 +115,10 @@ document.addEventListener("DOMContentLoaded", () => {
     function revealMatchingYearsWithFade(callback) {
         let matchingYearsContainer = document.querySelector("#matching-years");
         let matchingYearsList = document.querySelector("#matching-years-list");
-        let popupsContainer = document.querySelector("#year-popups");
+        let coordinateReflections = document.querySelector("#coordinate-reflections");
     
         matchingYearsList.innerHTML = ""; // Clear previous years
-        popupsContainer.innerHTML = ""; // Clear previous pop-ups
-        matchingYearsContainer.style.display = "block";
+        matchingYearsContainer.style.display = "block"; // Reveal the section
     
         let now = new Date(frozenTime);
         let month = now.getMonth() + 1;
@@ -130,6 +129,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let years = Array.from({ length: currentYear - 1880 }, (_, i) => i + 1880)
                          .filter(year => new Date(year, month - 1, day).getDay() === weekday);
     
+        // Ensure "Coordinate Reflections" is clickable and triggers the pop-up
+        coordinateReflections.addEventListener("click", () => {
+            document.getElementById("popup-years").checked = true;
+        });
+    
         years.forEach((year, index) => {
             let span = document.createElement("span");
             span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
@@ -138,37 +142,12 @@ document.addEventListener("DOMContentLoaded", () => {
             span.style.opacity = 0;
             span.style.transition = "opacity 1.8s ease-in";
     
-            // Create corresponding pop-up elements
-            let popupId = `popup-year-${year}`;
-            let popupInput = document.createElement("input");
-            popupInput.type = "radio";
-            popupInput.id = popupId;
-            popupInput.name = "year-popup-group";
-            popupInput.classList.add("popup-radio");
-    
-            let popupDiv = document.createElement("div");
-            popupDiv.classList.add("popup");
-            popupDiv.id = `${popupId}-box`;
-            popupDiv.setAttribute("role", "dialog");
-            popupDiv.setAttribute("aria-label", `Historical details for ${year}`);
-            popupDiv.setAttribute("aria-hidden", "true");
-    
-            let popupContent = `
-                <p><strong>Historical details for ${year}:</strong></p>
-                <p>Some interesting historical context about ${year} can go here.</p>
-                <label for="popup-reset" class="close-button">close</label>
-            `;
-    
-            popupDiv.innerHTML = popupContent;
-    
-            // Click event to show pop-up
+            // Click event to show the pop-up
             span.addEventListener("click", () => {
-                document.getElementById(popupId).checked = true;
+                document.getElementById("popup-years").checked = true;
             });
     
             matchingYearsList.appendChild(span);
-            popupsContainer.appendChild(popupInput);
-            popupsContainer.appendChild(popupDiv);
     
             setTimeout(() => {
                 span.style.opacity = 1;
@@ -183,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 el.style.transition = "none";
             });
         }, years.length * 1000 + 500);
-    }
+    }    
     
 
     function fadeInStoryGroups(callback) {

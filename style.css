@@ -496,3 +496,19 @@ img, a {
 .work-page .year-item:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
+
+/* 🔹 Clickable coordinate reflections & matching years */
+.work-page #coordinate-reflections,
+.work-page .year-item {
+    font-weight: bold;
+    color: var(--white);
+    text-decoration: none;
+    cursor: pointer;
+    transition: text-shadow 0.3s ease;
+}
+
+/* 🔹 Hover effect */
+.work-page #coordinate-reflections:hover,
+.work-page .year-item:hover {
+    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
+}
