@@ -280,23 +280,25 @@ document.addEventListener("DOMContentLoaded", function () {
     let video = document.getElementById("popup-video");
 
     function resetAndPlayVideo() {
-        video.pause(); // Pause the video
-        video.currentTime = 0; // Reset to start
-        video.play(); // Play again
+        video.pause(); // Ensure it is stopped before resetting
+        video.currentTime = 0; // Reset to beginning
+        video.play().catch(() => {
+            console.warn("Autoplay prevented by browser.");
+        }); // Handle autoplay restrictions
     }
 
     function stopVideo() {
-        video.pause(); // Pause when closed
-        video.currentTime = 0; // Reset position to the beginning
+        video.pause(); // Stop when closed
+        video.currentTime = 0; // Reset for next open
     }
 
-    // Listen for radio button changes (detect pop-up open/close)
+    // Listen for pop-up open/close
     document.querySelectorAll("input[name='year-popup-group']").forEach(input => {
         input.addEventListener("change", function () {
             if (popupYears.checked) {
-                resetAndPlayVideo();
+                resetAndPlayVideo(); // Always reset and play on open
             } else {
-                stopVideo();
+                stopVideo(); // Stop and reset on close
             }
         });
     });
