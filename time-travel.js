@@ -280,16 +280,23 @@ document.addEventListener("DOMContentLoaded", function () {
     let video = document.getElementById("popup-video");
 
     function resetAndPlayVideo() {
-        video.pause(); // Ensure it is stopped before resetting
-        video.currentTime = 0; // Reset to beginning
-        video.play().catch(() => {
-            console.warn("Autoplay prevented by browser.");
-        }); // Handle autoplay restrictions
+        video.pause(); // Ensure it stops first
+        video.currentTime = 0; // Reset to the beginning
+
+        // Delay playback slightly to allow browsers to register the reset
+        setTimeout(() => {
+            let playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    console.warn("Autoplay prevented. User interaction may be required.");
+                });
+            }
+        }, 100); // Short delay ensures autoplay works
     }
 
     function stopVideo() {
-        video.pause(); // Stop when closed
-        video.currentTime = 0; // Reset for next open
+        video.pause(); // Stop when pop-up closes
+        video.currentTime = 0; // Reset position
     }
 
     // Listen for pop-up open/close
@@ -303,3 +310,4 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
