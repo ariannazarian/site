@@ -515,4 +515,28 @@ img, a {
     display: none;
 }
 
+/* Styling for "Mathematical Background" clickable element */
+#math-background-toggle {
+    font-size: var(--text-size);
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: text-shadow 0.3s ease;
+}
+
+/* Hover effect (matches other clickable elements) */
+#math-background-toggle:hover {
+    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
+}
+
+/* Ensure blinking arrow behaves like others */
+#math-arrow {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Stop blinking after first click */
+#math-arrow:not(.blink-arrow) {
+    animation: none !important;
+}
 

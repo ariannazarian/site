@@ -293,3 +293,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const mathToggle = document.getElementById("math-background-toggle");
+    const mathArrow = document.getElementById("math-arrow");
+    const mathContent = document.getElementById("math-background-content");
+
+    if (mathToggle) {
+        mathToggle.addEventListener("click", function () {
+            const isHidden = mathContent.classList.toggle("hidden");
+            mathArrow.textContent = isHidden ? "▼" : "▲";
+
+            // Stop blinking after first click
+            mathArrow.classList.remove("blink-arrow");
+        });
+
+        // Ensure the element is visible once the Eternal Watch is revealed
+        document.getElementById("hidden-text").addEventListener("transitionend", function () {
+            mathToggle.classList.remove("hidden");
+        });
+    }
+});
