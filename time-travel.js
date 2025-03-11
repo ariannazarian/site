@@ -279,17 +279,25 @@ document.addEventListener("DOMContentLoaded", function () {
     let popupYears = document.getElementById("popup-years");
     let video = document.getElementById("popup-video");
 
-    popupYears.addEventListener("change", function () {
-        if (popupYears.checked) {
-            // Load video source only when the pop-up is revealed
-            let source = video.querySelector("source");
-            if (!source.src) {
-                source.src = source.dataset.src;
-                video.load(); // Load the video
+    function resetAndPlayVideo() {
+        video.pause(); // Pause the video
+        video.currentTime = 0; // Reset to start
+        video.play(); // Play again
+    }
+
+    function stopVideo() {
+        video.pause(); // Pause when closed
+        video.currentTime = 0; // Reset position to the beginning
+    }
+
+    // Listen for radio button changes (detect pop-up open/close)
+    document.querySelectorAll("input[name='year-popup-group']").forEach(input => {
+        input.addEventListener("change", function () {
+            if (popupYears.checked) {
+                resetAndPlayVideo();
+            } else {
+                stopVideo();
             }
-            video.classList.remove("hidden"); // Show the video
-        } else {
-            video.classList.add("hidden"); // Hide the video when pop-up is closed
-        }
+        });
     });
 });
