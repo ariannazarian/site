@@ -294,19 +294,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const mathToggle = document.getElementById("math-framework-toggle");
-    const mathArrow = document.getElementById("math-arrow");
-    const mathContent = document.getElementById("math-framework-content");
 
-    if (mathToggle) {
-        mathToggle.addEventListener("click", function () {
-            const isHidden = mathContent.classList.toggle("hidden");
-            mathArrow.textContent = isHidden ? "▼" : "▲";
-
-            // Stop blinking after first click
-            mathArrow.classList.remove("blink-arrow");
-        });
-    }
-});
 
