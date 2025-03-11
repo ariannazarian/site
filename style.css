@@ -499,4 +499,18 @@ img, a {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
 
+/* Ensure the video scales properly inside the pop-up */
+.popup video {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+}
+
+/* Initially hide the video */
+.hidden {
+    display: none;
+}
+
 

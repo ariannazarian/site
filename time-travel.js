@@ -276,3 +276,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }); 
    
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    let popupYears = document.getElementById("popup-years");
+    let video = document.getElementById("popup-video");
+
+    popupYears.addEventListener("change", function () {
+        if (popupYears.checked) {
+            // Load video source only when the pop-up is revealed
+            let source = video.querySelector("source");
+            if (!source.src) {
+                source.src = source.dataset.src;
+                video.load(); // Load the video
+            }
+            video.classList.remove("hidden"); // Show the video
+        } else {
+            video.classList.add("hidden"); // Hide the video when pop-up is closed
+        }
+    });
+});
