@@ -428,8 +428,8 @@ img, a {
     user-select: none; /* Prevents selection */
 }
 
-/* 🔹 Work Page Pop-Up Styling */
-.popup {
+/* 🔹 Work Page-Specific Pop-Up Styling */
+.work-page .popup {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -452,20 +452,20 @@ img, a {
 }
 
 /* 🔹 Show the correct pop-up when its radio is selected */
-.popup-radio:checked + .popup {
+.work-page .popup-radio:checked + .popup {
     opacity: 1;
     visibility: visible;
     display: block;
 }
 
 /* 🔹 Hide all pop-ups when reset is checked */
-#popup-reset:checked ~ .popup {
+.work-page #popup-reset:checked ~ .popup {
     opacity: 0;
     visibility: hidden;
 }
 
-/* 🔹 Close button styling */
-.close-button {
+/* 🔹 Close button styling (Work Page) */
+.work-page .close-button {
     display: block;
     margin-top: 10px;
     background: var(--black); /* Black background */
@@ -479,12 +479,12 @@ img, a {
 }
 
 /* 🔹 Close button hover effect */
-.close-button:hover {
+.work-page .close-button:hover {
     background: #333; /* Slightly lighter black for hover effect */
 }
 
 /* 🔹 Clickable matching years */
-.year-item {
+.work-page .year-item {
     font-weight: bold;
     color: var(--white);
     text-decoration: none;
@@ -493,6 +493,6 @@ img, a {
 }
 
 /* 🔹 Matching years hover effect */
-.year-item:hover {
+.work-page .year-item:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }

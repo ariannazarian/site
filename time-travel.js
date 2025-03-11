@@ -114,13 +114,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function revealMatchingYearsWithFade(callback) {
         let matchingYearsContainer = document.querySelector("#matching-years");
-        let matchingYearsList = document.createElement("span");
-        matchingYearsContainer.innerHTML = `<strong>Coordinate reflections:</strong> `;
-        matchingYearsContainer.style.display = "block";
-        matchingYearsContainer.appendChild(matchingYearsList);
-    
+        let matchingYearsList = document.querySelector("#matching-years-list");
         let popupsContainer = document.querySelector("#year-popups");
+    
+        matchingYearsList.innerHTML = ""; // Clear previous years
         popupsContainer.innerHTML = ""; // Clear previous pop-ups
+        matchingYearsContainer.style.display = "block";
     
         let now = new Date(frozenTime);
         let month = now.getMonth() + 1;
