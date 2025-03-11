@@ -508,17 +508,5 @@ img, a {
     margin: 10px auto;
 }
 
-/* Avoid display: none; (prevents loading) */
-.hidden {
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-}
-
-/* When shown, make it fully visible */
-.popup input:checked ~ #popup-years-box video {
-    visibility: visible;
-    opacity: 1;
-}
 
 
