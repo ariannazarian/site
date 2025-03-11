@@ -230,12 +230,13 @@ header .personal-text {
     opacity: 0;
     transition: opacity 3s ease-in;
 }
-/* 🔹 Hide radio buttons */
+
+/* Hide radio buttons */
 .popup-radio {
     display: none;
 }
 
-/* 🔹 Style the pop-ups */
+/* Style the pop-ups */
 .popup {
     position: fixed;
     top: 50%;
@@ -258,7 +259,7 @@ header .personal-text {
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
-/* 🔹 Show the correct pop-up when its radio is selected */
+/* Show the correct pop-up when its radio is selected */
 #popup-ariann:checked ~ #popup-ariann-box,
 #popup-usc:checked ~ #popup-usc-box,
 #popup-edu:checked ~ #popup-edu-box {
@@ -267,13 +268,13 @@ header .personal-text {
     display: block;
 }
 
-/* 🔹 Hide all pop-ups when reset is checked */
+/* Hide all pop-ups when reset is checked */
 #popup-reset:checked ~ .popup {
     opacity: 0;
     visibility: hidden;
 }
 
-/* 🔹 Close button inside each pop-up */
+/* Close button inside each pop-up */
 .popup .close-button {
     display: block;
     margin-top: 10px;
@@ -287,21 +288,20 @@ header .personal-text {
     text-align: center;
 }
 
-/* 🔹 Close button hover effect */
+/* Close button hover effect */
 .close-button:hover {
     background: #FFD700; /* Brighter gold */
 }
 
-/* 🔹 Mobile-friendly adjustments */
+/* Mobile-friendly adjustments */
 @media (max-width: 768px) {
-    .index-page .popup {
+    .popup {
         width: 80%;
         max-width: 90%;
         padding: 20px;
         text-align: left;
     }
 }
-
 /* 🔹 Style specifically for "Back to Top" link */
 footer a.clickable {
     font-weight: bold;
