@@ -169,7 +169,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 el.style.transition = "none";
             });
         }, years.length * 1000 + 500);
-    }    
+    }
+    
     
 
     function fadeInStoryGroups(callback) {
