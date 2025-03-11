@@ -546,11 +546,8 @@ img, a {
     margin-top: 10px;
 }
 
-/* Ensure iframe scales properly for full view */
+/* Ensure iframe scales properly */
 #math-pdf {
-    width: 100vw; /* Take full width of the viewport */
-    height: 90vh; /* Use 90% of viewport height for better visibility */
-    max-width: 100%; /* Ensure it doesn’t overflow */
     border: none;
+    max-width: 100%;
 }
-
