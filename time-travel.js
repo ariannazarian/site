@@ -114,7 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function revealMatchingYearsWithFade(callback) {
     let matchingYearsContainer = document.querySelector("#matching-years");
-    let matchingYearsList = document.querySelector("#matching-years-list");
+        matchingYears.innerHTML = `<strong>Coordinate reflections:</strong> `;
+        matchingYears.style.display = "block";
     let popupsContainer = document.querySelector("#year-popups");
 
     matchingYearsList.innerHTML = ""; // Clear previous years
