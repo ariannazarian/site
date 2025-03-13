@@ -28,22 +28,22 @@ a {
     user-select: text;
 }
 
-/* 🔹 Style for Header Image (Responsive Sizing) */
+/* 🔹 Header Image */
 .header-image {
-    width: 15vw; /* 15% of the viewport width on larger screens */
-    max-width: 600px; /* Ensures it doesn't get too large */
-    height: auto; /* Maintains aspect ratio */
-    display: block; /* Removes default spacing */
-    margin: 0 auto 10px; /* Centers the image */
+    width: min(15vw, 600px);
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
+    transition: opacity 0.3s ease-in-out;
 }
 
-/* 🔹 Adjust image size for smaller screens */
+/* 🔹 Responsive Image Adjustments */
 @media (max-width: 600px) {
     .header-image {
-        width: 50vw; /* 50% of viewport width on smaller screens */
-        max-width: 300px; /* Prevents it from becoming too large */
+        width: min(50vw, 300px);
     }
 }
+
 /* 🔹 Ensure the header still looks correct */
 header {
     background-color: var(--white);
