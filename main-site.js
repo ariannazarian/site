@@ -67,30 +67,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// 🔹 VIDEO FUNCTIONS (Efficient Event Listeners)
+// 🔹 VIDEO FUNCTIONS (Ensuring Click Listeners Are Attached)
 function setupVideoHandling() {
-    document.querySelectorAll(".video-title").forEach(title => {
-        title.addEventListener("click", () => {
-            toggleVideo(parseInt(title.dataset.index));
+    document.querySelectorAll(".video-title").forEach((title) => {
+        title.addEventListener("click", function () {
+            let index = parseInt(this.dataset.index);
+            toggleVideo(index);
         });
     });
 
-    document.querySelectorAll('.video-thumbnail').forEach(thumbnail => {
+    document.querySelectorAll('.video-thumbnail').forEach((thumbnail) => {
         thumbnail.dataset.originalContent = thumbnail.innerHTML;
 
-        thumbnail.addEventListener("click", () => {
-            loadVideo(thumbnail, thumbnail.dataset.videoId);
+        // Attach event listener dynamically to load video correctly
+        thumbnail.addEventListener("click", function () {
+            let videoId = this.dataset.videoId;
+            loadVideo(this, videoId);
         });
     });
 }
 
 function loadVideo(el, videoId) {
+    console.log("loadVideo called for videoId:", videoId); // Debugging
+
+    // Ensure the clicked element has a valid video ID
     if (!videoId) {
         console.error("No valid video ID found.");
         return;
     }
-
-    console.log("Replacing thumbnail with iframe for videoId:", videoId);
 
     // Stop all other playing videos before loading a new one
     document.querySelectorAll('.video-thumbnail').forEach(vid => {
@@ -103,35 +107,49 @@ function loadVideo(el, videoId) {
         el.dataset.originalContent = el.innerHTML;
     }
 
+    el.dataset.videoId = videoId;
     const width = el.offsetWidth;
+
+    console.log("Replacing thumbnail with iframe"); // Debugging
+
     el.innerHTML = `
         <iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
-        src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&autoplay=1"
+        src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0"
         frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
         allowfullscreen></iframe>`;
 }
 
+
 function toggleVideo(index) {
-    const videoContainers = document.querySelectorAll('.video-container');
+    const videos = document.querySelectorAll('.video-container');
     const arrows = document.querySelectorAll('.toggle-arrow');
     const videoTitles = document.querySelectorAll(".video-title");
 
-    let videoContainer = videoContainers[index];
+    let videoContainer = videos[index];
     let arrow = arrows[index];
     let title = videoTitles[index];
 
-    if (!videoContainer) return;
-
     // Toggle visibility
-    const isExpanded = videoContainer.classList.contains("hidden");
-    videoContainer.classList.toggle("hidden", isExpanded);
-    arrow.textContent = isExpanded ? "▼" : "▲";
+    let isExpanded = videoContainer.classList.contains("hidden");
+    videoContainer.classList.toggle("hidden", !isExpanded);
 
-    // Pause video when closing
-    const iframe = videoContainer.querySelector("iframe");
-    if (iframe && isExpanded) {
-        iframe.src = iframe.src; // Reset video playback to pause it
+    // Ensure video appears properly by resetting inline display (if needed)
+    if (!isExpanded) {
+        videoContainer.style.display = "block";
+    } else {
+        videoContainer.style.display = "none";
+
+        // 🔹 Pause the video if it's currently playing
+        let iframe = videoContainer.querySelector("iframe");
+        if (iframe) {
+            let videoSrc = iframe.src;
+            iframe.src = ""; // Reset src to stop video playback
+            iframe.src = videoSrc; // Restore src (prevents YouTube from keeping it playing)
+        }
     }
+
+    // Toggle arrow direction
+    arrow.textContent = isExpanded ? "▼" : "▲";
 
     // Stop blinking after first click
     arrow.classList.remove("blink-arrow");
@@ -140,3 +158,4 @@ function toggleVideo(index) {
     // Update ARIA attributes for accessibility
     title.setAttribute("aria-expanded", !isExpanded);
 }
+
