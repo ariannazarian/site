@@ -276,37 +276,21 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const popupYears = document.getElementById("popup-years");
-    const popupReset = document.getElementById("popup-reset");
-    const video = document.getElementById("popup-video");
+    let popupYears = document.getElementById("popup-years");
+    let video = document.getElementById("popup-video");
 
     popupYears.addEventListener("change", function () {
         if (popupYears.checked) {
-            video.classList.remove("hidden");
-
-            // 🔹 Always attempt to play the video
-            let playPromise = video.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    console.warn("Autoplay prevented by browser:", error);
-                });
+            // Load video source only when the pop-up is revealed
+            let source = video.querySelector("source");
+            if (!source.src) {
+                source.src = source.dataset.src;
+                video.load(); // Load the video
             }
+            video.classList.remove("hidden"); // Show the video
+        } else {
+            video.classList.add("hidden"); // Hide the video when pop-up is closed
         }
-    });
-
-    popupReset.addEventListener("change", function () {
-        if (popupReset.checked) {
-            video.pause(); // Pause video when popup closes
-            video.classList.add("hidden"); // Hide video
-        }
-    });
-
-    // 🔹 Ensure video resumes correctly if browser blocked autoplay
-    video.addEventListener("pause", function () {
-        popupYears.addEventListener("change", function () {
-            if (popupYears.checked) {
-                video.play().catch(error => console.warn("Autoplay prevented on resume:", error));
-            }
-        }, { once: true }); // Ensures it only runs once after pause
     });
 });
+
