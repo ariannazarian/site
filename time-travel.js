@@ -280,12 +280,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const popupReset = document.getElementById("popup-reset");
     const video = document.getElementById("popup-video");
 
+    let wasPlaying = false; // 🔹 Track if the video was playing before closing
+
     popupYears.addEventListener("change", function () {
         if (popupYears.checked) {
             video.classList.remove("hidden");
 
-            // 🔹 Resume only if the video was playing before closing
-            if (video.paused) {
+            // 🔹 Resume playing if it was playing before closing
+            if (wasPlaying) {
                 let playPromise = video.play();
                 if (playPromise !== undefined) {
                     playPromise.catch(error => {
@@ -298,7 +300,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     popupReset.addEventListener("change", function () {
         if (popupReset.checked) {
-            video.pause(); // Pause without resetting position
+            wasPlaying = !video.paused; // 🔹 Store play state before pausing
+            video.pause(); // Pause video
             video.classList.add("hidden");
         }
     });
