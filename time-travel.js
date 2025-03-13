@@ -280,28 +280,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const popupReset = document.getElementById("popup-reset");
     const video = document.getElementById("popup-video");
 
-    let wasPlaying = false; // 🔹 Track if the video was playing before closing
-
     popupYears.addEventListener("change", function () {
         if (popupYears.checked) {
             video.classList.remove("hidden");
-
-            // 🔹 Resume playing if it was playing before closing
-            if (wasPlaying) {
-                let playPromise = video.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.warn("Autoplay prevented by browser:", error);
-                    });
-                }
-            }
+            video.play(); // 🔹 Directly play when popup opens
         }
     });
 
     popupReset.addEventListener("change", function () {
         if (popupReset.checked) {
-            wasPlaying = !video.paused; // 🔹 Store play state before pausing
-            video.pause(); // Pause video
+            video.pause(); // 🔹 Directly pause when popup closes
             video.classList.add("hidden");
         }
     });
