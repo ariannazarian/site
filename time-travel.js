@@ -283,9 +283,16 @@ document.addEventListener("DOMContentLoaded", function () {
     popupYears.addEventListener("change", function () {
         if (popupYears.checked) {
             video.classList.remove("hidden");
-            video.play().catch(error => {
-                console.warn("Autoplay prevented by browser:", error);
-            });
+
+            // 🔹 Resume only if the video was playing before closing
+            if (video.paused) {
+                let playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.warn("Autoplay prevented by browser:", error);
+                    });
+                }
+            }
         }
     });
 
