@@ -277,10 +277,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("DOMContentLoaded", function () {
     let popupYears = document.getElementById("popup-years");
+    let popupReset = document.getElementById("popup-reset");
+    let popupYearsBox = document.getElementById("popup-years-box");
     let video = document.getElementById("popup-video");
 
     popupYears.addEventListener("change", function () {
         if (popupYears.checked) {
+            // Ensure accessibility is updated
+            popupYearsBox.setAttribute("aria-hidden", "false");
+
             // Load video source only when the pop-up is revealed
             let source = video.querySelector("source");
             if (!source.src) {
@@ -288,9 +293,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 video.load(); // Load the video
             }
             video.classList.remove("hidden"); // Show the video
-        } else {
+        }
+    });
+
+    popupReset.addEventListener("change", function () {
+        if (popupReset.checked) {
+            // Ensure accessibility is updated
+            popupYearsBox.setAttribute("aria-hidden", "true");
+
             video.classList.add("hidden"); // Hide the video when pop-up is closed
         }
     });
 });
+
 

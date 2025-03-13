@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; object-src 'none';">
-    <meta name="description" content="Arian Nazarian's website work page.">
+    <meta name="description" content="Arian Nazarian's website work page featuring projects and mathematical explorations.">
     <meta name="author" content="Arian Nazarian">
+    <meta name="keywords" content="Arian Nazarian, mathematics, academic papers, simulations, engineering">
     <title>work | Arian Nazarian</title>
     <link rel="stylesheet" href="style.css">
 
@@ -71,19 +72,22 @@
 
         <!-- Hidden radio reset to close pop-up -->
         <input type="radio" id="popup-reset" name="year-popup-group" class="popup-radio" checked>
-
-        <!-- The singular pop-up for all matching years -->
         <input type="radio" id="popup-years" name="year-popup-group" class="popup-radio">
+
         <div class="popup" id="popup-years-box" role="dialog" aria-label="Snippets of London from the 1880s to present day" aria-hidden="true">
             <p><strong>London, Timeless: 1880s-Present</strong></p>
-            <!-- Directly set the source -->
+            
             <video id="popup-video" loop autoplay muted playsinline>
                 <source src="assets/images/london-time.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
+            
             <p>Time flies, the sun will rise… and the taxman never dies.</p>
-            <label for="popup-reset" class="close-button">close</label>
+
+            <!-- Close button now updates aria-hidden dynamically -->
+            <label for="popup-reset" class="close-button" id="popup-close">close</label>
         </div>
+
 
 
         <!-- Travel quote now starts hidden and is toggled by "This time traveller's watch..." -->
