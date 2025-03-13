@@ -276,21 +276,22 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const popup = document.getElementById("popup-years-box");
-    const video = document.getElementById("popup-video");
+    let popupYears = document.getElementById("popup-years");
+    let video = document.getElementById("popup-video");
 
-    // Observe changes in the popup's visibility
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.target.style.opacity === "1") {
-                video.classList.remove("hidden");
-                video.play(); // Play when the popup opens
-            } else {
-                video.pause(); // Pause when the popup closes
+    popupYears.addEventListener("change", function () {
+        if (popupYears.checked) {
+            // Load video source only when the pop-up is revealed
+            let source = video.querySelector("source");
+            if (!source.src) {
+                source.src = source.dataset.src;
+                video.load(); // Load the video
             }
-        });
+            video.classList.remove("hidden"); // Show the video
+            video.play(); // 🔹 Ensure video resumes playing
+        } else {
+            video.classList.add("hidden"); // Hide the video when pop-up is closed
+            video.pause(); // 🔹 Pause the video when popup closes
+        }
     });
-
-    // Attach observer to detect when the popup is shown/hidden
-    observer.observe(popup, { attributes: true, attributeFilter: ["style"] });
 });
