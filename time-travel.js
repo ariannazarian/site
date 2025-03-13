@@ -277,21 +277,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("DOMContentLoaded", function () {
     let popupYears = document.getElementById("popup-years");
+    let popupReset = document.getElementById("popup-reset"); // Detects when pop-up closes
     let video = document.getElementById("popup-video");
 
     popupYears.addEventListener("change", function () {
         if (popupYears.checked) {
-            // Load video source only when the pop-up is revealed
-            let source = video.querySelector("source");
-            if (!source.src) {
-                source.src = source.dataset.src;
-                video.load(); // Load the video
+            video.classList.remove("hidden"); // Show video
+            if (video.paused) { // Only play if it was paused
+                video.play().catch(error => {
+                    console.warn("Autoplay prevented by browser:", error);
+                });
             }
-            video.classList.remove("hidden"); // Show the video
-            video.play(); // 🔹 Ensure video resumes playing
-        } else {
-            video.classList.add("hidden"); // Hide the video when pop-up is closed
-            video.pause(); // 🔹 Pause the video when popup closes
+        }
+    });
+
+    popupReset.addEventListener("change", function () {
+        if (popupReset.checked) {
+            video.pause(); // Pause video on popup close
+            video.classList.add("hidden"); // Hide video
         }
     });
 });
