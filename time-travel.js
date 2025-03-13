@@ -276,21 +276,21 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const popupYears = document.getElementById("popup-years");
-    const popupReset = document.getElementById("popup-reset");
+    const popup = document.getElementById("popup-years-box");
     const video = document.getElementById("popup-video");
 
-    popupYears.addEventListener("change", function () {
-        if (popupYears.checked) {
-            video.classList.remove("hidden");
-            video.play(); // 🔹 Directly play when popup opens
-        }
+    // Observe changes in the popup's visibility
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.target.style.opacity === "1") {
+                video.classList.remove("hidden");
+                video.play(); // Play when the popup opens
+            } else {
+                video.pause(); // Pause when the popup closes
+            }
+        });
     });
 
-    popupReset.addEventListener("change", function () {
-        if (popupReset.checked) {
-            video.pause(); // 🔹 Directly pause when popup closes
-            video.classList.add("hidden");
-        }
-    });
+    // Attach observer to detect when the popup is shown/hidden
+    observer.observe(popup, { attributes: true, attributeFilter: ["style"] });
 });
