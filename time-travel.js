@@ -288,11 +288,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 video.load(); // Load the video
             }
             video.classList.remove("hidden"); // Show the video
+            video.play(); // Ensure it starts playing
         } else {
             video.classList.add("hidden"); // Hide the video when pop-up is closed
+            video.pause(); // 🔹 Pause the video when popup closes
+            video.currentTime = 0; // 🔹 Reset video to start
         }
     });
 });
+
 
 
 
