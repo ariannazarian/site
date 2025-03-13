@@ -149,19 +149,27 @@ function toggleVideo(index) {
     const arrows = document.querySelectorAll('.toggle-arrow');
     const videoTitles = document.querySelectorAll(".video-title");
 
-    let video = videos[index]; 
+    let videoContainer = videos[index];
     let arrow = arrows[index];
     let title = videoTitles[index];
 
-    // Toggle the hidden class properly
-    let isExpanded = video.classList.contains("hidden");
-    video.classList.toggle("hidden", !isExpanded);
+    // Toggle visibility
+    let isExpanded = videoContainer.classList.contains("hidden");
+    videoContainer.classList.toggle("hidden", !isExpanded);
 
     // Ensure video appears properly by resetting inline display (if needed)
     if (!isExpanded) {
-        video.style.display = "block";
+        videoContainer.style.display = "block";
     } else {
-        video.style.display = "none";
+        videoContainer.style.display = "none";
+
+        // 🔹 Pause the video if it's currently playing
+        let iframe = videoContainer.querySelector("iframe");
+        if (iframe) {
+            let videoSrc = iframe.src;
+            iframe.src = ""; // Reset src to stop video playback
+            iframe.src = videoSrc; // Restore src (prevents YouTube from keeping it playing)
+        }
     }
 
     // Toggle arrow direction
@@ -174,3 +182,4 @@ function toggleVideo(index) {
     // Update ARIA attributes for accessibility
     title.setAttribute("aria-expanded", !isExpanded);
 }
+
