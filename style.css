@@ -1,14 +1,13 @@
-/* 🔹 Define Global Color Variables */
+/* Define color variables */
 :root {
     --black: #000000;
     --usc-cardinal: #990000; /* USC Crimson */
     --white: #ffffff;
-    --usc-gold: #FFCC00;
     --text-size: 16px; /* Standard text size below the header */
     --larger-text-size: 24px; /* Frozen time display */
 }
 
-/* 🔹 General Styling */
+/* General styling */
 body {
     font-family: "Courier New", Courier, monospace;
     text-align: center;
@@ -16,15 +15,36 @@ body {
     color: var(--white);
     margin: 0;
     padding: 0;
-    user-select: none; /* Disable text selection globally */
+
+    /* 🔹 Disable text selection globally */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
-/* 🔹 Allow Links to Be Selectable */
+/* 🔹 Allow links to be selectable */
 a {
     user-select: text;
 }
 
-/* 🔹 Header Styling */
+/* 🔹 Style for Header Image (Responsive Sizing) */
+.header-image {
+    width: 15vw; /* 15% of the viewport width on larger screens */
+    max-width: 600px; /* Ensures it doesn't get too large */
+    height: auto; /* Maintains aspect ratio */
+    display: block; /* Removes default spacing */
+    margin: 0 auto 10px; /* Centers the image */
+}
+
+/* 🔹 Adjust image size for smaller screens */
+@media (max-width: 600px) {
+    .header-image {
+        width: 50vw; /* 50% of viewport width on smaller screens */
+        max-width: 300px; /* Prevents it from becoming too large */
+    }
+}
+/* 🔹 Ensure the header still looks correct */
 header {
     background-color: var(--white);
     padding: 10px 15px;
@@ -35,32 +55,14 @@ header {
     color: var(--black);
 }
 
-/* 🔹 Header Image */
-.header-image {
-    width: 15vw;
-    max-width: 600px;
-    height: auto;
-    display: block;
-    margin: 0 auto 10px;
-    transition: opacity 0.3s ease-in-out;
-}
-
-/* 🔹 Responsive Image Adjustments */
-@media (max-width: 600px) {
-    .header-image {
-        width: 50vw;
-        max-width: 300px;
-    }
-}
-
-/* 🔹 Email & Personal Text */
+/* Email & personal text */
 header .email {
     color: var(--usc-cardinal);
     font-size: var(--text-size);
     margin: 5px 0;
 }
 
-/* 🔹 Ensure only clickable email elements have hover effects */
+/* 🔹 Ensure only clickable elements inside .email have a USC Gold hover effect */
 header .email label {
     font-weight: bold;
     color: var(--usc-cardinal);
@@ -68,71 +70,286 @@ header .email label {
     transition: text-shadow 0.3s ease-in-out;
 }
 
-/* 🔹 Custom Hover Effect for Email */
+/* 🔹 Custom hover effect: USC Gold text shadow */
 header .email label:hover {
-    text-shadow: 2px 2px 6px var(--usc-gold);
+    text-shadow: 2px 2px 6px #FFCC00;
 }
 
-/* 🔹 Ensure "at" and "dot" remain italicized and black */
+/* 🔹 Ensure "at" and "dot" are italicized, black, and non-bold */
 header .email em {
     color: black;
     font-style: italic;
     font-weight: normal;
 }
 
-/* 🔹 Clickable & Navigation Links */
-.clickable,
-nav a,
-.back-arrow {
-    font-weight: bold;
-    color: black !important;
-    text-decoration: none !important;
-    transition: text-shadow 0.3s ease, opacity 0.3s ease;
+/* 🔹 Style for personal-text */
+header .personal-text {
+    color: black;
+    font-size: var(--text-size);
+    margin-top: 3px; /* Reduce space above */
+    margin-bottom: 5px;
+    text-align: center;
 }
 
-/* 🔹 Hover Effect for Clickable Items */
-.clickable:hover,
-nav a:hover,
-.back-arrow:hover {
+/* 🔹 Ensure only clickable elements in .personal-text remain bold, black, and formatted correctly */
+.personal-text a {
+    font-weight: bold;
+    color: black; /* Ensures links stay black */
+    text-decoration: none !important; /* Removes underline */
+    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* 🔹 Prevent visited links from changing color */
+.personal-text a:visited {
+    color: black !important; /* Keeps the links black even after clicking */
+    font-weight: bold;
+}
+
+/* 🔹 Maintain the same hover effect as other clickable elements */
+.personal-text a:hover {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* 🔹 Hover Effect Standardization */
-.hover-effect {
-    transition: text-shadow 0.3s ease;
+/* 🔹 Ensure back navigation links remain bold and black */
+.back-arrow, nav a {
+    font-weight: bold;
+    color: black !important;
+    text-decoration: none !important; /* Removes underline */
+    transition: opacity 0.3s ease, text-shadow 0.3s ease;
 }
 
-.hover-effect:hover {
+/* 🔹 Apply hover effect to match other clickable elements */
+.back-arrow:hover, nav a:hover {
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Clickable elements */
+.clickable {
+    cursor: pointer;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Hover effect */
+.clickable:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
 
-/* 🔹 The Eternal Watch */
+/* The Eternal Watch - No space between it and frozen time */
 #eternal-title {
     font-size: var(--text-size);
     margin-bottom: 0px;
 }
 
-/* 🔹 Frozen Time Display */
+/* Frozen time display - Larger (24px) */
 #current-time {
     font-size: var(--larger-text-size);
     margin-top: 0px;
 }
 
-/* 🔹 Video Title Styling */
-.video-title {
-    font-size: 16px;
+/* Watch text formatting */
+.watch-text {
+    font-size: var(--text-size);
     font-weight: bold;
-    color: var(--white);
-    margin-bottom: 5px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* 🔹 Bold Latin texts and their translations */
+.toggle-text {
+    font-size: var(--text-size);
+    font-weight: bold;
     cursor: pointer;
 }
 
-/* 🔹 Hover Effect for Video Titles */
+/* 🔹 Fade-in effect for Latin + story text groups */
+.fade-group {
+    opacity: 0;
+    transition: opacity 3s ease-in;
+}
+
+/* 🔹 Ensure "This time traveller's watch..." only fades once, then toggles instantly */
+#reveal-matching-alt {
+    font-weight: bold;
+    font-size: var(--text-size);
+    opacity: 0;
+    display: none;
+    transition: opacity 3s ease-in; /* First-time fade-in */
+}
+
+/* 🔹 Blinking effect for ▼ indicators (stopped via JavaScript after first click) */
+.blink-arrow {
+    animation: blink 1s infinite alternate;
+}
+
+/* 🔹 Define blinking animation */
+@keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+/* 🔹 Ensure ▲ remains unaffected */
+#eternal-arrow, #watch-arrow {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* 🔹 Stop blinking for "▲" by removing the animation */
+#eternal-arrow:not(.blink-arrow),
+#watch-arrow:not(.blink-arrow) {
+    animation: none !important;
+}
+
+/* Watch description paragraphs */
+.watch-description {
+    font-size: var(--text-size);
+    text-align: justify;
+    margin: 10px auto;
+    max-width: 600px;
+    line-height: 1.6;
+}
+
+/* Matching years text */
+#matching-years {
+    font-size: var(--text-size);
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Ensures the ▼ symbol has slight spacing */
+#eternal-title::after, #reveal-matching-alt::after {
+    margin-left: 5px;
+}
+
+/* 🔹 Travel Quote Styling (New Feature) */
+/* Initially hide the travel quote */
+#travel-quote {
+    display: none;
+    opacity: 0;
+    transition: opacity 3s ease-in;
+}
+
+/* Hide radio buttons */
+.popup-radio {
+    display: none;
+}
+
+/* Style the pop-ups */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #990000; /* USC Cardinal */
+    color: #FFCC00; /* USC Gold */
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: left;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    width: 50%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+/* Show the correct pop-up when its radio is selected */
+#popup-ariann:checked ~ #popup-ariann-box,
+#popup-usc:checked ~ #popup-usc-box,
+#popup-edu:checked ~ #popup-edu-box {
+    opacity: 1;
+    visibility: visible;
+    display: block;
+}
+
+/* Hide all pop-ups when reset is checked */
+#popup-reset:checked ~ .popup {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Close button inside each pop-up */
+.popup .close-button {
+    display: block;
+    margin-top: 10px;
+    background: #FFCC00; /* USC Gold */
+    color: #990000; /* USC Cardinal */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* Close button hover effect */
+.close-button:hover {
+    background: #FFD700; /* Brighter gold */
+}
+
+@media (max-width: 768px) {
+    .popup,
+    .work-page .popup {
+        width: 80% !important;  /* Override the default width */
+        max-width: 90% !important;  /* Allow it to scale fully like index pop-ups */
+        padding: 20px;
+        text-align: left;
+    }
+}
+
+/* 🔹 Style specifically for "Back to Top" link */
+footer a.clickable {
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* 🔹 Maintain hover effect */
+footer a.clickable:hover {
+    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
+}
+
+/* Smooth transition when switching images */
+.header-image {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Blinking Down/Up Arrow (Stops After First Click) */
+.blink-arrow {
+    display: inline-block;
+    animation: blink 1s infinite alternate;
+    margin-left: 5px;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+.video-wrapper {
+    text-align: center;
+}
+
+.video-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 5px;
+    cursor: pointer; /* Make title clickable */
+    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Hover effect for video titles (matching Eternal Watch style) */
 .video-title:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
 
-/* 🔹 Video Containers */
+/* Video containers start hidden */
 .video-container {
     display: none;
 }
@@ -153,39 +370,75 @@ nav a:hover,
     display: block;
 }
 
-/* 🔹 Play Button for Videos */
+/* Rectangle Play Button */
 .play-button {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
+    background: rgb(0, 0, 0);
     color: white;
     font-size: 32px;
     padding: 8px 16px;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-/* 🔹 Play Button Hover Effect */
+/* Blinking Down/Up Arrow (Matching Eternal Watch) */
+.toggle-arrow {
+    display: inline-block;
+    animation: blink 1s infinite alternate;
+    margin-left: 5px;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+/* Hover Effect for Play Button */
 .play-button:hover {
     background: rgba(0, 0, 0, 0.9);
     transform: translate(-50%, -50%) scale(1.1);
 }
 
-/* 🔹 Pop-ups */
-.popup {
+/* Responsive Sizing */
+@media (max-width: 768px) {
+    .video-thumbnail {
+        width: 80%;
+    }
+}
+
+.popup-image {
+    width: 100%; /* Makes image responsive within the pop-up */
+    max-width: 300px; /* Prevents it from becoming too large */
+    height: auto; /* Keeps correct aspect ratio */
+    display: block; /* Ensures no extra space below */
+    margin: 10px auto; /* Centers the image inside the pop-up */
+    border-radius: 8px; /* Optional: Rounds corners for a clean look */
+}
+
+img, a {
+    -webkit-touch-callout: none; /* Disables long-press actions on iOS */
+    user-select: none; /* Prevents selection */
+}
+
+/* 🔹 Work Page-Specific Pop-Up Styling */
+.work-page .popup {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: var(--usc-cardinal);
-    color: var(--usc-gold);
+    background: var(--white); /* White background */
+    color: var(--black); /* Black text */
     padding: 15px;
     border-radius: 8px;
     font-size: 16px;
     text-align: left;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
     width: 50%;
     max-width: 400px;
     max-height: 80vh;
@@ -196,12 +449,25 @@ nav a:hover,
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
-/* 🔹 Pop-up Close Button */
-.popup .close-button {
+/* 🔹 Show the correct pop-up when its radio is selected */
+.work-page .popup-radio:checked + .popup {
+    opacity: 1;
+    visibility: visible;
+    display: block;
+}
+
+/* 🔹 Hide all pop-ups when reset is checked */
+.work-page #popup-reset:checked ~ .popup {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* 🔹 Close button styling (Work Page) */
+.work-page .close-button {
     display: block;
     margin-top: 10px;
-    background: var(--usc-gold);
-    color: var(--usc-cardinal);
+    background: var(--black); /* Black background */
+    color: var(--white); /* White text */
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 16px;
@@ -210,12 +476,28 @@ nav a:hover,
     text-align: center;
 }
 
-/* 🔹 Close Button Hover Effect */
-.popup .close-button:hover {
-    background: #FFD700;
+/* 🔹 Close button hover effect */
+.work-page .close-button:hover {
+    background: #333; /* Slightly lighter black for hover effect */
 }
 
-/* 🔹 Smooth Video Pop-Up Handling */
+/* 🔹 Clickable coordinate reflections & matching years */
+.work-page #coordinate-reflections,
+.work-page .year-item {
+    font-weight: bold;
+    color: var(--white);
+    text-decoration: none;
+    cursor: pointer;
+    transition: text-shadow 0.3s ease;
+}
+
+/* 🔹 Hover effect */
+.work-page #coordinate-reflections:hover,
+.work-page .year-item:hover {
+    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
+}
+
+/* Ensure the video scales properly inside the pop-up */
 .popup video {
     width: 100%;
     max-width: 100%;
@@ -225,24 +507,28 @@ nav a:hover,
     border-radius: 8px;
 }
 
-/* 🔹 Hide Radio Buttons */
-.popup-radio {
-    display: none;
-}
-
-/* 🔹 Hide Unused Elements */
+/* Initially hide the video */
 .hidden {
     display: none;
 }
 
-/* 🔹 Responsive Sizing */
-@media (max-width: 768px) {
-    .video-thumbnail {
-        width: 80%;
-    }
+/* Ensure the Mathematical Framework link stays bold, same color, and no underline */
+a.clickable.bold-text {
+    font-size: var(--text-size);
+    font-weight: bold;
+    color: var(--white) !important; /* Ensures it never changes */
+    text-decoration: none !important; /* Prevents underlining */
+    transition: text-shadow 0.3s ease;
+}
 
-    .popup {
-        width: 80%;
-        max-width: 90%;
-    }
+/* Prevent visited links from changing color */
+a.clickable.bold-text:visited {
+    color: var(--white) !important;
+    font-weight: bold;
+    text-decoration: none !important;
+}
+
+/* Maintain hover effect */
+a.clickable.bold-text:hover {
+    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
