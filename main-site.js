@@ -154,8 +154,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-
-// 🔹 Toggle Individual Videos
 function toggleVideo(index) {
     const videos = document.querySelectorAll('.video-container');
     const arrows = document.querySelectorAll('.toggle-arrow');
@@ -166,14 +164,22 @@ function toggleVideo(index) {
     let title = videoTitles[index];
 
     // Toggle visibility
-    let isExpanded = !videoContainer.classList.contains("hidden");
-    videoContainer.classList.toggle("hidden", isExpanded);
-    videoContainer.style.display = isExpanded ? "none" : "block";
+    let isExpanded = videoContainer.classList.contains("hidden");
+    videoContainer.classList.toggle("hidden", !isExpanded);
 
-    // Pause the video when hiding
-    const iframe = videoContainer.querySelector("iframe");
-    if (iframe && isExpanded) {
-        iframe.parentNode.innerHTML = iframe.parentNode.innerHTML; // Fully remove & reinsert to stop playback
+    // Ensure video appears properly by resetting inline display (if needed)
+    if (!isExpanded) {
+        videoContainer.style.display = "block";
+    } else {
+        videoContainer.style.display = "none";
+
+        // 🔹 Pause the video if it's currently playing
+        let iframe = videoContainer.querySelector("iframe");
+        if (iframe) {
+            let videoSrc = iframe.src;
+            iframe.src = ""; // Reset src to stop video playback
+            iframe.src = videoSrc; // Restore src (prevents YouTube from keeping it playing)
+        }
     }
 
     // Toggle arrow direction
@@ -186,3 +192,4 @@ function toggleVideo(index) {
     // Update ARIA attributes for accessibility
     title.setAttribute("aria-expanded", !isExpanded);
 }
+
