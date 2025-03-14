@@ -119,7 +119,6 @@ function loadVideo(el, videoId) {
         allowfullscreen></iframe>`;
 }
 
-
 // 🔹 Toggle Short Films Section
 document.addEventListener("DOMContentLoaded", function () {
     const sectionTitle = document.getElementById("short-films-title");
@@ -134,10 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Stop blinking after first click
             sectionArrow.classList.remove("blink-arrow");
 
-            if (!isHidden) {
-                // 🔹 Ensure video click events are re-attached
-                setupVideoHandling();
-            } else {
+            if (isHidden) {
                 // 🔹 Collapse all open video sections
                 document.querySelectorAll("#short-films-content .video-container").forEach(videoContainer => {
                     videoContainer.classList.add("hidden");
@@ -189,20 +185,3 @@ function toggleVideo(index) {
     // Update ARIA attributes for accessibility
     title.setAttribute("aria-expanded", !isExpanded);
 }
-
-// 🔹 Ensure Video Click Events are Reattached
-function setupVideoHandling() {
-    document.querySelectorAll(".video-title").forEach(title => {
-        title.removeEventListener("click", handleVideoClick); // Remove existing listeners to avoid duplicates
-        title.addEventListener("click", handleVideoClick);
-    });
-}
-
-// 🔹 Handle Video Title Clicks
-function handleVideoClick() {
-    let index = parseInt(this.dataset.index);
-    toggleVideo(index);
-}
-
-// 🔹 Initialize Video Click Handlers on Page Load
-setupVideoHandling();
