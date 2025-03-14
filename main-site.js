@@ -134,18 +134,18 @@ document.addEventListener("DOMContentLoaded", function () {
             sectionArrow.classList.remove("blink-arrow");
 
             if (isHidden) {
-                // 🔹 Collapse all open video sections
+                // 🔹 Collapse all open video sections within "Short Films"
                 document.querySelectorAll("#short-films-content .video-container").forEach(videoContainer => {
                     videoContainer.classList.add("hidden");
                     videoContainer.style.display = "none"; // Ensure videos are fully collapsed
                 });
 
-                // 🔹 Pause any playing videos inside the section
-                document.querySelectorAll("#short-films-content iframe").forEach(iframe => {
-                    iframe.parentNode.innerHTML = iframe.parentNode.innerHTML; // Fully remove & reinsert to stop playback
+                // 🔹 Collapse all video titles within the section
+                document.querySelectorAll("#short-films-content .video-title").forEach(videoTitle => {
+                    videoTitle.setAttribute("aria-expanded", "false");
                 });
 
-                // 🔹 Reset all toggle arrows inside section
+                // 🔹 Reset all toggle arrows inside the section
                 document.querySelectorAll("#short-films-content .toggle-arrow").forEach(arrow => {
                     arrow.textContent = "▼";
                 });
@@ -153,6 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
 
 // 🔹 Toggle Individual Videos
 function toggleVideo(index) {
