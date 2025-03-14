@@ -69,52 +69,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // 🔹 VIDEO FUNCTIONS (Ensuring Click Listeners Are Attached)
 function setupVideoHandling() {
-    document.querySelectorAll(".video-title").forEach((title) => {
-        title.addEventListener("click", function () {
-            let index = parseInt(this.dataset.index);
-            toggleVideo(index);
-        });
+    document.querySelectorAll(".video-title").forEach(title => {
+        title.removeEventListener("click", handleVideoClick); // Prevent duplicate listeners
+        title.addEventListener("click", handleVideoClick);
     });
 
-    document.querySelectorAll('.video-thumbnail').forEach((thumbnail) => {
+    document.querySelectorAll('.video-thumbnail').forEach(thumbnail => {
         thumbnail.dataset.originalContent = thumbnail.innerHTML;
 
         // Attach event listener dynamically to load video correctly
-        thumbnail.addEventListener("click", function () {
-            let videoId = this.dataset.videoId;
-            loadVideo(this, videoId);
-        });
+        thumbnail.removeEventListener("click", handleThumbnailClick);
+        thumbnail.addEventListener("click", handleThumbnailClick);
     });
 }
 
-function loadVideo(el, videoId) {
-    console.log("loadVideo called for videoId:", videoId); // Debugging
+// 🔹 Handle Video Title Clicks
+function handleVideoClick() {
+    let index = parseInt(this.dataset.index);
+    toggleVideo(index);
+}
 
-    // Ensure the clicked element has a valid video ID
+// 🔹 Handle Video Thumbnail Clicks (Play Videos)
+function handleThumbnailClick() {
+    let videoId = this.dataset.videoId;
     if (!videoId) {
         console.error("No valid video ID found.");
         return;
     }
 
-    // Stop all other playing videos before loading a new one
-    document.querySelectorAll('.video-thumbnail').forEach(vid => {
-        if (vid !== el && vid.dataset.originalContent) {
-            vid.innerHTML = vid.dataset.originalContent;
-        }
-    });
-
-    if (!el.dataset.originalContent) {
-        el.dataset.originalContent = el.innerHTML;
-    }
-
-    el.dataset.videoId = videoId;
-    const width = el.offsetWidth;
-
-    console.log("Replacing thumbnail with iframe"); // Debugging
-
-    el.innerHTML = `
+    // Replace thumbnail with YouTube iframe
+    const width = this.offsetWidth;
+    this.innerHTML = `
         <iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
-        src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0"
+        src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&autoplay=1"
         frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
         allowfullscreen></iframe>`;
 }
@@ -152,6 +139,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    // 🔹 Ensure Video Click Events are Attached Immediately
+    setupVideoHandling();
 });
 
 // 🔹 Toggle Individual Videos
@@ -164,24 +154,29 @@ function toggleVideo(index) {
     let arrow = arrows[index];
     let title = videoTitles[index];
 
-    // Toggle visibility
-    let isExpanded = !videoContainer.classList.contains("hidden");
-    videoContainer.classList.toggle("hidden", isExpanded);
-    videoContainer.style.display = isExpanded ? "none" : "block";
+    if (!videoContainer) return;
 
-    // Pause the video when hiding
+    // 🔹 Ensure first click expands immediately
+    let isCurrentlyHidden = videoContainer.classList.contains("hidden");
+    videoContainer.classList.toggle("hidden", !isCurrentlyHidden);
+    videoContainer.style.display = isCurrentlyHidden ? "block" : "none";
+
+    // 🔹 Pause the video when hiding
     const iframe = videoContainer.querySelector("iframe");
-    if (iframe && isExpanded) {
+    if (iframe && isCurrentlyHidden) {
         iframe.parentNode.innerHTML = iframe.parentNode.innerHTML; // Fully remove & reinsert to stop playback
     }
 
-    // Toggle arrow direction
-    arrow.textContent = isExpanded ? "▼" : "▲";
+    // 🔹 Toggle arrow direction
+    arrow.textContent = isCurrentlyHidden ? "▲" : "▼";
 
-    // Stop blinking after first click
+    // 🔹 Stop blinking after first click
     arrow.classList.remove("blink-arrow");
     arrow.style.animation = "none";
 
-    // Update ARIA attributes for accessibility
-    title.setAttribute("aria-expanded", !isExpanded);
+    // 🔹 Update ARIA attributes for accessibility
+    title.setAttribute("aria-expanded", isCurrentlyHidden);
 }
+
+// 🔹 Initialize Video Click Handlers on Page Load
+setupVideoHandling();
