@@ -161,7 +161,6 @@ function toggleVideo(index) {
 
 // 🔹 Toggle Short Films Section
 document.addEventListener("DOMContentLoaded", function () {
-    const section = document.getElementById("short-films");
     const sectionTitle = document.getElementById("short-films-title");
     const sectionArrow = document.getElementById("short-films-arrow");
     const sectionContent = document.getElementById("short-films-content");
@@ -173,7 +172,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Stop blinking after first click
             sectionArrow.classList.remove("blink-arrow");
+
+            if (isHidden) {
+                // 🔹 Collapse all open video sections
+                document.querySelectorAll(".video-container").forEach(videoContainer => {
+                    videoContainer.classList.add("hidden");
+                });
+
+                // 🔹 Pause any playing videos inside the section
+                document.querySelectorAll("#short-films-content iframe").forEach(iframe => {
+                    iframe.src = iframe.src; // Reset iframe to pause video
+                });
+
+                // 🔹 Reset all toggle arrows inside section
+                document.querySelectorAll("#short-films-content .toggle-arrow").forEach(arrow => {
+                    arrow.textContent = "▼";
+                });
+            }
         });
     }
 });
+
 
