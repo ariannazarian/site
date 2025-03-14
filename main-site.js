@@ -69,56 +69,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // 🔹 VIDEO FUNCTIONS (Ensuring Click Listeners Are Attached)
 function setupVideoHandling() {
-    document.querySelectorAll(".video-title").forEach((title) => {
-        title.addEventListener("click", function () {
-            let index = parseInt(this.dataset.index);
-            toggleVideo(index);
-        });
+    document.querySelectorAll(".video-title").forEach(title => {
+        title.removeEventListener("click", handleVideoClick); // Prevent duplicate listeners
+        title.addEventListener("click", handleVideoClick);
     });
 
-    document.querySelectorAll('.video-thumbnail').forEach((thumbnail) => {
-        thumbnail.dataset.originalContent = thumbnail.innerHTML;
-
-        // Attach event listener dynamically to load video correctly
-        thumbnail.addEventListener("click", function () {
-            let videoId = this.dataset.videoId;
-            loadVideo(this, videoId);
-        });
+    // 🔹 Ensure Thumbnails Can Load Videos
+    document.querySelectorAll(".video-thumbnail").forEach(thumbnail => {
+        thumbnail.removeEventListener("click", handleThumbnailClick); // Prevent duplicate listeners
+        thumbnail.addEventListener("click", handleThumbnailClick);
     });
 }
 
-function loadVideo(el, videoId) {
-    console.log("loadVideo called for videoId:", videoId); // Debugging
+// 🔹 Handle Video Title Clicks
+function handleVideoClick() {
+    let index = parseInt(this.dataset.index);
+    toggleVideo(index);
+}
 
-    // Ensure the clicked element has a valid video ID
+// 🔹 Handle Video Thumbnail Clicks (Play Videos)
+function handleThumbnailClick() {
+    let videoId = this.dataset.videoId;
     if (!videoId) {
         console.error("No valid video ID found.");
         return;
     }
 
-    // Stop all other playing videos before loading a new one
-    document.querySelectorAll('.video-thumbnail').forEach(vid => {
-        if (vid !== el && vid.dataset.originalContent) {
-            vid.innerHTML = vid.dataset.originalContent;
-        }
-    });
-
-    if (!el.dataset.originalContent) {
-        el.dataset.originalContent = el.innerHTML;
-    }
-
-    el.dataset.videoId = videoId;
-    const width = el.offsetWidth;
-
-    console.log("Replacing thumbnail with iframe"); // Debugging
-
-    el.innerHTML = `
+    // Replace thumbnail with YouTube iframe
+    const width = this.offsetWidth;
+    this.innerHTML = `
         <iframe class="video-iframe" loading="lazy" width="${width}" height="${width * 9 / 16}" 
-        src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0"
+        src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&autoplay=1"
         frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
         allowfullscreen></iframe>`;
 }
-
 
 // 🔹 Toggle Short Films Section
 document.addEventListener("DOMContentLoaded", function () {
@@ -136,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
             sectionArrow.classList.remove("blink-arrow");
 
             if (!wasHidden) {
-                // 🔹 Ensure video click events are re-attached
+                // 🔹 Ensure video click events are properly re-attached
                 setupVideoHandling();
             } else {
                 // 🔹 Collapse all open video sections when Short Films is hidden
@@ -190,16 +174,6 @@ function toggleVideo(index) {
     title.setAttribute("aria-expanded", isCurrentlyHidden);
 }
 
-// 🔹 Ensure Video Click Events Persist After Collapsing/Reopening
-function setupVideoHandling() {
-    document.querySelectorAll(".video-title").forEach(title => {
-        title.removeEventListener("click", handleVideoClick); // Prevent duplicate listeners
-        title.addEventListener("click", handleVideoClick);
-    });
-}
+// 🔹 Initialize Video Click Handlers on Page Load
+setupVideoHandling();
 
-// 🔹 Handle Video Title Clicks
-function handleVideoClick() {
-    let index = parseInt(this.dataset.index);
-    toggleVideo(index);
-}
