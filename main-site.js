@@ -133,10 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Stop blinking after first click
             sectionArrow.classList.remove("blink-arrow");
 
-            if (!isHidden) {
-                // 🔹 Ensure video click events are re-attached
-                setupVideoHandling();
-            } else {
+            if (isHidden) {
                 // 🔹 Collapse all open video sections
                 document.querySelectorAll("#short-films-content .video-container").forEach(videoContainer => {
                     videoContainer.classList.add("hidden");
@@ -155,9 +152,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-
-    // 🔹 Ensure Video Click Events are Attached Immediately
-    setupVideoHandling();
 });
 
 // 🔹 Toggle Individual Videos
@@ -170,52 +164,24 @@ function toggleVideo(index) {
     let arrow = arrows[index];
     let title = videoTitles[index];
 
-    if (!videoContainer) return;
+    // Toggle visibility
+    let isExpanded = !videoContainer.classList.contains("hidden");
+    videoContainer.classList.toggle("hidden", isExpanded);
+    videoContainer.style.display = isExpanded ? "none" : "block";
 
-    // 🔹 Ensure first click expands immediately
-    let isCurrentlyHidden = videoContainer.classList.contains("hidden");
-    videoContainer.classList.toggle("hidden", !isCurrentlyHidden);
-    videoContainer.style.display = isCurrentlyHidden ? "block" : "none";
-
-    // 🔹 Pause all other videos when opening a new one
-    if (!isCurrentlyHidden) {
-        document.querySelectorAll(".video-container iframe").forEach(iframe => {
-            if (iframe && iframe !== videoContainer.querySelector("iframe")) {
-                iframe.parentNode.innerHTML = iframe.parentNode.innerHTML; // Fully remove & reinsert to stop playback
-            }
-        });
-    }
-
-    // 🔹 Pause the video when hiding
+    // Pause the video when hiding
     const iframe = videoContainer.querySelector("iframe");
-    if (iframe && isCurrentlyHidden) {
+    if (iframe && isExpanded) {
         iframe.parentNode.innerHTML = iframe.parentNode.innerHTML; // Fully remove & reinsert to stop playback
     }
 
-    // 🔹 Toggle arrow direction
-    arrow.textContent = isCurrentlyHidden ? "▲" : "▼";
+    // Toggle arrow direction
+    arrow.textContent = isExpanded ? "▼" : "▲";
 
-    // 🔹 Stop blinking after first click
+    // Stop blinking after first click
     arrow.classList.remove("blink-arrow");
     arrow.style.animation = "none";
 
-    // 🔹 Update ARIA attributes for accessibility
-    title.setAttribute("aria-expanded", isCurrentlyHidden);
+    // Update ARIA attributes for accessibility
+    title.setAttribute("aria-expanded", !isExpanded);
 }
-
-// 🔹 Ensure Video Click Events Persist After Collapsing/Reopening
-function setupVideoHandling() {
-    document.querySelectorAll(".video-title").forEach(title => {
-        title.removeEventListener("click", handleVideoClick); // Prevent duplicate listeners
-        title.addEventListener("click", handleVideoClick);
-    });
-}
-
-// 🔹 Handle Video Title Clicks
-function handleVideoClick() {
-    let index = parseInt(this.dataset.index);
-    toggleVideo(index);
-}
-
-// 🔹 Initialize Video Click Handlers on Page Load
-setupVideoHandling();
