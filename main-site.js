@@ -159,3 +159,20 @@ function toggleVideo(index) {
     title.setAttribute("aria-expanded", !isExpanded);
 }
 
+// 🔹 Toggle Short Films Section
+document.addEventListener("DOMContentLoaded", function () {
+    const sectionTitle = document.getElementById("short-films-title");
+    const sectionArrow = document.getElementById("short-films-arrow");
+    const sectionContent = document.getElementById("short-films-section");
+
+    if (sectionTitle) {
+        sectionTitle.addEventListener("click", function () {
+            const isHidden = sectionContent.classList.toggle("hidden");
+            sectionArrow.textContent = isHidden ? "▼" : "▲";
+
+            // Stop blinking after first click
+            sectionArrow.classList.remove("blink-arrow");
+        });
+    }
+});
+

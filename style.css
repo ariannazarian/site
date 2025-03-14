@@ -532,3 +532,18 @@ a.clickable.bold-text:visited {
 a.clickable.bold-text:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
+
+/* Hide Short Films Section Initially */
+#short-films-section.hidden {
+    display: none;
+}
+
+/* Ensure blinking arrow behaves like others */
+#short-films-arrow {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Stop blinking after first click */
+#short-films-arrow:not(.blink-arrow) {
+    animation: none !important;
+}
