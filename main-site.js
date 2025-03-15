@@ -206,9 +206,11 @@ function toggleVideo(index) {
 
 function setupVideoHandling() {
     document.querySelectorAll(".video-container").forEach(videoContainer => {
+        // 🔹 Ensure videos are correctly marked as hidden
         if (!videoContainer.classList.contains("hidden")) {
-            videoContainer.classList.add("hidden"); // Ensure correct initial state
-            videoContainer.style.display = "none"; // Prevent any accidental overrides
+            console.log("Fixing missing .hidden class for video:", videoContainer);
+            videoContainer.classList.add("hidden");
+            videoContainer.style.display = "none"; 
         }
     });
 
