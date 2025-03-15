@@ -118,7 +118,7 @@ function loadVideo(el, videoId) {
         allowfullscreen></iframe>`;
 }
 
-// 🔹 Toggle Short Films Section
+// 🔹 Setup Short Films Section & Video Handling
 document.addEventListener("DOMContentLoaded", function () {
     const sectionTitle = document.getElementById("short-films-title");
     const sectionArrow = document.getElementById("short-films-arrow");
@@ -136,13 +136,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 // 🔹 Collapse all open video sections
                 document.querySelectorAll("#short-films-content .video-container").forEach(videoContainer => {
                     videoContainer.classList.add("hidden");
-                    videoContainer.style.display = "none"; // Ensure videos are fully collapsed
+                    videoContainer.style.display = "none";
                 });
 
                 // 🔹 Pause any playing videos inside the section
-                document.querySelectorAll("#short-films-content iframe").forEach(iframe => {
-                    iframe.parentNode.innerHTML = iframe.parentNode.innerHTML; // Fully remove & reinsert to stop playback
-                });
+                document.querySelectorAll("#short-films-content iframe").forEach(stopVideo);
 
                 // 🔹 Reset all toggle arrows inside section
                 document.querySelectorAll("#short-films-content .toggle-arrow").forEach(arrow => {
@@ -151,8 +149,18 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    setupVideoHandling(); // Initialize video handling
 });
 
+// 🔹 Function to Stop Video Playback
+function stopVideo(iframe) {
+    if (iframe) {
+        iframe.src = ""; // Properly stops the video
+    }
+}
+
+// 🔹 Function to Toggle Video Visibility
 function toggleVideo(index) {
     const videos = document.querySelectorAll('.video-container');
     const arrows = document.querySelectorAll('.toggle-arrow');
@@ -162,71 +170,46 @@ function toggleVideo(index) {
     let arrow = arrows[index];
     let title = videoTitles[index];
 
-    // Log current state before toggling
-    console.log(`Before toggle: index=${index}, hidden=${videoContainer.classList.contains("hidden")}, display=${videoContainer.style.display}`);
+    let isHidden = videoContainer.classList.toggle("hidden");
 
-    // Toggle visibility
-    let isExpanded = !videoContainer.classList.contains("hidden");
+    // Toggle display property
+    videoContainer.style.display = isHidden ? "none" : "block";
 
-    if (isExpanded) {
-        videoContainer.classList.add("hidden");
-        videoContainer.style.display = "none";
-    } else {
-        videoContainer.classList.remove("hidden");
-
-        // Force display change
-        videoContainer.style.display = "block";
-
-        // Debugging reflow
-        setTimeout(() => {
-            videoContainer.style.display = "block";
-            console.log(`Reflow applied: index=${index}, display=${videoContainer.style.display}`);
-        }, 10); // Small delay to ensure the reflow applies
-    }
-
-    // Log updated state
-    console.log(`After toggle: index=${index}, hidden=${videoContainer.classList.contains("hidden")}, display=${videoContainer.style.display}`);
-
-    // Pause the video when hiding
-    const iframe = videoContainer.querySelector("iframe");
-    if (iframe && isExpanded) {
-        iframe.parentNode.innerHTML = iframe.parentNode.innerHTML; // Fully remove & reinsert to stop playback
-    }
+    // Pause video when hiding
+    stopVideo(videoContainer.querySelector("iframe"));
 
     // Toggle arrow direction
-    arrow.textContent = isExpanded ? "▼" : "▲";
+    arrow.textContent = isHidden ? "▼" : "▲";
 
     // Stop blinking after first click
     arrow.classList.remove("blink-arrow");
     arrow.style.animation = "none";
 
     // Update ARIA attributes for accessibility
-    title.setAttribute("aria-expanded", !isExpanded);
+    title.setAttribute("aria-expanded", !isHidden);
 }
 
+// 🔹 Setup Video Handling with Event Delegation
 function setupVideoHandling() {
+    const shortFilmsSection = document.getElementById("short-films-content");
+
+    // Ensure videos start hidden
     document.querySelectorAll(".video-container").forEach(videoContainer => {
-        // 🔹 Ensure videos are correctly marked as hidden
-        if (!videoContainer.classList.contains("hidden")) {
-            console.log("Fixing missing .hidden class for video:", videoContainer);
-            videoContainer.classList.add("hidden");
-            videoContainer.style.display = "none"; 
-        }
+        videoContainer.classList.add("hidden");
+        videoContainer.style.display = "none";
     });
 
-    document.querySelectorAll(".video-title").forEach((title) => {
-        title.addEventListener("click", function () {
-            let index = parseInt(this.dataset.index);
+    // Delegate click events for video titles and thumbnails
+    shortFilmsSection.addEventListener("click", function (event) {
+        let title = event.target.closest(".video-title");
+        let thumbnail = event.target.closest(".video-thumbnail");
+
+        if (title) {
+            let index = parseInt(title.dataset.index);
             toggleVideo(index);
-        });
-    });
-
-    document.querySelectorAll('.video-thumbnail').forEach((thumbnail) => {
-        thumbnail.dataset.originalContent = thumbnail.innerHTML;
-
-        thumbnail.addEventListener("click", function () {
-            let videoId = this.dataset.videoId;
-            loadVideo(this, videoId);
-        });
+        } else if (thumbnail) {
+            let videoId = thumbnail.dataset.videoId;
+            loadVideo(thumbnail, videoId);
+        }
     });
 }
