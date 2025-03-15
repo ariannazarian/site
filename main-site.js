@@ -153,7 +153,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// 🔹 Toggle Individual Videos
 function toggleVideo(index) {
     const videos = document.querySelectorAll('.video-container');
     const arrows = document.querySelectorAll('.toggle-arrow');
@@ -165,8 +164,17 @@ function toggleVideo(index) {
 
     // Toggle visibility
     let isExpanded = !videoContainer.classList.contains("hidden");
-    videoContainer.classList.toggle("hidden", isExpanded);
-    videoContainer.style.display = isExpanded ? "none" : "block";
+
+    if (isExpanded) {
+        videoContainer.classList.add("hidden");
+        videoContainer.style.display = "none";
+    } else {
+        videoContainer.classList.remove("hidden");
+        videoContainer.style.display = "block";
+
+        // 🔹 Force a browser repaint to apply the style changes immediately
+        void videoContainer.offsetHeight; // Forces a reflow
+    }
 
     // Pause the video when hiding
     const iframe = videoContainer.querySelector("iframe");
