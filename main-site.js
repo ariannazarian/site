@@ -162,6 +162,9 @@ function toggleVideo(index) {
     let arrow = arrows[index];
     let title = videoTitles[index];
 
+    // Log current state before toggling
+    console.log(`Before toggle: index=${index}, hidden=${videoContainer.classList.contains("hidden")}, display=${videoContainer.style.display}`);
+
     // Toggle visibility
     let isExpanded = !videoContainer.classList.contains("hidden");
 
@@ -170,11 +173,19 @@ function toggleVideo(index) {
         videoContainer.style.display = "none";
     } else {
         videoContainer.classList.remove("hidden");
+
+        // Force display change
         videoContainer.style.display = "block";
 
-        // 🔹 Force a browser repaint to apply the style changes immediately
-        void videoContainer.offsetHeight; // Forces a reflow
+        // Debugging reflow
+        setTimeout(() => {
+            videoContainer.style.display = "block";
+            console.log(`Reflow applied: index=${index}, display=${videoContainer.style.display}`);
+        }, 10); // Small delay to ensure the reflow applies
     }
+
+    // Log updated state
+    console.log(`After toggle: index=${index}, hidden=${videoContainer.classList.contains("hidden")}, display=${videoContainer.style.display}`);
 
     // Pause the video when hiding
     const iframe = videoContainer.querySelector("iframe");
