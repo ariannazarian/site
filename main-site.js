@@ -203,3 +203,28 @@ function toggleVideo(index) {
     // Update ARIA attributes for accessibility
     title.setAttribute("aria-expanded", !isExpanded);
 }
+
+function setupVideoHandling() {
+    document.querySelectorAll(".video-container").forEach(videoContainer => {
+        if (!videoContainer.classList.contains("hidden")) {
+            videoContainer.classList.add("hidden"); // Ensure correct initial state
+            videoContainer.style.display = "none"; // Prevent any accidental overrides
+        }
+    });
+
+    document.querySelectorAll(".video-title").forEach((title) => {
+        title.addEventListener("click", function () {
+            let index = parseInt(this.dataset.index);
+            toggleVideo(index);
+        });
+    });
+
+    document.querySelectorAll('.video-thumbnail').forEach((thumbnail) => {
+        thumbnail.dataset.originalContent = thumbnail.innerHTML;
+
+        thumbnail.addEventListener("click", function () {
+            let videoId = this.dataset.videoId;
+            loadVideo(this, videoId);
+        });
+    });
+}
