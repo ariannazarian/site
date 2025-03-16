@@ -204,59 +204,34 @@ function toggleVideo(index) {
     title.setAttribute("aria-expanded", !isExpanded);
 }
 
-function setupVideoHandling() {
-    document.querySelectorAll(".video-container").forEach(videoContainer => {
-        // 🔹 Ensure videos are correctly marked as hidden
-        if (!videoContainer.classList.contains("hidden")) {
-            console.log("Fixing missing .hidden class for video:", videoContainer);
-            videoContainer.classList.add("hidden");
-            videoContainer.style.display = "none"; 
-        }
-    });
-
-    document.querySelectorAll(".video-title").forEach((title) => {
-        title.addEventListener("click", function () {
-            let index = parseInt(this.dataset.index);
-            toggleVideo(index);
-        });
-    });
-
-    document.querySelectorAll('.video-thumbnail').forEach((thumbnail) => {
-        thumbnail.dataset.originalContent = thumbnail.innerHTML;
-
-        thumbnail.addEventListener("click", function () {
-            let videoId = this.dataset.videoId;
-            loadVideo(this, videoId);
-        });
-    });
-}
-
-document.addEventListener("DOMContentLoaded", function () {
+fdocument.addEventListener("DOMContentLoaded", function () {
     const stick = document.getElementById("stick");
     const remainingAntsDisplay = document.getElementById("remaining-ants");
     const timerDisplay = document.getElementById("timer");
 
-    let pixelsPerSecond = 20; // Fixed speed of 20 pixels per second
+    let pixelsPerSecond = 20; // Fixed speed: 20 pixels per second
     let maxStickWidth = 500; // Max stick length
     let stickWidth = Math.min(window.innerWidth * 0.9, maxStickWidth); // Stick scales up to 500px max
-    let maxAnts = 50; // ✅ Max number of ants is now 50
+    let maxAnts = 50; // Max number of normal ants
     let antSize = 1; // Small, near-zero size for proper interactions
 
-    // ✅ **Corrected Scaling Formula for Ants**
+    // ✅ Scale normal ants properly while adding 2 for special ants
     let numAnts = Math.min(maxAnts, Math.floor(stickWidth / (maxStickWidth / maxAnts)));
-
     let ants = [];
+    let specialAnts = [];
     let startTime = null;
     let timerInterval = null;
 
-    // ✅ **Fix: Ensure stick visually matches simulation**
+    // ✅ Ensure stick visually matches the simulation
     stick.style.width = `${stickWidth}px`;
 
     function resetSimulation() {
         stick.innerHTML = "";
         ants = [];
+        specialAnts = [];
         startTime = performance.now();
-        
+
+        // ✅ Spawn random ants above the line
         for (let i = 0; i < numAnts; i++) {
             let position = Math.random() * (stickWidth - antSize);
             let direction = Math.random() < 0.5 ? -1 : 1;
@@ -271,29 +246,73 @@ document.addEventListener("DOMContentLoaded", function () {
             ants.push({ element: ant, position, direction });
         }
 
+        // ✅ Create a container for the two special ants below the line
+        let specialAntsContainer = document.createElement("div");
+        specialAntsContainer.id = "special-ants";
+        stick.appendChild(specialAntsContainer);
+
+        // ✅ Special left ant (starts at position 0, facing right)
+        let leftAnt = document.createElement("div");
+        leftAnt.className = "special-ant";
+        leftAnt.textContent = "▶";
+        leftAnt.style.left = "0px";
+        specialAntsContainer.appendChild(leftAnt);
+
+        // ✅ Special right ant (starts at max position, facing left)
+        let rightAnt = document.createElement("div");
+        rightAnt.className = "special-ant";
+        rightAnt.textContent = "◀";
+        rightAnt.style.left = `${stickWidth - antSize}px`;
+        specialAntsContainer.appendChild(rightAnt);
+
+        // Store special ants for movement
+        specialAnts = [
+            { element: leftAnt, position: 0, direction: 1 }, // Left ant moves right
+            { element: rightAnt, position: stickWidth - antSize, direction: -1 } // Right ant moves left
+        ];
+
         updateRemainingAnts();
         startTimer();
         moveAnts();
     }
 
     function moveAnts() {
-        let pixelsPerSecond = 20; // Fixed speed: 20 pixels per second
         let lastUpdateTime = performance.now();
-    
+
         let moveInterval = setInterval(() => {
             let currentTime = performance.now();
             let elapsedTime = (currentTime - lastUpdateTime) / 1000;
             lastUpdateTime = currentTime;
-    
+
             let distanceToMove = pixelsPerSecond * elapsedTime;
-    
-            // Step 1: Move All Ants at Constant Speed (No Direction Swap)
+
+            // ✅ Step 1: Move All Random Ants at Constant Speed
             ants.forEach(ant => {
                 ant.position += ant.direction * distanceToMove;
                 ant.element.style.left = `${ant.position}px`;
             });
-    
-            // Step 2: Remove Ants When They Fall Off the Stick
+
+            // ✅ Step 2: Move Special Ants and Handle Their Collision
+            if (specialAnts.length === 2) {
+                let leftAnt = specialAnts[0];
+                let rightAnt = specialAnts[1];
+
+                leftAnt.position += leftAnt.direction * distanceToMove;
+                rightAnt.position += rightAnt.direction * distanceToMove;
+
+                leftAnt.element.style.left = `${leftAnt.position}px`;
+                rightAnt.element.style.left = `${rightAnt.position}px`;
+
+                // ✅ Swap directions when they collide (at midpoint)
+                if (rightAnt.position - leftAnt.position <= antSize) {
+                    [leftAnt.direction, rightAnt.direction] = [rightAnt.direction, leftAnt.direction];
+
+                    leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
+                    rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
+                }
+            }
+
+            // Step 3: Remove Random Ants When They Fall Off the Stick
             let prevCount = ants.length;
             ants = ants.filter(ant => {
                 if (ant.position <= 0 || ant.position >= stickWidth) {
@@ -302,28 +321,37 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 return true;
             });
-    
+
             if (ants.length !== prevCount) {
                 updateRemainingAnts();
             }
-    
-            // Step 3: Stop Simulation Naturally When Last Ant Falls Off
-            if (ants.length === 0) {
+
+            let maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
+            timerDisplay.dataset.maxTime = maxTime;
+
+            // ✅ Step 4: Remove Special Ants at the Ends
+            if (specialAnts.length > 0 && specialAnts.every(ant => ant.position <= 0 || ant.position >= stickWidth)) {
+                specialAnts.forEach(ant => ant.element.remove());
+                specialAnts = [];
+            }
+
+            // Step 5: Stop Simulation Naturally When Last Ant Falls Off
+            if (ants.length === 0 && specialAnts.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
                 updateRemainingAnts();
             }
         }, 50);
     }
-    
-    
 
     function updateRemainingAnts() {
-        remainingAntsDisplay.textContent = `${ants.length}/${numAnts}`;
+        let totalAnts = numAnts + 2; // ✅ Add 2 special ants to total count
+        let remainingAnts = ants.length + specialAnts.length; // ✅ Count remaining normal + special ants
+        remainingAntsDisplay.textContent = `${remainingAnts}/${totalAnts}`;
     }
 
     function startTimer() {
-        let maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
+        let maxTime = (stickWidth / pixelsPerSecond).toFixed(2); // ✅ Max time only based on stick width
     
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
@@ -338,4 +366,3 @@ document.addEventListener("DOMContentLoaded", function () {
 
     resetSimulation();
 });
-

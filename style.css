@@ -561,7 +561,6 @@ a.clickable.bold-text:hover {
 #short-films-title:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
-
 #ants-on-line {
     text-align: center;
     margin-top: 40px; /* Adds space above the simulation */
@@ -578,12 +577,30 @@ a.clickable.bold-text:hover {
     margin: 10px auto 5px;
 }
 
-.ant {
+.ant, .special-ant { /* ✅ All ants now share the same styling */
     position: absolute;
-    font-size: 10px; 
+    font-size: 10px; /* ✅ Ensures normal & special ants are identical */
     color: white;
     transition: left 0.05s linear;
+}
+
+/* ✅ Position normal ants above the line */
+.ant {
     top: -15px; /* Keeps ants above the line */
+}
+
+/* ✅ Position special ants below the line */
+#special-ants {
+    position: relative;
+    top: 10px; /* Moves them below the main stick */
+    width: 100%;
+    height: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.special-ant {
+    top: 5px; /* ✅ Aligns special ants visually */
 }
 
 /* ✅ Make only the numbers bold, not the labels */
