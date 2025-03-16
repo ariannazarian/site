@@ -230,3 +230,76 @@ function setupVideoHandling() {
         });
     });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const stickWidth = 400; // Stick width in pixels
+    const antSpeed = 50; // Speed in pixels per second
+    const stick = document.getElementById("stick");
+    const remainingAntsDisplay = document.getElementById("remaining-ants");
+    const timerDisplay = document.getElementById("timer");
+    
+    let ants = [];
+    let startTime = null;
+    let timerInterval = null;
+
+    function resetSimulation() {
+        stick.innerHTML = ""; // Clear previous ants
+        ants = [];
+        let numAnts = Math.floor(Math.random() * 5) + 3; // 3 to 7 ants
+        startTime = performance.now(); // Start time for timer
+
+        for (let i = 0; i < numAnts; i++) {
+            let position = Math.random() * stickWidth;
+            let direction = Math.random() < 0.5 ? -1 : 1; // -1 for left (◀), 1 for right (▶)
+            let symbol = direction === -1 ? "◀" : "▶";
+
+            let ant = document.createElement("div");
+            ant.className = "ant";
+            ant.textContent = symbol;
+            ant.style.left = position + "px";
+            stick.appendChild(ant);
+
+            ants.push({ element: ant, position, direction });
+        }
+        updateRemainingAnts();
+        moveAnts();
+        startTimer();
+    }
+
+    function moveAnts() {
+        ants.forEach(ant => {
+            let timeToEdge = ant.direction === -1 
+                ? ant.position / antSpeed 
+                : (stickWidth - ant.position) / antSpeed;
+
+            ant.element.style.transition = `left ${timeToEdge}s linear`;
+            ant.element.style.left = (ant.direction === -1 ? 0 : stickWidth) + "px";
+
+            setTimeout(() => {
+                ant.element.remove(); // Remove ant when it falls off
+                ants = ants.filter(a => a !== ant); // Remove from array
+                updateRemainingAnts();
+            }, timeToEdge * 1000);
+        });
+    }
+
+    function updateRemainingAnts() {
+        remainingAntsDisplay.textContent = ants.length;
+        if (ants.length === 0) stopTimer();
+    }
+
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            let elapsed = (performance.now() - startTime) / 1000;
+            timerDisplay.textContent = elapsed.toFixed(2);
+        }, 100);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+    }
+
+    // Start simulation on page load
+    resetSimulation();
+});

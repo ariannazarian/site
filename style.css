@@ -561,3 +561,24 @@ a.clickable.bold-text:hover {
 #short-films-title:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
+
+#ants-on-line {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 16px;
+    color: white;
+}
+
+#stick {
+    position: relative;
+    width: 400px;
+    height: 10px;
+    background: white;
+    margin: 10px auto;
+}
+
+.ant {
+    position: absolute;
+    font-size: 20px;
+    transition: left linear;
+}
