@@ -225,6 +225,14 @@ fdocument.addEventListener("DOMContentLoaded", function () {
     // ✅ Ensure stick visually matches the simulation
     stick.style.width = `${stickWidth}px`;
 
+    // ✅ Place `#special-ants` outside `#stick` to prevent deletion
+    let specialAntsContainer = document.getElementById("special-ants");
+    if (!specialAntsContainer) {
+        specialAntsContainer = document.createElement("div");
+        specialAntsContainer.id = "special-ants";
+        stick.parentElement.appendChild(specialAntsContainer);
+    }
+
     function resetSimulation() {
         stick.innerHTML = "";
         ants = [];
@@ -246,10 +254,8 @@ fdocument.addEventListener("DOMContentLoaded", function () {
             ants.push({ element: ant, position, direction });
         }
 
-        // ✅ Create a container for the two special ants below the line
-        let specialAntsContainer = document.createElement("div");
-        specialAntsContainer.id = "special-ants";
-        stick.appendChild(specialAntsContainer);
+        // ✅ Clear and re-add special ants below the line
+        specialAntsContainer.innerHTML = "";
 
         // ✅ Special left ant (starts at position 0, facing right)
         let leftAnt = document.createElement("div");
@@ -265,7 +271,7 @@ fdocument.addEventListener("DOMContentLoaded", function () {
         rightAnt.style.left = `${stickWidth - antSize}px`;
         specialAntsContainer.appendChild(rightAnt);
 
-        // Store special ants for movement
+        // ✅ Store special ants for movement
         specialAnts = [
             { element: leftAnt, position: 0, direction: 1 }, // Left ant moves right
             { element: rightAnt, position: stickWidth - antSize, direction: -1 } // Right ant moves left
