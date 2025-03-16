@@ -236,9 +236,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const remainingAntsDisplay = document.getElementById("remaining-ants");
     const timerDisplay = document.getElementById("timer");
 
-    let stickWidth = Math.min(window.innerWidth * 0.9, 1000); // Now capped at 1000px
-    let antSize = 10; // Smaller ants
-    let numAnts = Math.floor(stickWidth / (antSize * 10)); // Scale based on new width
+    let stickWidth = Math.min(window.innerWidth * 0.9, 1000); // Capped at 1000px
+    let antSize = 10; // Each ant is 10px
+    let numAnts = Math.min(100, Math.floor(stickWidth / (antSize * 2))); // Up to 100 ants max
     let ants = [];
     let startTime = null;
     let timerInterval = null;
@@ -275,20 +275,22 @@ document.addEventListener("DOMContentLoaded", function () {
             ants.forEach(ant => {
                 let nextPosition = ant.position + (ant.direction * 2);
 
-                if (nextPositions.has(nextPosition)) {
-                    let other = nextPositions.get(nextPosition);
+                // Collision detection: if another ant is in the same spot, swap directions
+                ants.forEach(other => {
+                    if (other !== ant && Math.abs(nextPosition - other.position) < antSize) {
+                        let temp = ant.direction;
+                        ant.direction = other.direction;
+                        other.direction = temp;
 
-                    // Swap directions (as in the riddle)
-                    let temp = ant.direction;
-                    ant.direction = other.direction;
-                    other.direction = temp;
+                        // Update arrows to reflect new direction
+                        ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
+                        other.element.textContent = other.direction === -1 ? "◀" : "▶";
 
-                    // Ensure icons match new direction
-                    ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
-                    other.element.textContent = other.direction === -1 ? "◀" : "▶";
-                } else {
-                    nextPositions.set(nextPosition, ant);
-                }
+                        // Ensure they move apart slightly to avoid re-colliding instantly
+                        ant.position += ant.direction * 2;
+                        other.position += other.direction * 2;
+                    }
+                });
 
                 ant.position = nextPosition;
                 updatedAnts.push(ant);
@@ -298,6 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ant.element.style.left = `${ant.position}px`;
             });
 
+            // Remove ants when they fall off the stick
             ants = ants.filter(ant => {
                 if (ant.position <= 0 || ant.position >= stickWidth - antSize) {
                     ant.element.remove();
