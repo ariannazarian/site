@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let stickWidth = Math.min(window.innerWidth * 0.9, 600);
     let antSize = 18;
-    let numAnts = Math.floor(stickWidth / (antSize * 2));
+    let numAnts = Math.floor(stickWidth / (antSize * 2)); // Total ants based on screen size
     let ants = [];
     let startTime = null;
     let timerInterval = null;
@@ -259,7 +259,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ant.style.left = position + "px";
             stick.appendChild(ant);
 
-            ants.push({ element: ant, position, direction });
+            ants.push({ element: ant, position, direction, lastBounceTime: 0 });
         }
 
         updateRemainingAnts();
@@ -269,16 +269,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function moveAnts() {
         let moveInterval = setInterval(() => {
+            let currentTime = performance.now();
+
             ants.forEach(ant => {
                 let nextPosition = ant.position + (ant.direction * 2); 
 
-                // Collision detection (switch direction)
+                // Collision detection (ensure they don't reverse at the same time)
                 ants.forEach(other => {
                     if (other !== ant && Math.abs(nextPosition - other.position) < antSize) {
-                        ant.direction *= -1;
-                        other.direction *= -1;
-                        ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
-                        other.element.textContent = other.direction === -1 ? "◀" : "▶";
+                        if (currentTime - ant.lastBounceTime > 100 && currentTime - other.lastBounceTime > 100) {
+                            ant.direction *= -1;
+                            other.direction *= -1;
+
+                            ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
+                            other.element.textContent = other.direction === -1 ? "◀" : "▶";
+
+                            // Slightly push them apart to avoid sticking together
+                            ant.position += ant.direction * 2;
+                            other.position += other.direction * 2;
+
+                            // Store bounce time to prevent re-triggering immediately
+                            ant.lastBounceTime = currentTime;
+                            other.lastBounceTime = currentTime;
+                        }
                     }
                 });
 
@@ -302,14 +315,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateRemainingAnts() {
-        remainingAntsDisplay.textContent = ants.length;
+        remainingAntsDisplay.textContent = `${ants.length}/${numAnts} ants remaining`;
     }
 
     function startTimer() {
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             let elapsed = (performance.now() - startTime) / 1000;
-            timerDisplay.textContent = elapsed.toFixed(2);
+            let timeLabel = elapsed.toFixed(2) === "1.00" ? "second" : "seconds"; // Singular/plural fix
+            timerDisplay.textContent = `${elapsed.toFixed(2)} ${timeLabel} elapsed`;
         }, 100);
     }
 
