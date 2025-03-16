@@ -573,17 +573,15 @@ a.clickable.bold-text:hover {
     position: relative;
     width: 90vw;
     max-width: 1000px;
-    height: 10px; /* Ensures exact match with ant size */
+    height: 10px; /* Ensure exact match with ant size */
     background: white;
-    margin: 15px auto;
-    border-radius: 0px; /* Remove rounding that could make it appear thicker */
+    margin: 10px auto 5px auto; /* Reduce spacing but add a small gap above */
 }
-
 
 .ant {
     position: absolute;
-    font-size: 10px; /* Reduce size of arrows */
+    font-size: 10px; /* Ensure size consistency */
     color: white;
     transition: left 0.05s linear;
-    top: -15px; /* Keep ants above the line */
+    top: -15px; /* Keeps ants above the line */
 }
