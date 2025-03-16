@@ -349,11 +349,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-                // ✅ Step 3: Remove Random Ants When They Fall Off the Stick (Perfectly Symmetric)
+               // ✅ Step 3: Remove Random Ants When They Fall Off the Stick (Asymmetrical Rule)
                 let prevCount = ants.length;
                 ants = ants.filter(ant => {
-                    if ((ant.direction === -1 && ant.position <= 0) || // ✅ Clear left-moving ants (`◀`) when tip reaches `0px`
-                    (ant.direction === 1 && centerPosition >= stickWidth)) { // ✅ Right side clearing
+                    let centerPosition = ant.position + antSize / 2; // ✅ Get center of arrow
+
+                    if ((ant.direction === -1 && ant.position <= 0) || // ✅ Left ants clear when tip reaches `0px`
+                        (ant.direction === 1 && centerPosition >= stickWidth)) { // ✅ Right ants clear when center reaches `stickWidth`
                         ant.element.remove();
                         return false;
                     }
