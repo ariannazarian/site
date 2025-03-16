@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let stickWidth = Math.min(window.innerWidth * 0.9, 600);
     let antSize = 18;
-    let numAnts = Math.floor(stickWidth / (antSize * 2)); // Total ants based on screen size
+    let numAnts = Math.floor(stickWidth / (antSize * 2)); // Scale ants to stick size
     let ants = [];
     let startTime = null;
     let timerInterval = null;
@@ -259,7 +259,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ant.style.left = position + "px";
             stick.appendChild(ant);
 
-            ants.push({ element: ant, position, direction, lastBounceTime: 0 });
+            ants.push({ element: ant, position, direction });
         }
 
         updateRemainingAnts();
@@ -269,44 +269,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function moveAnts() {
         let moveInterval = setInterval(() => {
-            let currentTime = performance.now();
+            let nextPositions = new Map();
 
             ants.forEach(ant => {
-                let nextPosition = ant.position + (ant.direction * 2); 
+                let nextPosition = ant.position + (ant.direction * 2);
 
-                // Collision detection (ensure they don't reverse at the same time)
-                ants.forEach(other => {
-                    if (other !== ant && Math.abs(nextPosition - other.position) < antSize) {
-                        if (currentTime - ant.lastBounceTime > 100 && currentTime - other.lastBounceTime > 100) {
-                            ant.direction *= -1;
-                            other.direction *= -1;
+                // Store next position to check for collisions
+                if (nextPositions.has(nextPosition)) {
+                    let other = nextPositions.get(nextPosition);
 
-                            ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
-                            other.element.textContent = other.direction === -1 ? "◀" : "▶";
+                    // Swap directions (equivalent to passing through)
+                    let temp = ant.direction;
+                    ant.direction = other.direction;
+                    other.direction = temp;
 
-                            // Slightly push them apart to avoid sticking together
-                            ant.position += ant.direction * 2;
-                            other.position += other.direction * 2;
-
-                            // Store bounce time to prevent re-triggering immediately
-                            ant.lastBounceTime = currentTime;
-                            other.lastBounceTime = currentTime;
-                        }
-                    }
-                });
+                    // Ensure icons match new direction
+                    ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
+                    other.element.textContent = other.direction === -1 ? "◀" : "▶";
+                } else {
+                    nextPositions.set(nextPosition, ant);
+                }
 
                 // Update position
                 ant.position = nextPosition;
                 ant.element.style.left = `${ant.position}px`;
-
-                // Remove ants when they leave the stick
-                if (ant.position <= 0 || ant.position >= stickWidth - antSize) {
-                    ant.element.remove();
-                    ants = ants.filter(a => a !== ant);
-                    updateRemainingAnts();
-                }
             });
 
+            // Remove ants when they leave the stick
+            ants = ants.filter(ant => {
+                if (ant.position <= 0 || ant.position >= stickWidth - antSize) {
+                    ant.element.remove();
+                    updateRemainingAnts();
+                    return false; // Remove ant from array
+                }
+                return true;
+            });
+
+            // Stop simulation if all ants are gone
             if (ants.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
@@ -322,7 +321,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             let elapsed = (performance.now() - startTime) / 1000;
-            let timeLabel = elapsed.toFixed(2) === "1.00" ? "second" : "seconds"; // Singular/plural fix
+            let timeLabel = elapsed.toFixed(2) === "1.00" ? "second" : "seconds";
             timerDisplay.textContent = `${elapsed.toFixed(2)} ${timeLabel} elapsed`;
         }, 100);
     }
