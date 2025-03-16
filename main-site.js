@@ -269,19 +269,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function moveAnts() {
         let pixelsPerSecond = 20; // Fixed speed of 20 pixels per second
-        let updatesPerSecond = 20; // Lower update rate for stability
+        let updatesPerSecond = 20; // 20 FPS update rate
         let pixelsPerFrame = pixelsPerSecond / updatesPerSecond; // Movement per update
     
         let moveInterval = setInterval(() => {
-            let nextPositions = new Map();
-            let updatedAnts = [];
+            let updatedAnts = new Set(); // Track ants that need updating
     
-            ants.forEach(ant => {
-                let nextPosition = Math.round(ant.position + (ant.direction * pixelsPerFrame));
+            // Step 1: Detect & Handle Collisions Before Moving
+            for (let i = 0; i < ants.length; i++) {
+                for (let j = i + 1; j < ants.length; j++) {
+                    let ant = ants[i];
+                    let other = ants[j];
     
-                // Collision detection: if another ant is in the same spot, swap directions
-                ants.forEach(other => {
-                    if (other !== ant && Math.abs(nextPosition - Math.round(other.position)) < antSize) {
+                    if (Math.abs(ant.position - other.position) < antSize) {
+                        // Swap directions
                         let temp = ant.direction;
                         ant.direction = other.direction;
                         other.direction = temp;
@@ -290,21 +291,25 @@ document.addEventListener("DOMContentLoaded", function () {
                         ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
                         other.element.textContent = other.direction === -1 ? "◀" : "▶";
     
-                        // Prevent instant re-collisions by slightly adjusting position
+                        // Prevent instant re-collisions by slightly nudging apart
                         ant.position += ant.direction * pixelsPerFrame;
                         other.position += other.direction * pixelsPerFrame;
+    
+                        updatedAnts.add(ant);
+                        updatedAnts.add(other);
                     }
-                });
+                }
+            }
     
-                ant.position = nextPosition;
-                updatedAnts.push(ant);
-            });
-    
-            updatedAnts.forEach(ant => {
+            // Step 2: Move All Ants in a Single Loop
+            ants.forEach(ant => {
+                if (!updatedAnts.has(ant)) {
+                    ant.position += ant.direction * pixelsPerFrame;
+                }
                 ant.element.style.left = `${ant.position}px`;
             });
     
-            // Remove ants when they fall off the stick
+            // Step 3: Remove Ants When They Fall Off the Stick
             let prevCount = ants.length;
             ants = ants.filter(ant => {
                 if (ant.position <= 0 || ant.position >= stickWidth - antSize) {
@@ -323,8 +328,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 stopTimer();
                 updateRemainingAnts();
             }
-        }, 50); // 20 updates per second (smoother and more stable)
-    }
+        }, 50); // 20 FPS for stable movement
+    }    
         
 
     function updateRemainingAnts() {
