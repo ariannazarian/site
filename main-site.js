@@ -272,18 +272,18 @@ document.addEventListener("DOMContentLoaded", function () {
         let updatesPerSecond = 20; // 20 FPS update rate
         let pixelsPerFrame = pixelsPerSecond / updatesPerSecond; // Movement per update
     
-        let lastUpdateTime = performance.now(); // Track real time
+        let lastUpdateTime = performance.now(); // Track real time for consistent speed
     
         let moveInterval = setInterval(() => {
             let currentTime = performance.now();
             let elapsedTime = (currentTime - lastUpdateTime) / 1000; // Convert ms to seconds
-            lastUpdateTime = currentTime; // Update time tracker
+            lastUpdateTime = currentTime; // Update for next frame
     
             let distanceToMove = pixelsPerSecond * elapsedTime; // Move ants at exact speed
     
-            let updatedAnts = new Set(); // Track ants that had collisions
+            let updatedAnts = new Set(); // Track ants that swapped direction
     
-            // Step 1: Detect & Handle Collisions Without Modifying Position
+            // Step 1: Detect & Handle Collisions First
             for (let i = 0; i < ants.length; i++) {
                 for (let j = i + 1; j < ants.length; j++) {
                     let ant = ants[i];
@@ -305,11 +305,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
     
-            // Step 2: Move All Ants in a Single Pass
+            // Step 2: Move All Ants Every Frame (Even After Collision)
             ants.forEach(ant => {
-                if (!updatedAnts.has(ant)) {
-                    ant.position += ant.direction * distanceToMove;
+                ant.position += ant.direction * distanceToMove;
+    
+                // **Prevent ants from staying stuck** by applying a slight nudge after a collision
+                if (updatedAnts.has(ant)) {
+                    ant.position += ant.direction * 0.1; // Small push to keep movement continuous
                 }
+    
                 ant.element.style.left = `${ant.position}px`;
             });
     
