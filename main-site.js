@@ -277,7 +277,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function moveAnts() {
-        let pixelsPerSecond = 20;
+        let pixelsPerSecond = 20; // Fixed speed: 20 pixels per second
         let lastUpdateTime = performance.now();
     
         let moveInterval = setInterval(() => {
@@ -287,50 +287,13 @@ document.addEventListener("DOMContentLoaded", function () {
     
             let distanceToMove = pixelsPerSecond * elapsedTime;
     
-            // Store previous positions for pass-through collision detection
-            let previousPositions = new Map();
-            ants.forEach(ant => previousPositions.set(ant, ant.position));
-    
-            // Step 1: Move All Ants at Constant Speed
+            // Step 1: Move All Ants at Constant Speed (No Direction Swap)
             ants.forEach(ant => {
                 ant.position += ant.direction * distanceToMove;
                 ant.element.style.left = `${ant.position}px`;
             });
     
-            // Step 2: Detect and Handle Collisions with Slightly Increased Range
-            let newDirections = new Map();
-    
-            for (let i = 0; i < ants.length; i++) {
-                for (let j = i + 1; j < ants.length; j++) {
-                    let ant = ants[i];
-                    let other = ants[j];
-    
-                    let prevAntPos = previousPositions.get(ant);
-                    let prevOtherPos = previousPositions.get(other);
-    
-                    // **Fix: Slightly increase detection range, but still check pass-through**
-                    if ((prevAntPos < prevOtherPos && ant.position >= other.position - 2) ||
-                        (prevAntPos > prevOtherPos && ant.position <= other.position + 2)) {
-                        
-                        // Swap directions
-                        newDirections.set(ant, other.direction);
-                        newDirections.set(other, ant.direction);
-    
-                        // **Fix: Slightly separate ants to prevent infinite swaps**
-                        let adjustAmount = 0.2 * distanceToMove;
-                        ant.position += ant.direction * adjustAmount;
-                        other.position += other.direction * adjustAmount;
-                    }
-                }
-            }
-    
-            // Apply direction swaps after checking all collisions
-            newDirections.forEach((newDir, ant) => {
-                ant.direction = newDir;
-                ant.element.textContent = newDir === -1 ? "◀" : "▶";
-            });
-    
-            // Step 3: Remove Ants When They Fall Off the Stick
+            // Step 2: Remove Ants When They Fall Off the Stick
             let prevCount = ants.length;
             ants = ants.filter(ant => {
                 if (ant.position <= 0 || ant.position >= stickWidth) {
@@ -344,9 +307,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateRemainingAnts();
             }
     
-            let maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
-            timerDisplay.dataset.maxTime = maxTime;
-    
+            // Step 3: Stop Simulation Naturally When Last Ant Falls Off
             if (ants.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
@@ -354,6 +315,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }, 50);
     }
+    
     
 
     function updateRemainingAnts() {
