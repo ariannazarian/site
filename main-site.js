@@ -278,13 +278,17 @@ document.addEventListener("DOMContentLoaded", function () {
     
             let distanceToMove = pixelsPerSecond * elapsedTime; // Ensures exact movement
     
+            // Store previous positions for pass-through collision detection
+            let previousPositions = new Map();
+            ants.forEach(ant => previousPositions.set(ant, ant.position));
+    
             // Step 1: Move All Ants at Constant Speed
             ants.forEach(ant => {
                 ant.position += ant.direction * distanceToMove;
                 ant.element.style.left = `${ant.position}px`;
             });
     
-            // Step 2: Detect Collisions Only When Positions Exactly Match
+            // Step 2: Detect Pass-Through Collisions & Swap Directions
             let collisionPairs = new Set();
     
             for (let i = 0; i < ants.length; i++) {
@@ -292,17 +296,25 @@ document.addEventListener("DOMContentLoaded", function () {
                     let ant = ants[i];
                     let other = ants[j];
     
-                    if (ant.position.toFixed(5) === other.position.toFixed(5) && !collisionPairs.has(`${i}-${j}`)) {
-                        // Swap directions but DO NOT modify positions
-                        [ant.direction, other.direction] = [other.direction, ant.direction];
+                    let prevAntPos = previousPositions.get(ant);
+                    let prevOtherPos = previousPositions.get(other);
     
-                        // Update arrows to reflect new direction
-                        ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
-                        other.element.textContent = other.direction === -1 ? "◀" : "▶";
+                    // Check if ants passed through each other in the last frame
+                    if ((prevAntPos < prevOtherPos && ant.position > other.position) ||
+                        (prevAntPos > prevOtherPos && ant.position < other.position)) {
+                        
+                        if (!collisionPairs.has(`${i}-${j}`)) {
+                            // Swap directions
+                            [ant.direction, other.direction] = [other.direction, ant.direction];
     
-                        // Prevent double-swaps in the same frame
-                        collisionPairs.add(`${i}-${j}`);
-                        collisionPairs.add(`${j}-${i}`);
+                            // Update arrows to reflect new direction
+                            ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
+                            other.element.textContent = other.direction === -1 ? "◀" : "▶";
+    
+                            // Prevent multiple swaps in the same frame
+                            collisionPairs.add(`${i}-${j}`);
+                            collisionPairs.add(`${j}-${i}`);
+                        }
                     }
                 }
             }
@@ -328,8 +340,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateRemainingAnts();
             }
         }, 50); // 20 updates per second (ensures perfect 20px/sec movement)
-    }
-    
+    }    
 
     function updateRemainingAnts() {
         remainingAntsDisplay.textContent = `${ants.length}/${numAnts}`; // Just updates numbers, not text
