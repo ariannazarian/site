@@ -573,7 +573,7 @@ a.clickable.bold-text:hover {
     position: relative;
     width: 90vw;
     max-width: 500px;
-    height: 3px; /* Matches ant size for consistency */
+    height: 5px; /* Matches ant size for consistency */
     background: white;
     margin: 10px auto 5px;
 }
