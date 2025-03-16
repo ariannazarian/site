@@ -280,7 +280,6 @@ document.addEventListener("DOMContentLoaded", function () {
             lastUpdateTime = currentTime; // Update for next frame
     
             let distanceToMove = pixelsPerSecond * elapsedTime; // Move ants at exact speed
-    
             let updatedAnts = new Set(); // Track ants that swapped direction
     
             // Step 1: Detect & Handle Collisions First
@@ -290,7 +289,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     let other = ants[j];
     
                     if (Math.abs(ant.position - other.position) < antSize) {
-                        // Swap directions
+                        // Swap directions without modifying position
                         let temp = ant.direction;
                         ant.direction = other.direction;
                         other.direction = temp;
@@ -305,15 +304,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
     
-            // Step 2: Move All Ants Every Frame (Even After Collision)
+            // Step 2: Move All Ants Every Frame (No Position Modification on Swap)
             ants.forEach(ant => {
                 ant.position += ant.direction * distanceToMove;
-    
-                // **Prevent ants from staying stuck** by applying a slight nudge after a collision
-                if (updatedAnts.has(ant)) {
-                    ant.position += ant.direction * 0.1; // Small push to keep movement continuous
-                }
-    
                 ant.element.style.left = `${ant.position}px`;
             });
     
