@@ -330,24 +330,38 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             // ✅ Step 2: Move Special Ants and Handle Their Collision
-            if (specialAnts.length === 2) {
-                let leftAnt = specialAnts[0];
-                let rightAnt = specialAnts[1];
+if (specialAnts.length === 2) {
+    let leftAnt = specialAnts[0];
+    let rightAnt = specialAnts[1];
 
-                leftAnt.position += leftAnt.direction * distanceToMove;
-                rightAnt.position += rightAnt.direction * distanceToMove;
+    leftAnt.position += leftAnt.direction * distanceToMove;
+    rightAnt.position += rightAnt.direction * distanceToMove;
 
-                leftAnt.element.style.left = `${leftAnt.position}px`;
-                rightAnt.element.style.left = `${rightAnt.position}px`;
+    leftAnt.element.style.left = `${leftAnt.position}px`;
+    rightAnt.element.style.left = `${rightAnt.position}px`;
 
-                // ✅ Fix collision detection and swapping logic
+                // ✅ Ensure Special Ants Split the Journey Equally
+                let midPoint = stickWidth / 2;
+                
                 if (Math.abs(leftAnt.position - rightAnt.position) <= antSize) {
+                    let elapsed = (performance.now() - startTime) / 1000;
+                    let expectedHalfTime = (stickWidth / 20) / 2; // ✅ Each should take exactly half the max time
+                    
+                    // ✅ Correct any deviation due to floating-point shifts
+                    if (elapsed < expectedHalfTime) {
+                        let correction = expectedHalfTime - elapsed;
+                        leftAnt.position += leftAnt.direction * pixelsPerSecond * correction;
+                        rightAnt.position += rightAnt.direction * pixelsPerSecond * correction;
+                    }
+
+                    // ✅ Swap directions correctly
                     [leftAnt.direction, rightAnt.direction] = [rightAnt.direction, leftAnt.direction];
 
                     leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
                     rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
                 }
             }
+
 
                // ✅ Step 3: Remove Random Ants When They Fall Off the Stick (Asymmetrical Rule)
                 let prevCount = ants.length;
