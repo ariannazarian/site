@@ -590,12 +590,9 @@ a.clickable.bold-text:hover {
 }
 
 #special-ants {
-    position: relative;
-    top: 10px; /* Moves them below the main stick */
-    width: 100%;
+    position: absolute; /* ✅ Ties it to the stick */
+    top: 10px; /* ✅ Moves it below the stick */
     height: 20px;
-    display: flex;
-    justify-content: space-between;
 }
 
 .special-ant {

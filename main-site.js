@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ants.push({ element: ant, position, direction });
         }
     
-        // ✅ Ensure `special-ants` container is correctly positioned below `stick`
+        // ✅ Ensure `special-ants` is positioned relative to the stick
         let specialAntsContainer = document.getElementById("special-ants");
         if (!specialAntsContainer) {
             specialAntsContainer = document.createElement("div");
@@ -262,8 +262,9 @@ document.addEventListener("DOMContentLoaded", function () {
             stick.parentElement.appendChild(specialAntsContainer);
         }
         specialAntsContainer.innerHTML = "";
-        specialAntsContainer.style.position = "relative";
-        specialAntsContainer.style.width = stickWidth + "px"; // ✅ Ensure it matches the stick
+        specialAntsContainer.style.position = "absolute";
+        specialAntsContainer.style.left = `${stick.offsetLeft}px`; // ✅ Align with stick
+        specialAntsContainer.style.width = `${stickWidth}px`;
     
         // ✅ Special left ant (starts at position 0, facing right)
         let leftAnt = document.createElement("div");
