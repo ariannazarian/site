@@ -358,10 +358,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-            // Step 3: Remove Random Ants When They Fall Off the Stick
+            // ✅ Step 3: Remove Random Ants When They Fall Off the Stick (Fixed Symmetry)
             let prevCount = ants.length;
             ants = ants.filter(ant => {
-                if (ant.position <= 0 || ant.position >= stickWidth) {
+                if (
+                    (ant.direction === -1 && ant.position + antSize <= 0) || // ✅ Clear left properly
+                    (ant.direction === 1 && ant.position >= stickWidth) // ✅ Clear right properly
+                ) {
                     ant.element.remove();
                     return false;
                 }
@@ -375,13 +378,19 @@ document.addEventListener("DOMContentLoaded", function () {
             let maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
             timerDisplay.dataset.maxTime = maxTime;
 
-            // ✅ Step 4: Remove Special Ants at the Ends
+            // ✅ Step 4: Stop Timer When All Normal Ants Are Gone
+            if (ants.length === 0) {
+                clearInterval(timerInterval);
+                timerDisplay.textContent = `${maxTime} / ${maxTime}`;
+            }
+
+            // ✅ Step 5: Remove Special Ants at the Ends
             if (specialAnts.length > 0 && specialAnts.every(ant => ant.position <= 0 || ant.position >= stickWidth)) {
                 specialAnts.forEach(ant => ant.element.remove());
                 specialAnts = [];
             }
 
-            // Step 5: Stop Simulation Naturally When Last Ant Falls Off
+            // Step 6: Stop Simulation When Everything Is Gone
             if (ants.length === 0 && specialAnts.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
@@ -395,15 +404,6 @@ document.addEventListener("DOMContentLoaded", function () {
         let remainingAnts = ants.length + specialAnts.length;
         remainingAntsDisplay.textContent = `${remainingAnts}/${totalAnts}`;
     }
-
-    function startTimer() {
-        let maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
-        if (timerInterval) clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-            let elapsed = (performance.now() - startTime) / 1000;
-            timerDisplay.textContent = `${elapsed.toFixed(2)} / ${maxTime}`;
-        }, 100);
-    }    
 
     function stopTimer() {
         clearInterval(timerInterval);
