@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const remainingAntsDisplay = document.getElementById("remaining-ants");
     const timerDisplay = document.getElementById("timer");
 
-    let stickWidth = Math.min(window.innerWidth * 0.9, 1000); // Now scales up to 1000px
+    let stickWidth = Math.min(window.innerWidth * 0.9, 1000); // Scales up to 1000px
     let antSize = 10; // Each ant is 10px wide
     let numAnts = Math.min(100, Math.floor(stickWidth / antSize)); // Scale up to 100 ants
     let ants = [];
@@ -286,7 +286,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
                         other.element.textContent = other.direction === -1 ? "◀" : "▶";
 
-                        // Ensure they move apart slightly to avoid re-colliding instantly
+                        // Prevent instant re-collisions by slightly adjusting position
                         ant.position += ant.direction * 2;
                         other.position += other.direction * 2;
                     }
@@ -296,12 +296,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 updatedAnts.push(ant);
             });
 
+            // Apply new positions to prevent trails
             updatedAnts.forEach(ant => {
                 ant.element.style.left = `${ant.position}px`;
             });
 
             // Remove ants when they fall off the stick
-            let antsBefore = ants.length;
+            let prevCount = ants.length;
             ants = ants.filter(ant => {
                 if (ant.position <= 0 || ant.position >= stickWidth - antSize) {
                     ant.element.remove();
@@ -310,28 +311,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 return true;
             });
 
-            if (antsBefore !== ants.length) {
+            if (ants.length !== prevCount) {
                 updateRemainingAnts();
             }
 
             if (ants.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
+                updateRemainingAnts(); // Ensure 0/X is displayed at the end
             }
         }, 50);
     }
 
     function updateRemainingAnts() {
-        remainingAntsDisplay.textContent = `${ants.length}/${numAnts} ants remaining`;
+        remainingAntsDisplay.textContent = `${ants.length}/${numAnts}`; // Just updates numbers, not text
     }
 
     function startTimer() {
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             let elapsed = (performance.now() - startTime) / 1000;
-            timerDisplay.textContent = `${elapsed.toFixed(2)}`;
+            timerDisplay.textContent = elapsed.toFixed(2); // Just updates numbers, not text
         }, 100);
-    }    
+    }
 
     function stopTimer() {
         clearInterval(timerInterval);
