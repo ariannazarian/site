@@ -315,6 +315,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Swap directions
                         newDirections.set(ant, other.direction);
                         newDirections.set(other, ant.direction);
+    
+                        // 🚀 Fix: Add small separation to prevent sticking
+                        let separationAmount = 0.2 * distanceToMove; // Tiny nudge to prevent cluster formation
+                        ant.position += ant.direction * separationAmount;
+                        other.position += other.direction * separationAmount;
                     }
                 }
             }
