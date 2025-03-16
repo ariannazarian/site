@@ -276,22 +276,22 @@ document.addEventListener("DOMContentLoaded", function () {
             let elapsedTime = (currentTime - lastUpdateTime) / 1000; // Convert ms to seconds
             lastUpdateTime = currentTime; // Update for next frame
     
-            let distanceToMove = pixelsPerSecond * elapsedTime; // Ensures accurate speed
+            let distanceToMove = pixelsPerSecond * elapsedTime; // Ensures exact movement
     
-            // Step 1: Move All Ants Based on Exact Elapsed Time
+            // Step 1: Move All Ants Before Handling Collisions
             ants.forEach(ant => {
                 ant.position += ant.direction * distanceToMove;
                 ant.element.style.left = `${ant.position}px`;
             });
     
-            // Step 2: Handle Collisions Properly (Equivalent to Passing Through)
+            // Step 2: Handle Collisions Without Affecting Movement Speed
             for (let i = 0; i < ants.length; i++) {
                 for (let j = i + 1; j < ants.length; j++) {
                     let ant = ants[i];
                     let other = ants[j];
     
                     if (Math.abs(ant.position - other.position) < antSize) {
-                        // Instead of "bouncing," they swap directions instantly
+                        // Swap directions but DO NOT modify positions
                         let temp = ant.direction;
                         ant.direction = other.direction;
                         other.direction = temp;
@@ -317,10 +317,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateRemainingAnts();
             }
     
-            // Step 4: Stop Simulation Exactly at Max Time
+            // Step 4: Ensure Simulation Ends at Max Time
             let elapsedSimulationTime = (performance.now() - startTime) / 1000;
-            let maxTime = stickWidth / 20;
-            
+            let maxTime = stickWidth / pixelsPerSecond; // Correct theoretical max time
+    
             if (elapsedSimulationTime >= maxTime || ants.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
@@ -328,7 +328,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }, 50); // 20 updates per second (consistent)
     }    
-    
 
     function updateRemainingAnts() {
         remainingAntsDisplay.textContent = `${ants.length}/${numAnts}`; // Just updates numbers, not text
