@@ -571,12 +571,12 @@ a.clickable.bold-text:hover {
 
 #stick {
     position: relative;
-    width: 90vw; /* Stick scales to 90% of screen width */
-    max-width: 1000px; /* Increased max width */
-    height: 4px;
+    width: 90vw;
+    max-width: 1000px;
+    height: 10px; /* Match thickness to ant size */
     background: white;
     margin: 15px auto;
-    border-radius: 2px;
+    border-radius: 5px;
 }
 
 .ant {

@@ -236,9 +236,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const remainingAntsDisplay = document.getElementById("remaining-ants");
     const timerDisplay = document.getElementById("timer");
 
-    let stickWidth = Math.min(window.innerWidth * 0.9, 1000); // Capped at 1000px
-    let antSize = 10; // Each ant is 10px
-    let numAnts = Math.min(100, Math.floor(stickWidth / (antSize * 2))); // Up to 100 ants max
+    let stickWidth = Math.min(window.innerWidth * 0.9, 1000); // Now scales up to 1000px
+    let antSize = 10; // Each ant is 10px wide
+    let numAnts = Math.min(100, Math.floor(stickWidth / antSize)); // Scale up to 100 ants
     let ants = [];
     let startTime = null;
     let timerInterval = null;
@@ -273,11 +273,11 @@ document.addEventListener("DOMContentLoaded", function () {
             let updatedAnts = [];
 
             ants.forEach(ant => {
-                let nextPosition = ant.position + (ant.direction * 2);
+                let nextPosition = Math.round(ant.position + (ant.direction * 2)); // Rounded for precision
 
                 // Collision detection: if another ant is in the same spot, swap directions
                 ants.forEach(other => {
-                    if (other !== ant && Math.abs(nextPosition - other.position) < antSize) {
+                    if (other !== ant && Math.abs(nextPosition - Math.round(other.position)) < antSize) {
                         let temp = ant.direction;
                         ant.direction = other.direction;
                         other.direction = temp;
@@ -301,14 +301,18 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             // Remove ants when they fall off the stick
+            let antsBefore = ants.length;
             ants = ants.filter(ant => {
                 if (ant.position <= 0 || ant.position >= stickWidth - antSize) {
                     ant.element.remove();
-                    updateRemainingAnts();
                     return false;
                 }
                 return true;
             });
+
+            if (antsBefore !== ants.length) {
+                updateRemainingAnts();
+            }
 
             if (ants.length === 0) {
                 clearInterval(moveInterval);
