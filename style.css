@@ -564,6 +564,7 @@ a.clickable.bold-text:hover {
 #ants-on-line {
     text-align: center;
     margin-top: 40px; /* Adds space above the simulation */
+    margin-bottom: 40px; /* Adds space below the simulation */
     font-size: 16px;
     color: white;
 }
