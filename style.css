@@ -572,7 +572,7 @@ a.clickable.bold-text:hover {
 #stick {
     position: relative;
     width: 90vw;
-    max-width: 1000px;
+    max-width: 500px;
     height: 5px; /* Matches ant size for consistency */
     background: white;
     margin: 10px auto 5px;
