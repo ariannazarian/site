@@ -586,6 +586,12 @@ a.clickable.bold-text:hover {
     top: -15px; /* Keeps ants above the line */
 }
 
-#remaining-ants b, #timer b {
-    font-weight: bold; /* Only bolds the numbers */
+/* ✅ Make only the numbers bold, not the labels */
+#remaining-ants, #timer {
+    font-weight: bold;
+}
+
+/* ✅ Add space between counters and the simulation */
+#ant-info {
+    margin-bottom: 15px;
 }
