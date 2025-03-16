@@ -236,16 +236,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const remainingAntsDisplay = document.getElementById("remaining-ants");
     const timerDisplay = document.getElementById("timer");
 
-    let pixelsPerSecond = 20; // Fixed speed: 20 pixels per second
-    let maxStickWidth = 500; // **Fix: Ensure consistent max stick length**
-    let stickWidth = Math.min(window.innerWidth * 0.9, maxStickWidth); // **Fix: Defined once globally**
-    let maxAnts = 25;
+    let pixelsPerSecond = 20; // Fixed speed of 20 pixels per second
+    let maxStickWidth = 500; // Max stick length
+    let stickWidth = Math.min(window.innerWidth * 0.9, maxStickWidth); // Stick scales up to 500px max
+    let maxAnts = 50; // ✅ Max number of ants is now 50
     let antSize = 1; // Small, near-zero size for proper interactions
 
-    let numAnts = Math.min(maxAnts, Math.floor(stickWidth / (maxStickWidth / maxAnts))); // **Fix: Scale properly**
+    // ✅ **Corrected Scaling Formula for Ants**
+    let numAnts = Math.min(maxAnts, Math.floor(stickWidth / (maxStickWidth / maxAnts)));
+
     let ants = [];
     let startTime = null;
     let timerInterval = null;
+
+    // ✅ **Fix: Ensure stick visually matches simulation**
+    stick.style.width = `${stickWidth}px`;
 
     function resetSimulation() {
         stick.innerHTML = "";
@@ -272,23 +277,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function moveAnts() {
-        let lastUpdateTime = performance.now(); // Track real time for precise movement
+        let lastUpdateTime = performance.now();
 
         let moveInterval = setInterval(() => {
             let currentTime = performance.now();
-            let elapsedTime = (currentTime - lastUpdateTime) / 1000; // Convert ms to seconds
-            lastUpdateTime = currentTime; // Update for next frame
+            let elapsedTime = (currentTime - lastUpdateTime) / 1000;
+            lastUpdateTime = currentTime;
 
-            let distanceToMove = pixelsPerSecond * elapsedTime; // Ensures exact movement
+            let distanceToMove = pixelsPerSecond * elapsedTime;
 
-            // Step 1: Move All Ants at Constant Speed
             ants.forEach(ant => {
                 ant.position += ant.direction * distanceToMove;
                 ant.element.style.left = `${ant.position}px`;
             });
 
-            // Step 2: Detect Collisions and Swap Directions
-            let collisionPairs = new Set(); // Prevent duplicate swaps in the same frame
+            let collisionPairs = new Set();
 
             for (let i = 0; i < ants.length; i++) {
                 for (let j = i + 1; j < ants.length; j++) {
@@ -296,21 +299,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     let other = ants[j];
 
                     if (Math.abs(ant.position - other.position) < antSize && !collisionPairs.has(`${i}-${j}`)) {
-                        // Swap directions but DO NOT modify positions
                         [ant.direction, other.direction] = [other.direction, ant.direction];
-
-                        // Update arrows to reflect new direction
                         ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
                         other.element.textContent = other.direction === -1 ? "◀" : "▶";
-
-                        // Mark this pair as processed to prevent multiple swaps per frame
                         collisionPairs.add(`${i}-${j}`);
                         collisionPairs.add(`${j}-${i}`);
                     }
                 }
             }
 
-            // Step 3: Remove Ants When They Fall Off the Stick
             let prevCount = ants.length;
             ants = ants.filter(ant => {
                 if (ant.position <= 0 || ant.position >= stickWidth - antSize) {
@@ -324,21 +321,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateRemainingAnts();
             }
 
-            // Step 4: Stop Simulation Naturally When Last Ant Falls Off
+            let maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
+            timerDisplay.dataset.maxTime = maxTime;
+
             if (ants.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
                 updateRemainingAnts();
             }
-        }, 50); // 20 updates per second (ensures perfect 20px/sec movement)
+        }, 50);
     }
 
     function updateRemainingAnts() {
-        remainingAntsDisplay.textContent = `${ants.length}/${numAnts}`; // Just updates numbers, not text
+        remainingAntsDisplay.textContent = `${ants.length}/${numAnts}`;
     }
 
     function startTimer() {
-        let maxTime = (stickWidth / pixelsPerSecond).toFixed(2); // **Fix: Ensure max time updates correctly**
+        let maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
     
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
