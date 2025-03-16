@@ -284,15 +284,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 ant.element.style.left = `${ant.position}px`;
             });
     
-            // Step 2: Detect Collisions and Swap Directions
-            let collisionPairs = new Set(); // Prevent duplicate swaps in the same frame
+            // Step 2: Detect Collisions Only When Positions Exactly Match
+            let collisionPairs = new Set();
     
             for (let i = 0; i < ants.length; i++) {
                 for (let j = i + 1; j < ants.length; j++) {
                     let ant = ants[i];
                     let other = ants[j];
     
-                    if (Math.abs(ant.position - other.position) < antSize && !collisionPairs.has(`${i}-${j}`)) {
+                    if (ant.position.toFixed(5) === other.position.toFixed(5) && !collisionPairs.has(`${i}-${j}`)) {
                         // Swap directions but DO NOT modify positions
                         [ant.direction, other.direction] = [other.direction, ant.direction];
     
@@ -300,7 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
                         other.element.textContent = other.direction === -1 ? "◀" : "▶";
     
-                        // Mark this pair as processed to prevent multiple swaps per frame
+                        // Prevent double-swaps in the same frame
                         collisionPairs.add(`${i}-${j}`);
                         collisionPairs.add(`${j}-${i}`);
                     }
@@ -310,7 +310,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Step 3: Remove Ants When They Fall Off the Stick
             let prevCount = ants.length;
             ants = ants.filter(ant => {
-                if (ant.position <= 0 || ant.position >= stickWidth - antSize) {
+                if (ant.position <= 0 || ant.position >= stickWidth) {
                     ant.element.remove();
                     return false;
                 }
