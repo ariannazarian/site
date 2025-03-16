@@ -272,17 +272,26 @@ document.addEventListener("DOMContentLoaded", function () {
         let updatesPerSecond = 20; // 20 FPS update rate
         let pixelsPerFrame = pixelsPerSecond / updatesPerSecond; // Movement per update
     
-        let moveInterval = setInterval(() => {
-            let updatedAnts = new Set(); // Track ants that need updating
+        let lastUpdateTime = performance.now(); // Track time to ensure smooth motion
     
-            // Step 1: Detect & Handle Collisions Before Moving
+        let moveInterval = setInterval(() => {
+            let currentTime = performance.now();
+            let elapsedTime = (currentTime - lastUpdateTime) / 1000; // Time in seconds
+            lastUpdateTime = currentTime; // Update for next frame
+    
+            let distanceToMove = pixelsPerSecond * elapsedTime; // Ensures accurate speed
+    
+            let nextPositions = new Map();
+            let updatedAnts = new Set();
+    
+            // Step 1: Detect & Handle Collisions Without Moving
             for (let i = 0; i < ants.length; i++) {
                 for (let j = i + 1; j < ants.length; j++) {
                     let ant = ants[i];
                     let other = ants[j];
     
                     if (Math.abs(ant.position - other.position) < antSize) {
-                        // Swap directions
+                        // Swap directions only, no movement adjustment
                         let temp = ant.direction;
                         ant.direction = other.direction;
                         other.direction = temp;
@@ -291,20 +300,16 @@ document.addEventListener("DOMContentLoaded", function () {
                         ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
                         other.element.textContent = other.direction === -1 ? "◀" : "▶";
     
-                        // Prevent instant re-collisions by slightly nudging apart
-                        ant.position += ant.direction * pixelsPerFrame;
-                        other.position += other.direction * pixelsPerFrame;
-    
                         updatedAnts.add(ant);
                         updatedAnts.add(other);
                     }
                 }
             }
     
-            // Step 2: Move All Ants in a Single Loop
+            // Step 2: Move All Ants in a Single Loop (with Consistent Speed)
             ants.forEach(ant => {
                 if (!updatedAnts.has(ant)) {
-                    ant.position += ant.direction * pixelsPerFrame;
+                    ant.position += ant.direction * distanceToMove;
                 }
                 ant.element.style.left = `${ant.position}px`;
             });
@@ -328,8 +333,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 stopTimer();
                 updateRemainingAnts();
             }
-        }, 50); // 20 FPS for stable movement
-    }    
+        }, 50); // Still runs at 20 FPS, but now accounts for actual time elapsed
+    }        
         
 
     function updateRemainingAnts() {
