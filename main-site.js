@@ -268,19 +268,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function moveAnts() {
-        let pixelsPerSecond = 20; // Fixed speed: 20 pixels per second
-        let pixelsPerFrame = pixelsPerSecond / 60; // Convert to movement per frame (60 FPS)
+        let pixelsPerSecond = 20; // Fixed speed of 20 pixels per second
+        let updatesPerSecond = 20; // Lower update rate for stability
+        let pixelsPerFrame = pixelsPerSecond / updatesPerSecond; // Movement per update
     
         let moveInterval = setInterval(() => {
             let nextPositions = new Map();
             let updatedAnts = [];
     
             ants.forEach(ant => {
-                let nextPosition = ant.position + (ant.direction * pixelsPerFrame);
+                let nextPosition = Math.round(ant.position + (ant.direction * pixelsPerFrame));
     
                 // Collision detection: if another ant is in the same spot, swap directions
                 ants.forEach(other => {
-                    if (other !== ant && Math.abs(nextPosition - other.position) < antSize) {
+                    if (other !== ant && Math.abs(nextPosition - Math.round(other.position)) < antSize) {
                         let temp = ant.direction;
                         ant.direction = other.direction;
                         other.direction = temp;
@@ -322,9 +323,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 stopTimer();
                 updateRemainingAnts();
             }
-        }, 16.67); // **Still updating at 60 FPS**
+        }, 50); // 20 updates per second (smoother and more stable)
     }
-    
+        
 
     function updateRemainingAnts() {
         remainingAntsDisplay.textContent = `${ants.length}/${numAnts}`; // Just updates numbers, not text
