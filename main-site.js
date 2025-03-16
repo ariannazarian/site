@@ -329,10 +329,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             let elapsed = (performance.now() - startTime) / 1000;
-            let timeLabel = elapsed.toFixed(2) === "1.00" ? "second" : "seconds";
-            timerDisplay.textContent = `${elapsed.toFixed(2)} ${timeLabel} elapsed`;
+            timerDisplay.textContent = `${elapsed.toFixed(2)}`;
         }, 100);
-    }
+    }    
 
     function stopTimer() {
         clearInterval(timerInterval);
