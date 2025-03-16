@@ -573,11 +573,12 @@ a.clickable.bold-text:hover {
     position: relative;
     width: 90vw;
     max-width: 1000px;
-    height: 10px; /* Match thickness to ant size */
+    height: 10px; /* Ensures exact match with ant size */
     background: white;
     margin: 15px auto;
-    border-radius: 5px;
+    border-radius: 0px; /* Remove rounding that could make it appear thicker */
 }
+
 
 .ant {
     position: absolute;
