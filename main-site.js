@@ -277,17 +277,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function moveAnts() {
-        let pixelsPerSecond = 20; // Fixed speed: 20 pixels per second
-        let lastUpdateTime = performance.now(); // Track real time for precise movement
+        let lastUpdateTime = performance.now();
     
         let moveInterval = setInterval(() => {
             let currentTime = performance.now();
-            let elapsedTime = (currentTime - lastUpdateTime) / 1000; // Convert ms to seconds
-            lastUpdateTime = currentTime; // Update for next frame
+            let elapsedTime = (currentTime - lastUpdateTime) / 1000;
+            lastUpdateTime = currentTime;
     
-            let distanceToMove = pixelsPerSecond * elapsedTime; // Ensures exact movement
+            let distanceToMove = pixelsPerSecond * elapsedTime;
     
-            // Store previous positions for pass-through collision detection
+            // Store previous positions to check for pass-through collisions
             let previousPositions = new Map();
             ants.forEach(ant => previousPositions.set(ant, ant.position));
     
@@ -298,7 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     
             // Step 2: Detect Pass-Through Collisions and Swap Directions
-            let newDirections = new Map();
+            let collisionPairs = new Set();
     
             for (let i = 0; i < ants.length; i++) {
                 for (let j = i + 1; j < ants.length; j++) {
@@ -308,27 +307,30 @@ document.addEventListener("DOMContentLoaded", function () {
                     let prevAntPos = previousPositions.get(ant);
                     let prevOtherPos = previousPositions.get(other);
     
-                    // **Fix: Detect if ants swapped positions between frames (pass-through event)**
+                    // **Fix: Detect if ants swapped places between frames**
                     if ((prevAntPos < prevOtherPos && ant.position > other.position) ||
                         (prevAntPos > prevOtherPos && ant.position < other.position)) {
                         
-                        // Swap directions
-                        newDirections.set(ant, other.direction);
-                        newDirections.set(other, ant.direction);
+                        if (!collisionPairs.has(`${i}-${j}`)) {
+                            // Swap directions
+                            [ant.direction, other.direction] = [other.direction, ant.direction];
     
-                        // 🚀 Fix: Add small separation to prevent sticking
-                        let separationAmount = 0.2 * distanceToMove; // Tiny nudge to prevent cluster formation
-                        ant.position += ant.direction * separationAmount;
-                        other.position += other.direction * separationAmount;
+                            // Update arrows to reflect new direction
+                            ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
+                            other.element.textContent = other.direction === -1 ? "◀" : "▶";
+    
+                            // **Fix: Slightly move ants apart to prevent infinite swaps**
+                            let adjustAmount = 0.1 * distanceToMove;
+                            ant.position += ant.direction * adjustAmount;
+                            other.position += other.direction * adjustAmount;
+    
+                            // Prevent duplicate swaps in the same frame
+                            collisionPairs.add(`${i}-${j}`);
+                            collisionPairs.add(`${j}-${i}`);
+                        }
                     }
                 }
             }
-    
-            // Apply direction swaps after checking all collisions
-            newDirections.forEach((newDir, ant) => {
-                ant.direction = newDir;
-                ant.element.textContent = newDir === -1 ? "◀" : "▶";
-            });
     
             // Step 3: Remove Ants When They Fall Off the Stick
             let prevCount = ants.length;
@@ -344,13 +346,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateRemainingAnts();
             }
     
-            // Step 4: Stop Simulation Naturally When Last Ant Falls Off
+            let maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
+            timerDisplay.dataset.maxTime = maxTime;
+    
             if (ants.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
                 updateRemainingAnts();
             }
-        }, 50); // 20 updates per second (ensures perfect 20px/sec movement)
+        }, 50);
     }
     
 
