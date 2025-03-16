@@ -338,12 +338,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function startTimer() {
+        let maxTime = (stickWidth / 20).toFixed(2); // Max time based on stick length & speed
+    
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             let elapsed = (performance.now() - startTime) / 1000;
-            timerDisplay.textContent = elapsed.toFixed(2); // Just updates numbers, not text
+            timerDisplay.textContent = `${elapsed.toFixed(2)} / ${maxTime}`;
         }, 100);
-    }
+    }    
 
     function stopTimer() {
         clearInterval(timerInterval);
