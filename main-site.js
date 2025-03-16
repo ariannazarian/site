@@ -268,39 +268,41 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function moveAnts() {
+        let pixelsPerSecond = 20; // Fixed speed: 20 pixels per second
+        let pixelsPerFrame = pixelsPerSecond / 60; // Convert to movement per frame (60 FPS)
+    
         let moveInterval = setInterval(() => {
             let nextPositions = new Map();
             let updatedAnts = [];
-
+    
             ants.forEach(ant => {
-                let nextPosition = Math.round(ant.position + (ant.direction * 2)); // Rounded for precision
-
+                let nextPosition = ant.position + (ant.direction * pixelsPerFrame);
+    
                 // Collision detection: if another ant is in the same spot, swap directions
                 ants.forEach(other => {
-                    if (other !== ant && Math.abs(nextPosition - Math.round(other.position)) < antSize) {
+                    if (other !== ant && Math.abs(nextPosition - other.position) < antSize) {
                         let temp = ant.direction;
                         ant.direction = other.direction;
                         other.direction = temp;
-
+    
                         // Update arrows to reflect new direction
                         ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
                         other.element.textContent = other.direction === -1 ? "◀" : "▶";
-
+    
                         // Prevent instant re-collisions by slightly adjusting position
-                        ant.position += ant.direction * 2;
-                        other.position += other.direction * 2;
+                        ant.position += ant.direction * pixelsPerFrame;
+                        other.position += other.direction * pixelsPerFrame;
                     }
                 });
-
+    
                 ant.position = nextPosition;
                 updatedAnts.push(ant);
             });
-
-            // Apply new positions to prevent trails
+    
             updatedAnts.forEach(ant => {
                 ant.element.style.left = `${ant.position}px`;
             });
-
+    
             // Remove ants when they fall off the stick
             let prevCount = ants.length;
             ants = ants.filter(ant => {
@@ -310,18 +312,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 return true;
             });
-
+    
             if (ants.length !== prevCount) {
                 updateRemainingAnts();
             }
-
+    
             if (ants.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
-                updateRemainingAnts(); // Ensure 0/X is displayed at the end
+                updateRemainingAnts();
             }
-        }, 50);
+        }, 16.67); // **Still updating at 60 FPS**
     }
+    
 
     function updateRemainingAnts() {
         remainingAntsDisplay.textContent = `${ants.length}/${numAnts}`; // Just updates numbers, not text
