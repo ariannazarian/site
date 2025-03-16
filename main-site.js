@@ -353,7 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 let prevCount = ants.length;
                 ants = ants.filter(ant => {
                     if ((ant.direction === -1 && ant.position <= 0) || // ✅ Clear left-moving ants (`◀`) when tip reaches `0px`
-                        (ant.direction === 1 && ant.position + antSize >= stickWidth)) { // ✅ Clear right-moving ants (`▶`) when tip reaches `stickWidth`
+                    (ant.direction === 1 && centerPosition >= stickWidth)) { // ✅ Right side clearing
                         ant.element.remove();
                         return false;
                     }
