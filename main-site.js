@@ -357,7 +357,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return antArray.filter(ant => {
                     let centerPosition = ant.position + antSize / 2; // ✅ Get center of arrow
                     if ((ant.direction === -1 && ant.position <= 0) || // ✅ Left ants clear when tip reaches `0px`
-                        (ant.direction === 1 && centerPosition >= stickWidth)) { // ✅ Right ants clear when center reaches `stickWidth`
+                        (ant.direction === 1 && centerPosition >= stickWidth - 0.1)) { // ✅ Right ants clear when center reaches or slightly exceeds `stickWidth`
                         ant.element.remove();
                         return false;
                     }
@@ -379,7 +379,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateRemainingAnts();
             }
         }, 50);
-    }
+    }    
     
 
     function updateRemainingAnts() {
