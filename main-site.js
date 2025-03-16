@@ -268,34 +268,41 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function moveAnts() {
-        let pixelsPerSecond = 20; // Fixed speed: 20 pixels per second
-        let updatesPerSecond = 20; // 20 FPS update rate
-        let pixelsPerFrame = pixelsPerSecond / updatesPerSecond; // Movement per update
+        let pixelsPerSecond = 20; // Fixed speed of 20 pixels per second
+        let lastUpdateTime = performance.now(); // Track real time for precise movement
     
         let moveInterval = setInterval(() => {
-            let updatedAnts = new Set(); // Track ants that had collisions
+            let currentTime = performance.now();
+            let elapsedTime = (currentTime - lastUpdateTime) / 1000; // Convert ms to seconds
+            lastUpdateTime = currentTime; // Update for next frame
     
-            // Step 1: Move All Ants Before Handling Collisions
+            let distanceToMove = pixelsPerSecond * elapsedTime; // Ensures exact movement
+    
+            // Step 1: Move All Ants at Constant Speed
             ants.forEach(ant => {
-                ant.position += ant.direction * pixelsPerFrame;
+                ant.position += ant.direction * distanceToMove;
                 ant.element.style.left = `${ant.position}px`;
             });
     
-            // Step 2: Handle Collisions Without Modifying Position
+            // Step 2: Detect Collisions and Swap Directions
+            let collisionPairs = new Set(); // Prevent duplicate swaps in the same frame
+    
             for (let i = 0; i < ants.length; i++) {
                 for (let j = i + 1; j < ants.length; j++) {
                     let ant = ants[i];
                     let other = ants[j];
     
-                    if (Math.abs(ant.position - other.position) < antSize) {
-                        // Swap directions instantly
-                        let temp = ant.direction;
-                        ant.direction = other.direction;
-                        other.direction = temp;
+                    if (Math.abs(ant.position - other.position) < antSize && !collisionPairs.has(`${i}-${j}`)) {
+                        // Swap directions but DO NOT modify positions
+                        [ant.direction, other.direction] = [other.direction, ant.direction];
     
                         // Update arrows to reflect new direction
                         ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
                         other.element.textContent = other.direction === -1 ? "◀" : "▶";
+    
+                        // Mark this pair as processed to prevent multiple swaps per frame
+                        collisionPairs.add(`${i}-${j}`);
+                        collisionPairs.add(`${j}-${i}`);
                     }
                 }
             }
