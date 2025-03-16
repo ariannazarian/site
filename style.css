@@ -593,5 +593,7 @@ a.clickable.bold-text:hover {
 
 /* ✅ Add space between counters and the simulation */
 #ant-info {
-    margin-bottom: 15px;
+    display: inline-block; /* Ensures proper spacing */
+    margin-bottom: 20px; /* Increased for better separation */
+    line-height: 1.2; /* Adjusts spacing between text elements */
 }
