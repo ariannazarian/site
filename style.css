@@ -586,6 +586,6 @@ a.clickable.bold-text:hover {
     top: -15px; /* Keeps ants above the line */
 }
 
-#remaining-ants, #timer {
-    font-weight: bold; /* Ensures only the numbers are bold */
+#remaining-ants b, #timer b {
+    font-weight: bold; /* Only bolds the numbers */
 }
