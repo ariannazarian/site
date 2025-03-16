@@ -204,7 +204,7 @@ function toggleVideo(index) {
     title.setAttribute("aria-expanded", !isExpanded);
 }
 
-fdocument.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     const stick = document.getElementById("stick");
     const remainingAntsDisplay = document.getElementById("remaining-ants");
     const timerDisplay = document.getElementById("timer");
@@ -225,7 +225,7 @@ fdocument.addEventListener("DOMContentLoaded", function () {
     // ✅ Ensure stick visually matches the simulation
     stick.style.width = `${stickWidth}px`;
 
-    // ✅ Place `#special-ants` outside `#stick` to prevent deletion
+    // ✅ Move `#special-ants` outside `#stick` to prevent deletion
     let specialAntsContainer = document.getElementById("special-ants");
     if (!specialAntsContainer) {
         specialAntsContainer = document.createElement("div");
@@ -234,7 +234,7 @@ fdocument.addEventListener("DOMContentLoaded", function () {
     }
 
     function resetSimulation() {
-        stick.innerHTML = "";
+        stick.innerHTML = ""; // ✅ Only clear the normal ants
         ants = [];
         specialAnts = [];
         startTime = performance.now();
