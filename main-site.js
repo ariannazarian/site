@@ -269,6 +269,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function moveAnts() {
         let pixelsPerSecond = 20; // Fixed speed of 20 pixels per second
+        let stickWidth = Math.min(window.innerWidth * 0.9, 500); // Scale up to max 500px
+        let maxAnts = 25;
+        let antSize = 1; // Small, near-zero size for proper interactions
+    
+        let numAnts = Math.min(maxAnts, Math.floor(stickWidth / (antSize * 10))); // Scale ants down for smaller screens
         let lastUpdateTime = performance.now(); // Track real time for precise movement
     
         let moveInterval = setInterval(() => {
@@ -329,6 +334,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }, 50); // 20 updates per second (ensures perfect 20px/sec movement)
     }
+    
         
 
     function updateRemainingAnts() {
