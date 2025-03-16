@@ -584,4 +584,5 @@ a.clickable.bold-text:hover {
     font-size: 18px; /* Keep arrows visible */
     color: white;
     transition: left 0.05s linear; /* Small steps for smoother animation */
+    top: -20px; /* Moves ants above the stick */
 }

@@ -236,22 +236,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const remainingAntsDisplay = document.getElementById("remaining-ants");
     const timerDisplay = document.getElementById("timer");
 
-    let stickWidth = Math.min(window.innerWidth * 0.9, 600); // 90% of screen width, max 600px
-    let antSize = 18; // Width of an ant character in pixels
-    let numAnts = Math.floor(stickWidth / (antSize * 2)); // Scale ants based on stick size
+    let stickWidth = Math.min(window.innerWidth * 0.9, 600);
+    let antSize = 18;
+    let numAnts = Math.floor(stickWidth / (antSize * 2));
     let ants = [];
     let startTime = null;
     let timerInterval = null;
 
     function resetSimulation() {
-        stick.innerHTML = ""; // Clear previous ants
+        stick.innerHTML = "";
         ants = [];
         startTime = performance.now();
         
-        // Generate ants based on screen width
         for (let i = 0; i < numAnts; i++) {
-            let position = Math.random() * (stickWidth - antSize); 
-            let direction = Math.random() < 0.5 ? -1 : 1; // -1 = left, 1 = right
+            let position = Math.random() * (stickWidth - antSize);
+            let direction = Math.random() < 0.5 ? -1 : 1;
             let symbol = direction === -1 ? "◀" : "▶";
 
             let ant = document.createElement("div");
@@ -271,13 +270,15 @@ document.addEventListener("DOMContentLoaded", function () {
     function moveAnts() {
         let moveInterval = setInterval(() => {
             ants.forEach(ant => {
-                let nextPosition = ant.position + (ant.direction * 3); // Move smoothly
-                
-                // Collision detection (switch direction if they meet another ant)
+                let nextPosition = ant.position + (ant.direction * 2); 
+
+                // Collision detection (switch direction)
                 ants.forEach(other => {
                     if (other !== ant && Math.abs(nextPosition - other.position) < antSize) {
-                        ant.direction *= -1; // Reverse direction
+                        ant.direction *= -1;
                         other.direction *= -1;
+                        ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
+                        other.element.textContent = other.direction === -1 ? "◀" : "▶";
                     }
                 });
 
@@ -293,12 +294,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
 
-            // Stop animation when all ants are gone
             if (ants.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
             }
-        }, 50); // Updates every 50ms for smooth motion
+        }, 50);
     }
 
     function updateRemainingAnts() {
@@ -317,6 +317,5 @@ document.addEventListener("DOMContentLoaded", function () {
         clearInterval(timerInterval);
     }
 
-    // Start simulation on page load
     resetSimulation();
 });
