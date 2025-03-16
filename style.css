@@ -589,7 +589,6 @@ a.clickable.bold-text:hover {
     top: -15px; /* Keeps ants above the line */
 }
 
-/* ✅ Position special ants below the line */
 #special-ants {
     position: relative;
     top: 10px; /* Moves them below the main stick */
@@ -600,8 +599,11 @@ a.clickable.bold-text:hover {
 }
 
 .special-ant {
-    top: 5px; /* ✅ Aligns special ants visually */
+    position: absolute;
+    font-size: 10px; /* ✅ Same size as normal ants */
+    color: white;
 }
+
 
 /* ✅ Make only the numbers bold, not the labels */
 #remaining-ants, #timer {
