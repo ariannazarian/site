@@ -349,21 +349,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-            // ✅ Step 3: Remove Random Ants When They Fall Off the Stick (Now Symmetric)
-            let prevCount = ants.length;
-            ants = ants.filter(ant => {
-                let centerPosition = ant.position + antSize / 2; // ✅ Get center of arrow
+                // ✅ Step 3: Remove Random Ants When They Fall Off the Stick (Now Fully Symmetric)
+                let prevCount = ants.length;
+                ants = ants.filter(ant => {
+                    let centerPosition = ant.position + antSize / 2; // ✅ Get center of arrow
 
-                if (centerPosition <= 0 || centerPosition >= stickWidth) {
-                    ant.element.remove();
-                    return false;
+                    if (centerPosition <= 0 || centerPosition >= stickWidth) { // ✅ Now fully symmetric!
+                        ant.element.remove();
+                        return false;
+                    }
+                    return true;
+                });
+
+                if (ants.length !== prevCount) {
+                    updateRemainingAnts();
                 }
-                return true;
-            });
 
-            if (ants.length !== prevCount) {
-                updateRemainingAnts();
-            }
 
 
             let maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
