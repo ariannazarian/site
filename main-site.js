@@ -236,9 +236,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const remainingAntsDisplay = document.getElementById("remaining-ants");
     const timerDisplay = document.getElementById("timer");
 
-    let stickWidth = Math.min(window.innerWidth * 0.9, 600);
-    let antSize = 18;
-    let numAnts = Math.floor(stickWidth / (antSize * 2)); // Scale ants to stick size
+    let stickWidth = Math.min(window.innerWidth * 0.9, 1000); // Now capped at 1000px
+    let antSize = 10; // Smaller ants
+    let numAnts = Math.floor(stickWidth / (antSize * 2)); // Scale based on new width
     let ants = [];
     let startTime = null;
     let timerInterval = null;
@@ -270,15 +270,15 @@ document.addEventListener("DOMContentLoaded", function () {
     function moveAnts() {
         let moveInterval = setInterval(() => {
             let nextPositions = new Map();
+            let updatedAnts = [];
 
             ants.forEach(ant => {
                 let nextPosition = ant.position + (ant.direction * 2);
 
-                // Store next position to check for collisions
                 if (nextPositions.has(nextPosition)) {
                     let other = nextPositions.get(nextPosition);
 
-                    // Swap directions (equivalent to passing through)
+                    // Swap directions (as in the riddle)
                     let temp = ant.direction;
                     ant.direction = other.direction;
                     other.direction = temp;
@@ -290,22 +290,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     nextPositions.set(nextPosition, ant);
                 }
 
-                // Update position
                 ant.position = nextPosition;
+                updatedAnts.push(ant);
+            });
+
+            updatedAnts.forEach(ant => {
                 ant.element.style.left = `${ant.position}px`;
             });
 
-            // Remove ants when they leave the stick
             ants = ants.filter(ant => {
                 if (ant.position <= 0 || ant.position >= stickWidth - antSize) {
                     ant.element.remove();
                     updateRemainingAnts();
-                    return false; // Remove ant from array
+                    return false;
                 }
                 return true;
             });
 
-            // Stop simulation if all ants are gone
             if (ants.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();

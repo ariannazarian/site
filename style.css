@@ -572,7 +572,7 @@ a.clickable.bold-text:hover {
 #stick {
     position: relative;
     width: 90vw; /* Stick scales to 90% of screen width */
-    max-width: 600px; /* But never larger than 600px */
+    max-width: 1000px; /* Increased max width */
     height: 4px;
     background: white;
     margin: 15px auto;
@@ -581,8 +581,8 @@ a.clickable.bold-text:hover {
 
 .ant {
     position: absolute;
-    font-size: 18px; /* Keep arrows visible */
+    font-size: 10px; /* Reduce size of arrows */
     color: white;
-    transition: left 0.05s linear; /* Small steps for smoother animation */
-    top: -20px; /* Moves ants above the stick */
+    transition: left 0.05s linear;
+    top: -15px; /* Keep ants above the line */
 }
