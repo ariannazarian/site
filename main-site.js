@@ -269,6 +269,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function moveAnts() {
         let pixelsPerSecond = 20; // Fixed speed: 20 pixels per second
+        let antLength = 2; // Small nonzero length for correct collision handling
         let lastUpdateTime = performance.now(); // Track real time for precise movement
     
         let moveInterval = setInterval(() => {
@@ -288,7 +289,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ant.element.style.left = `${ant.position}px`;
             });
     
-            // Step 2: Detect Pass-Through Collisions with Improved Check
+            // Step 2: Detect Collisions with Small-Length Ants
             let newDirections = new Map();
     
             for (let i = 0; i < ants.length; i++) {
@@ -299,15 +300,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     let prevAntPos = previousPositions.get(ant);
                     let prevOtherPos = previousPositions.get(other);
     
-                    // **Fix: Allow for near-pass detection instead of exact swaps**
-                    if ((prevAntPos < prevOtherPos && ant.position >= other.position) ||
-                        (prevAntPos > prevOtherPos && ant.position <= other.position)) {
+                    // **Fix: Allow ants to interact when within `antLength` pixels**
+                    if ((prevAntPos < prevOtherPos && ant.position + antLength >= other.position) ||
+                        (prevAntPos > prevOtherPos && ant.position <= other.position + antLength)) {
                         
                         // Swap directions
                         newDirections.set(ant, other.direction);
                         newDirections.set(other, ant.direction);
     
-                        // **Fix: Small Separation Adjustment (prevents stuck swaps)**
+                        // **Fix: Slightly adjust positions apart to prevent stuck swaps**
                         let adjustAmount = 0.5 * distanceToMove; // Small nudge apart
                         ant.position += ant.direction * adjustAmount;
                         other.position += other.direction * adjustAmount;
@@ -342,7 +343,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateRemainingAnts();
             }
         }, 50); // 20 updates per second (ensures perfect 20px/sec movement)
-    }    
+    }
+    
 
     function updateRemainingAnts() {
         remainingAntsDisplay.textContent = `${ants.length}/${numAnts}`; // Just updates numbers, not text
