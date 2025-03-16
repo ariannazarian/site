@@ -396,7 +396,14 @@ document.addEventListener("DOMContentLoaded", function () {
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             let elapsed = (performance.now() - startTime) / 1000;
-            timerDisplay.textContent = `${elapsed.toFixed(2)} / ${maxTime}`;
+    
+            // ✅ Only update timer if normal ants are still on the stick
+            if (ants.length > 0) {
+                timerDisplay.textContent = `${elapsed.toFixed(2)} / ${maxTime}`;
+            } else {
+                clearInterval(timerInterval);
+                timerDisplay.textContent = `${maxTime} / ${maxTime}`; // ✅ Ensure final time is correct
+            }
         }, 100);
     }    
 
