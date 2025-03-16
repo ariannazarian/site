@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let stickWidth = Math.min(window.innerWidth * 0.9, 1000); // Now capped at 1000px
     let antSize = 10; // Smaller ants
-    let numAnts = Math.floor(stickWidth / (antSize * 2)); // Scale based on new width
+    let numAnts = Math.floor(stickWidth / (antSize * 10)); // Scale based on new width
     let ants = [];
     let startTime = null;
     let timerInterval = null;
