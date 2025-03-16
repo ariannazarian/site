@@ -268,8 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function moveAnts() {
-        let pixelsPerSecond = 20; // Fixed speed: 20 pixels per second
-        let antLength = 2; // Small nonzero length for correct collision handling
+        let pixelsPerSecond = 20; // Fixed speed of 20 pixels per second
         let lastUpdateTime = performance.now(); // Track real time for precise movement
     
         let moveInterval = setInterval(() => {
@@ -279,53 +278,39 @@ document.addEventListener("DOMContentLoaded", function () {
     
             let distanceToMove = pixelsPerSecond * elapsedTime; // Ensures exact movement
     
-            // Store previous positions to track pass-through collisions
-            let previousPositions = new Map();
-            ants.forEach(ant => previousPositions.set(ant, ant.position));
-    
             // Step 1: Move All Ants at Constant Speed
             ants.forEach(ant => {
                 ant.position += ant.direction * distanceToMove;
                 ant.element.style.left = `${ant.position}px`;
             });
     
-            // Step 2: Detect Collisions with Small-Length Ants
-            let newDirections = new Map();
+            // Step 2: Detect Collisions and Swap Directions
+            let collisionPairs = new Set(); // Prevent duplicate swaps in the same frame
     
             for (let i = 0; i < ants.length; i++) {
                 for (let j = i + 1; j < ants.length; j++) {
                     let ant = ants[i];
                     let other = ants[j];
     
-                    let prevAntPos = previousPositions.get(ant);
-                    let prevOtherPos = previousPositions.get(other);
+                    if (Math.abs(ant.position - other.position) < antSize && !collisionPairs.has(`${i}-${j}`)) {
+                        // Swap directions but DO NOT modify positions
+                        [ant.direction, other.direction] = [other.direction, ant.direction];
     
-                    // **Fix: Allow ants to interact when within `antLength` pixels**
-                    if ((prevAntPos < prevOtherPos && ant.position + antLength >= other.position) ||
-                        (prevAntPos > prevOtherPos && ant.position <= other.position + antLength)) {
-                        
-                        // Swap directions
-                        newDirections.set(ant, other.direction);
-                        newDirections.set(other, ant.direction);
+                        // Update arrows to reflect new direction
+                        ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
+                        other.element.textContent = other.direction === -1 ? "◀" : "▶";
     
-                        // **Fix: Slightly adjust positions apart to prevent stuck swaps**
-                        let adjustAmount = 0.5 * distanceToMove; // Small nudge apart
-                        ant.position += ant.direction * adjustAmount;
-                        other.position += other.direction * adjustAmount;
+                        // Mark this pair as processed to prevent multiple swaps per frame
+                        collisionPairs.add(`${i}-${j}`);
+                        collisionPairs.add(`${j}-${i}`);
                     }
                 }
             }
     
-            // Apply direction swaps after checking all collisions
-            newDirections.forEach((newDir, ant) => {
-                ant.direction = newDir;
-                ant.element.textContent = newDir === -1 ? "◀" : "▶";
-            });
-    
             // Step 3: Remove Ants When They Fall Off the Stick
             let prevCount = ants.length;
             ants = ants.filter(ant => {
-                if (ant.position <= 0 || ant.position >= stickWidth) {
+                if (ant.position <= 0 || ant.position >= stickWidth - antSize) {
                     ant.element.remove();
                     return false;
                 }
@@ -344,7 +329,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }, 50); // 20 updates per second (ensures perfect 20px/sec movement)
     }
-    
+        
 
     function updateRemainingAnts() {
         remainingAntsDisplay.textContent = `${ants.length}/${numAnts}`; // Just updates numbers, not text
