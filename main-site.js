@@ -350,14 +350,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
     
-            // ✅ Step 3: Remove Both Normal and Special Ants When They Fall Off the Stick
+            // ✅ Step 3: Remove Random Ants When They Fall Off the Stick (Asymmetrical Rule)
             let prevCount = ants.length + specialAnts.length;
     
             function removeAnts(antArray) {
                 return antArray.filter(ant => {
                     let centerPosition = ant.position + antSize / 2; // ✅ Get center of arrow
                     if ((ant.direction === -1 && ant.position <= 0) || // ✅ Left ants clear when tip reaches `0px`
-                        (ant.direction === 1 && centerPosition >= stickWidth - 0.1)) { // ✅ Right ants clear when center reaches or slightly exceeds `stickWidth`
+                        (ant.direction === 1 && centerPosition >= stickWidth)) { // ✅ Right ants clear when center reaches `stickWidth`
                         ant.element.remove();
                         return false;
                     }
@@ -366,20 +366,23 @@ document.addEventListener("DOMContentLoaded", function () {
             }
     
             ants = removeAnts(ants);
-            specialAnts = removeAnts(specialAnts); // ✅ Now uses same rules as normal ants
+            specialAnts = removeAnts(specialAnts); // ✅ Now uses same clearing rules as normal ants
     
             if (ants.length + specialAnts.length !== prevCount) {
                 updateRemainingAnts();
             }
     
-            // ✅ Step 4: Stop Simulation Naturally When Last Ant Falls Off
+            let maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
+            timerDisplay.dataset.maxTime = maxTime;
+    
+            // ✅ Step 5: Stop Simulation Naturally When Last Ant Falls Off
             if (ants.length === 0 && specialAnts.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
                 updateRemainingAnts();
             }
         }, 50);
-    }    
+    }
     
 
     function updateRemainingAnts() {
