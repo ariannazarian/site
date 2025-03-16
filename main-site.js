@@ -394,7 +394,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function startTimer() {
-        let maxTime = (stickWidth / pixelsPerSecond).toFixed(2); // ✅ Max time only based on stick width
+        let maxTime = (stickWidth / pixelsPerSecond).toFixed(2); // ✅ Max time based on stick width
     
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
@@ -405,7 +405,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 timerDisplay.textContent = `${elapsed.toFixed(2)} / ${maxTime}`;
             } else {
                 clearInterval(timerInterval);
-                timerDisplay.textContent = `${maxTime} / ${maxTime}`; // ✅ Ensure final time is correct
+                timerDisplay.textContent = `${elapsed.toFixed(2)} / ${maxTime}`; // ✅ Now correctly stops at real elapsed time
             }
         }, 100);
     }    
