@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function moveAnts() {
-        let pixelsPerSecond = 20; // Fixed speed of 20 pixels per second
+        let pixelsPerSecond = 20; // Fixed speed: 20 pixels per second
         let lastUpdateTime = performance.now(); // Track real time for precise movement
     
         let moveInterval = setInterval(() => {
@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
             let distanceToMove = pixelsPerSecond * elapsedTime; // Ensures exact movement
     
-            // Store previous positions for pass-through collision detection
+            // Store previous positions to track pass-through collisions
             let previousPositions = new Map();
             ants.forEach(ant => previousPositions.set(ant, ant.position));
     
@@ -288,8 +288,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 ant.element.style.left = `${ant.position}px`;
             });
     
-            // Step 2: Detect Pass-Through Collisions & Swap Directions
-            let collisionPairs = new Set();
+            // Step 2: Detect Pass-Through Collisions with Tolerance
+            let newDirections = new Map();
     
             for (let i = 0; i < ants.length; i++) {
                 for (let j = i + 1; j < ants.length; j++) {
@@ -299,25 +299,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     let prevAntPos = previousPositions.get(ant);
                     let prevOtherPos = previousPositions.get(other);
     
-                    // Check if ants passed through each other in the last frame
+                    // Check if ants moved past each other (accounting for small time-step gaps)
                     if ((prevAntPos < prevOtherPos && ant.position > other.position) ||
                         (prevAntPos > prevOtherPos && ant.position < other.position)) {
                         
-                        if (!collisionPairs.has(`${i}-${j}`)) {
-                            // Swap directions
-                            [ant.direction, other.direction] = [other.direction, ant.direction];
-    
-                            // Update arrows to reflect new direction
-                            ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
-                            other.element.textContent = other.direction === -1 ? "◀" : "▶";
-    
-                            // Prevent multiple swaps in the same frame
-                            collisionPairs.add(`${i}-${j}`);
-                            collisionPairs.add(`${j}-${i}`);
-                        }
+                        // Swap directions (simulate pass-through behavior)
+                        newDirections.set(ant, other.direction);
+                        newDirections.set(other, ant.direction);
                     }
                 }
             }
+    
+            // Apply direction swaps after checking all collisions
+            newDirections.forEach((newDir, ant) => {
+                ant.direction = newDir;
+                ant.element.textContent = newDir === -1 ? "◀" : "▶";
+            });
     
             // Step 3: Remove Ants When They Fall Off the Stick
             let prevCount = ants.length;
@@ -340,7 +337,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateRemainingAnts();
             }
         }, 50); // 20 updates per second (ensures perfect 20px/sec movement)
-    }    
+    }
+        
 
     function updateRemainingAnts() {
         remainingAntsDisplay.textContent = `${ants.length}/${numAnts}`; // Just updates numbers, not text
