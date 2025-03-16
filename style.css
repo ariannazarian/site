@@ -565,22 +565,23 @@ a.clickable.bold-text:hover {
 #ants-on-line {
     text-align: center;
     margin-top: 20px;
-    font-size: 14px;
+    font-size: 16px;
     color: white;
 }
 
 #stick {
     position: relative;
-    width: 300px; /* Reduce width for better proportion */
-    height: 4px; /* Thinner stick for better balance */
+    width: 90vw; /* Stick scales to 90% of screen width */
+    max-width: 600px; /* But never larger than 600px */
+    height: 4px;
     background: white;
     margin: 15px auto;
-    border-radius: 2px; /* Rounded edges for smoother look */
+    border-radius: 2px;
 }
 
 .ant {
     position: absolute;
-    font-size: 16px; /* Slightly smaller for balance */
+    font-size: 18px; /* Keep arrows visible */
     color: white;
-    transition: left linear;
+    transition: left 0.05s linear; /* Small steps for smoother animation */
 }

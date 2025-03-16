@@ -231,28 +231,92 @@ function setupVideoHandling() {
     });
 }
 
-function dropAnts() {
+document.addEventListener("DOMContentLoaded", function () {
     const stick = document.getElementById("stick");
-    stick.innerHTML = "";
-    ants = [];
-    
-    let numAnts = Math.floor(Math.random() * 5) + 3; 
-    startTime = performance.now(); 
+    const remainingAntsDisplay = document.getElementById("remaining-ants");
+    const timerDisplay = document.getElementById("timer");
 
-    for (let i = 0; i < numAnts; i++) {
-        let position = Math.random() * 280 + 10; // Keep ants within stick bounds
-        let direction = Math.random() < 0.5 ? -1 : 1;
-        let symbol = direction === -1 ? "◀" : "▶";
+    let stickWidth = Math.min(window.innerWidth * 0.9, 600); // 90% of screen width, max 600px
+    let antSize = 18; // Width of an ant character in pixels
+    let numAnts = Math.floor(stickWidth / (antSize * 2)); // Scale ants based on stick size
+    let ants = [];
+    let startTime = null;
+    let timerInterval = null;
 
-        let ant = document.createElement("div");
-        ant.className = "ant";
-        ant.textContent = symbol;
-        ant.style.left = position + "px";
-        stick.appendChild(ant);
+    function resetSimulation() {
+        stick.innerHTML = ""; // Clear previous ants
+        ants = [];
+        startTime = performance.now();
+        
+        // Generate ants based on screen width
+        for (let i = 0; i < numAnts; i++) {
+            let position = Math.random() * (stickWidth - antSize); 
+            let direction = Math.random() < 0.5 ? -1 : 1; // -1 = left, 1 = right
+            let symbol = direction === -1 ? "◀" : "▶";
 
-        ants.push({ element: ant, position, direction });
+            let ant = document.createElement("div");
+            ant.className = "ant";
+            ant.textContent = symbol;
+            ant.style.left = position + "px";
+            stick.appendChild(ant);
+
+            ants.push({ element: ant, position, direction });
+        }
+
+        updateRemainingAnts();
+        startTimer();
+        moveAnts();
     }
-    updateRemainingAnts();
-    moveAnts();
-    startTimer();
-}
+
+    function moveAnts() {
+        let moveInterval = setInterval(() => {
+            ants.forEach(ant => {
+                let nextPosition = ant.position + (ant.direction * 3); // Move smoothly
+                
+                // Collision detection (switch direction if they meet another ant)
+                ants.forEach(other => {
+                    if (other !== ant && Math.abs(nextPosition - other.position) < antSize) {
+                        ant.direction *= -1; // Reverse direction
+                        other.direction *= -1;
+                    }
+                });
+
+                // Update position
+                ant.position = nextPosition;
+                ant.element.style.left = `${ant.position}px`;
+
+                // Remove ants when they leave the stick
+                if (ant.position <= 0 || ant.position >= stickWidth - antSize) {
+                    ant.element.remove();
+                    ants = ants.filter(a => a !== ant);
+                    updateRemainingAnts();
+                }
+            });
+
+            // Stop animation when all ants are gone
+            if (ants.length === 0) {
+                clearInterval(moveInterval);
+                stopTimer();
+            }
+        }, 50); // Updates every 50ms for smooth motion
+    }
+
+    function updateRemainingAnts() {
+        remainingAntsDisplay.textContent = ants.length;
+    }
+
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            let elapsed = (performance.now() - startTime) / 1000;
+            timerDisplay.textContent = elapsed.toFixed(2);
+        }, 100);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+    }
+
+    // Start simulation on page load
+    resetSimulation();
+});
