@@ -269,27 +269,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function moveAnts() {
         let pixelsPerSecond = 20; // Fixed speed: 20 pixels per second
-        let updatesPerSecond = 20; // 20 FPS update rate
-        let pixelsPerFrame = pixelsPerSecond / updatesPerSecond; // Movement per update
-    
-        let lastUpdateTime = performance.now(); // Track real time for consistent speed
+        let lastUpdateTime = performance.now(); // Track real time for precise movement
     
         let moveInterval = setInterval(() => {
             let currentTime = performance.now();
             let elapsedTime = (currentTime - lastUpdateTime) / 1000; // Convert ms to seconds
             lastUpdateTime = currentTime; // Update for next frame
     
-            let distanceToMove = pixelsPerSecond * elapsedTime; // Move ants at exact speed
-            let updatedAnts = new Set(); // Track ants that swapped direction
+            let distanceToMove = pixelsPerSecond * elapsedTime; // Ensures accurate speed
     
-            // Step 1: Detect & Handle Collisions First
+            // Step 1: Move All Ants Based on Exact Elapsed Time
+            ants.forEach(ant => {
+                ant.position += ant.direction * distanceToMove;
+                ant.element.style.left = `${ant.position}px`;
+            });
+    
+            // Step 2: Handle Collisions Properly (Equivalent to Passing Through)
             for (let i = 0; i < ants.length; i++) {
                 for (let j = i + 1; j < ants.length; j++) {
                     let ant = ants[i];
                     let other = ants[j];
     
                     if (Math.abs(ant.position - other.position) < antSize) {
-                        // Swap directions without modifying position
+                        // Instead of "bouncing," they swap directions instantly
                         let temp = ant.direction;
                         ant.direction = other.direction;
                         other.direction = temp;
@@ -297,18 +299,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Update arrows to reflect new direction
                         ant.element.textContent = ant.direction === -1 ? "◀" : "▶";
                         other.element.textContent = other.direction === -1 ? "◀" : "▶";
-    
-                        updatedAnts.add(ant);
-                        updatedAnts.add(other);
                     }
                 }
             }
-    
-            // Step 2: Move All Ants Every Frame (No Position Modification on Swap)
-            ants.forEach(ant => {
-                ant.position += ant.direction * distanceToMove;
-                ant.element.style.left = `${ant.position}px`;
-            });
     
             // Step 3: Remove Ants When They Fall Off the Stick
             let prevCount = ants.length;
@@ -324,13 +317,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateRemainingAnts();
             }
     
-            if (ants.length === 0) {
+            // Step 4: Stop Simulation Exactly at Max Time
+            let elapsedSimulationTime = (performance.now() - startTime) / 1000;
+            let maxTime = stickWidth / 20;
+            
+            if (elapsedSimulationTime >= maxTime || ants.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
                 updateRemainingAnts();
             }
-        }, 50); // Updates every 50ms (20 FPS)
-    }
+        }, 50); // 20 updates per second (consistent)
+    }    
     
 
     function updateRemainingAnts() {
