@@ -564,7 +564,7 @@ a.clickable.bold-text:hover {
 
 #ants-on-line {
     text-align: center;
-    margin-top: 40px; /* Increased space above the simulation */
+    margin-top: 40px; /* Adds space above the simulation */
     font-size: 16px;
     color: white;
 }
@@ -573,15 +573,19 @@ a.clickable.bold-text:hover {
     position: relative;
     width: 90vw;
     max-width: 1000px;
-    height: 5px; /* Reduce thickness to 5px */
+    height: 5px; /* Matches ant size for consistency */
     background: white;
-    margin: 10px auto 5px auto;
+    margin: 10px auto 5px;
 }
 
 .ant {
     position: absolute;
-    font-size: 10px; /* Reduce size of arrows */
+    font-size: 10px; 
     color: white;
     transition: left 0.05s linear;
-    top: -15px; /* Keep ants above the line */
+    top: -15px; /* Keeps ants above the line */
+}
+
+#remaining-ants, #timer {
+    font-weight: bold; /* Ensures only the numbers are bold */
 }
