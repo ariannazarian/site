@@ -290,14 +290,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // ✅ Special left ant (starts at position 0, facing right)
         let leftAnt = document.createElement("div");
-        leftAnt.className = "special-ant";
+        leftAnt.className = "special-ant left"; // ✅ Assign permanent blue color via CSS
         leftAnt.textContent = "▶";
         leftAnt.style.left = "0px";
         specialAntsContainer.appendChild(leftAnt);
 
         // ✅ Special right ant (starts at max position, facing left)
         let rightAnt = document.createElement("div");
-        rightAnt.className = "special-ant";
+        rightAnt.className = "special-ant right"; // ✅ Assign permanent red color via CSS
         rightAnt.textContent = "◀";
         rightAnt.style.left = `${stickWidth - antSize}px`;
         specialAntsContainer.appendChild(rightAnt);
@@ -328,18 +328,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 ant.position += ant.direction * distanceToMove;
                 ant.element.style.left = `${ant.position}px`;
             });
-    
+
             // ✅ Step 2: Move Special Ants and Handle Their Collision
             if (specialAnts.length === 2) {
                 let leftAnt = specialAnts[0];
                 let rightAnt = specialAnts[1];
-    
+
                 leftAnt.position += leftAnt.direction * distanceToMove;
                 rightAnt.position += rightAnt.direction * distanceToMove;
-    
+
                 leftAnt.element.style.left = `${leftAnt.position}px`;
                 rightAnt.element.style.left = `${rightAnt.position}px`;
-    
+
                 let collisionThreshold = Math.max(antSize, distanceToMove * 1.1); // ✅ Ensure reliable collision
 
                 if (Math.abs(leftAnt.position - rightAnt.position) <= collisionThreshold) {
@@ -356,18 +356,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     rightAnt.style.color = "white";
 
                     setTimeout(() => {
-                        leftAnt.style.color = "blue"; // ✅ Always blue
-                        rightAnt.style.color = "red"; // ✅ Always red
+                        leftAnt.style.color = ""; // ✅ Reset to CSS-defined color
+                        rightAnt.style.color = ""; // ✅ Reset to CSS-defined color
                     }, 100); // ✅ Flash duration
                 }
-
-
-
             }
-    
+
             // ✅ Step 3: Remove Both Normal and Special Ants When They Fall Off the Stick (Symmetric Clearing)
             let prevCount = ants.length + specialAnts.length;
-    
+
             function removeAnts(antArray) {
                 return antArray.filter(ant => {
                     if ((ant.direction === -1 && ant.position + antSize <= 0) || // ✅ Left-moving ants (`◀`) clear when full width is off `0px`
@@ -378,14 +375,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     return true;
                 });
             }
-    
+
             ants = removeAnts(ants);
             specialAnts = removeAnts(specialAnts); // ✅ Now uses the same clearing rules as normal ants
-    
+
             if (ants.length + specialAnts.length !== prevCount) {
                 updateRemainingAnts();
             }
-    
+
             // ✅ Step 4: Stop Simulation Naturally When Last Ant Falls Off
             if (ants.length === 0 && specialAnts.length === 0) {
                 clearInterval(moveInterval);
