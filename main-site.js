@@ -351,14 +351,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
                     rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
 
-                    // ✅ Add flash class
-                    leftAnt.classList.add("flash");
-                    rightAnt.classList.add("flash");
+                    // ✅ Fix: Access `.element` before adding the class
+                    leftAnt.element.classList.add("flash");
+                    rightAnt.element.classList.add("flash");
 
                     // ✅ Remove flash after 100ms
                     setTimeout(() => {
-                        leftAnt.classList.remove("flash");
-                        rightAnt.classList.remove("flash");
+                        leftAnt.element.classList.remove("flash");
+                        rightAnt.element.classList.remove("flash");
                     }, 100);
                 }
 
