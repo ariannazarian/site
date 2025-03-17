@@ -351,17 +351,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
                     rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
 
-                    // ✅ Apply white flash and force it to render before switching back
-                    requestAnimationFrame(() => {
-                        leftAnt.style.color = "white";
-                        rightAnt.style.color = "white";
+                    // ✅ Flash white immediately
+                    leftAnt.style.color = "white";
+                    rightAnt.style.color = "white";
 
-                        setTimeout(() => {
-                            leftAnt.style.color = ""; // ✅ Reset to CSS-defined color
-                            rightAnt.style.color = ""; // ✅ Reset to CSS-defined color
-                        }, 100); // ✅ Flash duration
-                    });
-}
+                    // ✅ Keep the flash visible for 100ms before restoring the original colors
+                    setTimeout(() => {
+                        leftAnt.style.color = ""; // ✅ Reset to CSS-defined color
+                        rightAnt.style.color = ""; // ✅ Reset to CSS-defined color
+                    }, 100); // ✅ More noticeable flash duration
+                }
 
             }
 
