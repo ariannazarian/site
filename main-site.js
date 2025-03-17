@@ -315,68 +315,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function moveAnts() {
         let lastUpdateTime = performance.now();
-
+    
         let moveInterval = setInterval(() => {
             let currentTime = performance.now();
             let elapsedTime = (currentTime - lastUpdateTime) / 1000;
             lastUpdateTime = currentTime;
-
+    
             let distanceToMove = pixelsPerSecond * elapsedTime;
-
+    
             // ✅ Step 1: Move All Random Ants at Constant Speed
             ants.forEach(ant => {
                 ant.position += ant.direction * distanceToMove;
                 ant.element.style.left = `${ant.position}px`;
             });
-
+    
             // ✅ Step 2: Move Special Ants and Handle Their Collision
             if (specialAnts.length === 2) {
                 let leftAnt = specialAnts[0];
                 let rightAnt = specialAnts[1];
-
+    
                 leftAnt.position += leftAnt.direction * distanceToMove;
                 rightAnt.position += rightAnt.direction * distanceToMove;
-
+    
                 leftAnt.element.style.left = `${leftAnt.position}px`;
                 rightAnt.element.style.left = `${rightAnt.position}px`;
-
+    
                 // ✅ Detect collision only once at the midpoint
                 if (Math.abs(leftAnt.position - rightAnt.position) <= antSize) {
                     // ✅ Swap directions once and let them move apart
                     [leftAnt.direction, rightAnt.direction] = [rightAnt.direction, leftAnt.direction];
-
+    
                     leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
                     rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
                 }
             }
-
-            // ✅ Step 3: Remove Random Ants When They Fall Off the Stick (Asymmetrical Rule)
-            let prevCount = ants.length;
-
-            ants = ants.filter(ant => {
-
-                if ((ant.direction === -1 && ant.position <= 0) || // ✅ Left ants clear when tip reaches 0px
-                    (ant.direction === 1 && ant.position >= stickWidth)) { // ✅ Right ants clear when tip reaches stickWidth
-                    ant.element.remove();
-                    return false;
-                }
-                return true;
-            });
-
-            if (ants.length !== prevCount) {
+    
+            // ✅ Step 3: Remove Both Normal and Special Ants When They Fall Off the Stick (Symmetric Clearing)
+            let prevCount = ants.length + specialAnts.length;
+    
+            function removeAnts(antArray) {
+                return antArray.filter(ant => {
+                    if ((ant.direction === -1 && ant.position + antSize <= 0) || // ✅ Left-moving ants (`◀`) clear when full width is off `0px`
+                        (ant.direction === 1 && ant.position >= stickWidth)) { // ✅ Right-moving ants (`▶`) clear when full width is off `stickWidth`
+                        ant.element.remove();
+                        return false;
+                    }
+                    return true;
+                });
+            }
+    
+            ants = removeAnts(ants);
+            specialAnts = removeAnts(specialAnts); // ✅ Now uses the same clearing rules as normal ants
+    
+            if (ants.length + specialAnts.length !== prevCount) {
                 updateRemainingAnts();
             }
-
-            let maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
-            timerDisplay.dataset.maxTime = maxTime;
-
-            // ✅ Step 4: Remove Special Ants at the Ends
-            if (specialAnts.length > 0 && specialAnts.every(ant => ant.position <= 0 || ant.position >= stickWidth)) {
-                specialAnts.forEach(ant => ant.element.remove());
-                specialAnts = [];
-            }
-
-            // Step 5: Stop Simulation Naturally When Last Ant Falls Off
+    
+            // ✅ Step 4: Stop Simulation Naturally When Last Ant Falls Off
             if (ants.length === 0 && specialAnts.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
@@ -384,6 +379,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }, 50);
     }
+    
 
     function updateRemainingAnts() {
         let totalAnts = numAnts + 2; // ✅ Add 2 special ants to total count
