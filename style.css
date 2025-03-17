@@ -142,7 +142,7 @@ header .personal-text {
 
 /* Frozen time display - Larger (24px) */
 #current-time {
-    font-size: var(--larger-text-size);
+    font-size: var(--text-size);
     margin-top: 0px;
 }
 
