@@ -605,16 +605,16 @@ a.clickable.bold-text:hover {
 }
 
 .special-ant.left {
-    color: blue; /* ✅ Left special ant is always blue */
+    color: #00ffff; /* ✅ Cyan */
 }
 
 .special-ant.right {
-    color: red; /* ✅ Right special ant is always red */
+    color: #ff0000; /* ✅ Red (complementary to cyan) */
 }
 
 /* ✅ Flash effect on collision */
 .special-ant.flash {
-    color: white !important; /* ✅ Force flash to override default colors */
+    color: #ffff00 !important; /* ✅ Force flash to override default colors */
     transition: color 0s; /* ✅ Ensure instant flash */
 }
 
