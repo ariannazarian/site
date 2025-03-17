@@ -351,15 +351,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
                     rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
 
-                    // ✅ Flash white on collision, then return to original colors
-                    leftAnt.style.color = "white";
-                    rightAnt.style.color = "white";
+                    // ✅ Apply white flash and force it to render before switching back
+                    requestAnimationFrame(() => {
+                        leftAnt.style.color = "white";
+                        rightAnt.style.color = "white";
 
-                    setTimeout(() => {
-                        leftAnt.style.color = ""; // ✅ Reset to CSS-defined color
-                        rightAnt.style.color = ""; // ✅ Reset to CSS-defined color
-                    }, 100); // ✅ Flash duration
-                }
+                        setTimeout(() => {
+                            leftAnt.style.color = ""; // ✅ Reset to CSS-defined color
+                            rightAnt.style.color = ""; // ✅ Reset to CSS-defined color
+                        }, 100); // ✅ Flash duration
+                    });
+}
+
             }
 
             // ✅ Step 3: Remove Both Normal and Special Ants When They Fall Off the Stick (Symmetric Clearing)
