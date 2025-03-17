@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let maxStickWidth = 500; // Max stick length
     let stickWidth = Math.min(window.innerWidth * 0.9, maxStickWidth); // Stick scales up to 500px max
     let maxAnts = 50; // Max number of normal ants
-    let antSize = 3; // Ensuring visible size is correct
+    let antSize = 5; // Ensuring visible size is correct
 
     // ✅ Scale normal ants properly while adding 2 for special ants
     let numAnts = Math.min(maxAnts, Math.floor(stickWidth / (maxStickWidth / maxAnts)));
@@ -340,9 +340,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 leftAnt.element.style.left = `${leftAnt.position}px`;
                 rightAnt.element.style.left = `${rightAnt.position}px`;
     
-                // ✅ Ensure collision detection always works, even for small `antSize`
-                let collisionThreshold = Math.max(antSize, distanceToMove);
-                if (Math.abs(leftAnt.position - rightAnt.position) <= collisionThreshold) {
+                // ✅ Detect collision only once at the midpoint
+                if (Math.abs(leftAnt.position - rightAnt.position) <= antSize) {
                     // ✅ Swap directions once and let them move apart
                     [leftAnt.direction, rightAnt.direction] = [rightAnt.direction, leftAnt.direction];
     
@@ -356,8 +355,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
             function removeAnts(antArray) {
                 return antArray.filter(ant => {
-                    if ((ant.direction === -1 && ant.position + antSize <= 0) || // ✅ Left-moving (`◀`) ants clear when full width is off `0px`
-                        (ant.direction === 1 && ant.position >= stickWidth + antSize)) { // ✅ Right-moving (`▶`) ants clear when full width is off `stickWidth`
+                    if ((ant.direction === -1 && ant.position + antSize <= 0) || // ✅ Left-moving ants (`◀`) clear when full width is off `0px`
+                        (ant.direction === 1 && ant.position >= stickWidth)) { // ✅ Right-moving ants (`▶`) clear when full width is off `stickWidth`
                         ant.element.remove();
                         return false;
                     }
