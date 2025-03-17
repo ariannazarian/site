@@ -351,15 +351,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
                     rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
 
-                    // ✅ Flash white immediately
-                    leftAnt.style.color = "white";
-                    rightAnt.style.color = "white";
+                    // ✅ Add flash class
+                    leftAnt.classList.add("flash");
+                    rightAnt.classList.add("flash");
 
-                    // ✅ Keep the flash visible for 100ms before restoring the original colors
+                    // ✅ Remove flash after 100ms, restoring CSS-defined color
                     setTimeout(() => {
-                        leftAnt.style.color = ""; // ✅ Reset to CSS-defined color
-                        rightAnt.style.color = ""; // ✅ Reset to CSS-defined color
-                    }, 100); // ✅ More noticeable flash duration
+                        leftAnt.classList.remove("flash");
+                        rightAnt.classList.remove("flash");
+                    }, 100);
                 }
 
             }

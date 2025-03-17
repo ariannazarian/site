@@ -612,6 +612,12 @@ a.clickable.bold-text:hover {
     color: red; /* ✅ Right special ant is always red */
 }
 
+/* ✅ Flash effect on collision */
+.special-ant.flash {
+    color: white !important; /* ✅ Force flash to override default colors */
+    transition: color 0s; /* ✅ Ensure instant flash */
+}
+
 /* ✅ Make only the numbers bold, not the labels */
 #remaining-ants, #timer {
     font-weight: bold;
