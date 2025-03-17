@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function moveAnts() {
         let lastUpdateTime = performance.now();
     
-        let moveInterval = setInterval(() => {
+        function step() {
             let currentTime = performance.now();
             let elapsedTime = (currentTime - lastUpdateTime) / 1000;
             lastUpdateTime = currentTime;
@@ -335,71 +335,71 @@ document.addEventListener("DOMContentLoaded", function () {
                 ant.position += ant.direction * distanceToMove;
                 ant.element.style.left = `${ant.position}px`;
             });
-
+    
             // ✅ Step 2: Move Special Ants and Handle Their Collision
             if (specialAnts.length === 2) {
                 let leftAnt = specialAnts[0];
                 let rightAnt = specialAnts[1];
-
+    
                 leftAnt.position += leftAnt.direction * distanceToMove;
                 rightAnt.position += rightAnt.direction * distanceToMove;
-
+    
                 leftAnt.element.style.left = `${leftAnt.position}px`;
                 rightAnt.element.style.left = `${rightAnt.position}px`;
-
+    
                 let collisionThreshold = Math.max(antSize / 2, distanceToMove * 1.1); // ✅ Adjust collision range
-
-
+    
                 if (Math.abs(leftAnt.position - rightAnt.position) <= collisionThreshold) {
                     console.log(`✅ Collision detected: Left ${leftAnt.position}, Right ${rightAnt.position}`); // ✅ Debugging log
-
+    
                     // ✅ Swap directions
                     [leftAnt.direction, rightAnt.direction] = [rightAnt.direction, leftAnt.direction];
-
+    
                     leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
                     rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
-
-                    // ✅ Fix: Access `.element` before adding the class
+    
+                    // ✅ Flash effect on collision
                     leftAnt.element.classList.add("flash");
                     rightAnt.element.classList.add("flash");
-
-                    // ✅ Remove flash after 100ms
+    
                     setTimeout(() => {
                         leftAnt.element.classList.remove("flash");
                         rightAnt.element.classList.remove("flash");
                     }, 100);
                 }
-
             }
-
-            // ✅ Step 3: Remove Both Normal and Special Ants When They Fall Off the Stick (Symmetric Clearing)
+    
+            // ✅ Step 3: Remove Both Normal and Special Ants When They Fall Off the Stick
             let prevCount = ants.length + specialAnts.length;
-
+    
             function removeAnts(antArray) {
                 return antArray.filter(ant => {
-                    if ((ant.direction === -1 && ant.position + antSize <= 0) || // ✅ Left-moving ants (`◀`) clear when full width is off `0px`
-                        (ant.direction === 1 && ant.position >= stickWidth)) { // ✅ Right-moving ants (`▶`) clear when full width is off `stickWidth`
+                    if ((ant.direction === -1 && ant.position + antSize <= 0) || 
+                        (ant.direction === 1 && ant.position >= stickWidth)) {
                         ant.element.remove();
                         return false;
                     }
                     return true;
                 });
             }
-
+    
             ants = removeAnts(ants);
-            specialAnts = removeAnts(specialAnts); // ✅ Now uses the same clearing rules as normal ants
-
+            specialAnts = removeAnts(specialAnts);
+    
             if (ants.length + specialAnts.length !== prevCount) {
                 updateRemainingAnts();
             }
-
-            // ✅ Step 4: Stop Simulation Naturally When Last Ant Falls Off
-            if (ants.length === 0 && specialAnts.length === 0) {
-                clearInterval(moveInterval);
+    
+            // ✅ Step 4: Stop Simulation When Last Ant Falls Off
+            if (ants.length > 0 || specialAnts.length > 0) {
+                requestAnimationFrame(step); // 🔹 Recursively calls itself when ants remain
+            } else {
                 stopTimer();
                 updateRemainingAnts();
             }
-        }, 50);
+        }
+    
+        requestAnimationFrame(step); // 🔹 Start the animation loop
     }
     
 
