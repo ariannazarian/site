@@ -257,61 +257,68 @@ document.addEventListener("DOMContentLoaded", function () {
         ants = [];
         specialAnts = [];
         startTime = performance.now();
-
-        // ✅ Spawn random ants above the line
-        for (let i = 0; i < numAnts; i++) {
-            let position = Math.random() * (stickWidth - antSize);
-            let direction = Math.random() < 0.5 ? -1 : 1;
-            let symbol = direction === -1 ? "◀" : "▶";
-
-            let ant = document.createElement("div");
-            ant.className = "ant";
-            ant.textContent = symbol;
-            ant.style.left = `${position}px`;
-            stick.appendChild(ant);
-
-            ants.push({ element: ant, position, direction });
-        }
-
-        // ✅ Ensure #special-ants container exists and is positioned correctly
-        let specialAntsContainer = document.getElementById("special-ants");
-        if (!specialAntsContainer) {
-            specialAntsContainer = document.createElement("div");
-            specialAntsContainer.id = "special-ants";
-            document.body.appendChild(specialAntsContainer); // ✅ Attach it directly to the body
-        }
-        specialAntsContainer.innerHTML = "";
-        
-        let stickRect = stick.getBoundingClientRect(); // ✅ Get accurate stick position
-        specialAntsContainer.style.position = "absolute";
-        specialAntsContainer.style.left = `${stickRect.left}px`; // ✅ Align with the stick
-        specialAntsContainer.style.width = `${stickWidth}px`;
-        specialAntsContainer.style.top = `${stickRect.bottom + 5}px`; // ✅ Position it right below the stick
-
-        // ✅ Special left ant (starts at position 0, facing right)
-        let leftAnt = document.createElement("div");
-        leftAnt.className = "special-ant left"; // ✅ Assign permanent blue color via CSS
-        leftAnt.textContent = "▶";
-        leftAnt.style.left = "0px";
-        specialAntsContainer.appendChild(leftAnt);
-
-        // ✅ Special right ant (starts at max position, facing left)
-        let rightAnt = document.createElement("div");
-        rightAnt.className = "special-ant right"; // ✅ Assign permanent red color via CSS
-        rightAnt.textContent = "◀";
-        rightAnt.style.left = `${stickWidth - antSize}px`;
-        specialAntsContainer.appendChild(rightAnt);
-
-        // ✅ Store special ants for movement
-        specialAnts = [
-            { element: leftAnt, position: 0, direction: 1 }, // Left ant moves right
-            { element: rightAnt, position: stickWidth - antSize, direction: -1 } // Right ant moves left
-        ];
-
-        updateRemainingAnts();
-        startTimer();
-        moveAnts();
+    
+        // ✅ Ensure the stick’s position is stable before placing ants
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                let stickRect = stick.getBoundingClientRect(); // ✅ Get updated stick position
+                console.log(`Updated Stick Dimensions - Left: ${stickRect.left}, Width: ${stickRect.width}`);
+    
+                // ✅ Ensure special ants container exists
+                let specialAntsContainer = document.getElementById("special-ants");
+                if (!specialAntsContainer) {
+                    specialAntsContainer = document.createElement("div");
+                    specialAntsContainer.id = "special-ants";
+                    document.body.appendChild(specialAntsContainer);
+                }
+                specialAntsContainer.innerHTML = "";
+    
+                specialAntsContainer.style.position = "absolute";
+                specialAntsContainer.style.left = `${stickRect.left}px`;
+                specialAntsContainer.style.width = `${stickWidth}px`;
+                specialAntsContainer.style.top = `${stickRect.bottom + 5}px`;
+    
+                // ✅ Spawn random ants above the line AFTER layout is stable
+                for (let i = 0; i < numAnts; i++) {
+                    let position = Math.random() * (stickWidth - antSize);
+                    let direction = Math.random() < 0.5 ? -1 : 1;
+                    let symbol = direction === -1 ? "◀" : "▶";
+    
+                    let ant = document.createElement("div");
+                    ant.className = "ant";
+                    ant.textContent = symbol;
+                    ant.style.left = `${position}px`;
+                    stick.appendChild(ant);
+    
+                    ants.push({ element: ant, position, direction });
+                }
+    
+                // ✅ Special left ant (starts at position 0, facing right)
+                let leftAnt = document.createElement("div");
+                leftAnt.className = "special-ant left";
+                leftAnt.textContent = "▶";
+                leftAnt.style.left = "0px";
+                specialAntsContainer.appendChild(leftAnt);
+    
+                // ✅ Special right ant (starts at max position, facing left)
+                let rightAnt = document.createElement("div");
+                rightAnt.className = "special-ant right";
+                rightAnt.textContent = "◀";
+                rightAnt.style.left = `${stickWidth - antSize}px`;
+                specialAntsContainer.appendChild(rightAnt);
+    
+                specialAnts = [
+                    { element: leftAnt, position: 0, direction: 1 },
+                    { element: rightAnt, position: stickWidth - antSize, direction: -1 }
+                ];
+    
+                updateRemainingAnts();
+                startTimer();
+                moveAnts();
+            }, 50); // ✅ Small delay ensures layout updates before placing ants
+        });
     }
+    
 
     function moveAnts() {
         let lastUpdateTime = performance.now();
