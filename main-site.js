@@ -347,7 +347,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 leftAnt.element.style.left = `${leftAnt.position}px`;
                 rightAnt.element.style.left = `${rightAnt.position}px`;
 
-                let collisionThreshold = Math.max(antSize, distanceToMove * 1.1); // ✅ Ensure reliable collision
+                let collisionThreshold = Math.max(antSize / 2, distanceToMove * 1.1); // ✅ Adjust collision range
+
 
                 if (Math.abs(leftAnt.position - rightAnt.position) <= collisionThreshold) {
                     console.log(`✅ Collision detected: Left ${leftAnt.position}, Right ${rightAnt.position}`); // ✅ Debugging log
@@ -409,21 +410,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function startTimer() {
-        let maxTime = (stickWidth / pixelsPerSecond).toFixed(2); // ✅ Max time based on stick width
+        let maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
     
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             let elapsed = (performance.now() - startTime) / 1000;
     
-            // ✅ Only update timer if normal ants are still on the stick
-            if (ants.length > 0) {
-                timerDisplay.textContent = `${elapsed.toFixed(2)} / ${maxTime}`;
-            } else {
+            if (ants.length === 0) {
                 clearInterval(timerInterval);
-                timerDisplay.textContent = `${elapsed.toFixed(2)} / ${maxTime}`; // ✅ Now correctly stops at real elapsed time
+                return; // 🔹 Prevent unnecessary updates
             }
+    
+            timerDisplay.textContent = `${elapsed.toFixed(2)} / ${maxTime}`;
         }, 100);
-    }    
+    }
+    
 
     function stopTimer() {
         clearInterval(timerInterval);
