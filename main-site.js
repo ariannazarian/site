@@ -88,7 +88,6 @@ function setupVideoHandling() {
 }
 
 function loadVideo(el, videoId) {
-    console.log("loadVideo called for videoId:", videoId); // Debugging
 
     // Ensure the clicked element has a valid video ID
     if (!videoId) {
@@ -162,8 +161,6 @@ function toggleVideo(index) {
     let arrow = arrows[index];
     let title = videoTitles[index];
 
-    // Log current state before toggling
-    console.log(`Before toggle: index=${index}, hidden=${videoContainer.classList.contains("hidden")}, display=${videoContainer.style.display}`);
 
     // Toggle visibility
     let isExpanded = !videoContainer.classList.contains("hidden");
@@ -180,12 +177,8 @@ function toggleVideo(index) {
         // Debugging reflow
         setTimeout(() => {
             videoContainer.style.display = "block";
-            console.log(`Reflow applied: index=${index}, display=${videoContainer.style.display}`);
         }, 10); // Small delay to ensure the reflow applies
     }
-
-    // Log updated state
-    console.log(`After toggle: index=${index}, hidden=${videoContainer.classList.contains("hidden")}, display=${videoContainer.style.display}`);
 
     // Pause the video when hiding
     const iframe = videoContainer.querySelector("iframe");
@@ -208,7 +201,6 @@ function setupVideoHandling() {
     document.querySelectorAll(".video-container").forEach(videoContainer => {
         // 🔹 Ensure videos are correctly marked as hidden
         if (!videoContainer.classList.contains("hidden")) {
-            console.log("Fixing missing .hidden class for video:", videoContainer);
             videoContainer.classList.add("hidden");
             videoContainer.style.display = "none"; 
         }
@@ -262,7 +254,6 @@ document.addEventListener("DOMContentLoaded", function () {
         requestAnimationFrame(() => {
             setTimeout(() => {
                 let stickRect = stick.getBoundingClientRect(); // ✅ Get updated stick position
-                console.log(`Updated Stick Dimensions - Left: ${stickRect.left}, Width: ${stickRect.width}`);
     
                 // ✅ Ensure special ants container exists
                 let specialAntsContainer = document.getElementById("special-ants");
@@ -323,7 +314,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function moveAnts() {
         let lastUpdateTime = performance.now();
     
-        function step() {
+        let moveInterval = setInterval(() => {
             let currentTime = performance.now();
             let elapsedTime = (currentTime - lastUpdateTime) / 1000;
             lastUpdateTime = currentTime;
@@ -335,71 +326,71 @@ document.addEventListener("DOMContentLoaded", function () {
                 ant.position += ant.direction * distanceToMove;
                 ant.element.style.left = `${ant.position}px`;
             });
-    
+
             // ✅ Step 2: Move Special Ants and Handle Their Collision
             if (specialAnts.length === 2) {
                 let leftAnt = specialAnts[0];
                 let rightAnt = specialAnts[1];
-    
+
                 leftAnt.position += leftAnt.direction * distanceToMove;
                 rightAnt.position += rightAnt.direction * distanceToMove;
-    
+
                 leftAnt.element.style.left = `${leftAnt.position}px`;
                 rightAnt.element.style.left = `${rightAnt.position}px`;
-    
+
                 let collisionThreshold = Math.max(antSize / 2, distanceToMove * 1.1); // ✅ Adjust collision range
-    
+
+
                 if (Math.abs(leftAnt.position - rightAnt.position) <= collisionThreshold) {
                     console.log(`✅ Collision detected: Left ${leftAnt.position}, Right ${rightAnt.position}`); // ✅ Debugging log
-    
+
                     // ✅ Swap directions
                     [leftAnt.direction, rightAnt.direction] = [rightAnt.direction, leftAnt.direction];
-    
+
                     leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
                     rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
-    
-                    // ✅ Flash effect on collision
+
+                    // ✅ Fix: Access `.element` before adding the class
                     leftAnt.element.classList.add("flash");
                     rightAnt.element.classList.add("flash");
-    
+
+                    // ✅ Remove flash after 100ms
                     setTimeout(() => {
                         leftAnt.element.classList.remove("flash");
                         rightAnt.element.classList.remove("flash");
                     }, 100);
                 }
+
             }
-    
-            // ✅ Step 3: Remove Both Normal and Special Ants When They Fall Off the Stick
+
+            // ✅ Step 3: Remove Both Normal and Special Ants When They Fall Off the Stick (Symmetric Clearing)
             let prevCount = ants.length + specialAnts.length;
-    
+
             function removeAnts(antArray) {
                 return antArray.filter(ant => {
-                    if ((ant.direction === -1 && ant.position + antSize <= 0) || 
-                        (ant.direction === 1 && ant.position >= stickWidth)) {
+                    if ((ant.direction === -1 && ant.position + antSize <= 0) || // ✅ Left-moving ants (`◀`) clear when full width is off `0px`
+                        (ant.direction === 1 && ant.position >= stickWidth)) { // ✅ Right-moving ants (`▶`) clear when full width is off `stickWidth`
                         ant.element.remove();
                         return false;
                     }
                     return true;
                 });
             }
-    
+
             ants = removeAnts(ants);
-            specialAnts = removeAnts(specialAnts);
-    
+            specialAnts = removeAnts(specialAnts); // ✅ Now uses the same clearing rules as normal ants
+
             if (ants.length + specialAnts.length !== prevCount) {
                 updateRemainingAnts();
             }
-    
-            // ✅ Step 4: Stop Simulation When Last Ant Falls Off
-            if (ants.length > 0 || specialAnts.length > 0) {
-                requestAnimationFrame(step); // 🔹 Recursively calls itself when ants remain
-            } else {
+
+            // ✅ Step 4: Stop Simulation Naturally When Last Ant Falls Off
+            if (ants.length === 0 && specialAnts.length === 0) {
+                clearInterval(moveInterval);
                 stopTimer();
                 updateRemainingAnts();
             }
-        }
-    
-        requestAnimationFrame(step); // 🔹 Start the animation loop
+        }, 50);
     }
     
 
