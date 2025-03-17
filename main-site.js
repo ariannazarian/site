@@ -340,24 +340,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 leftAnt.element.style.left = `${leftAnt.position}px`;
                 rightAnt.element.style.left = `${rightAnt.position}px`;
     
-                // ✅ Dynamically adjust collision detection to ensure it always triggers
-                let collisionThreshold = Math.max(antSize, distanceToMove * 1.1); // ✅ Allow slight buffer
+                let collisionThreshold = Math.max(antSize, distanceToMove * 1.1); // ✅ Ensure reliable collision
 
                 if (Math.abs(leftAnt.position - rightAnt.position) <= collisionThreshold) {
-                    // ✅ Swap directions once and let them move apart
+                    console.log(`Collision detected: Left ${leftAnt.position}, Right ${rightAnt.position}`);
+
+                    // ✅ Swap directions
                     [leftAnt.direction, rightAnt.direction] = [rightAnt.direction, leftAnt.direction];
 
                     leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
                     rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
 
-                    // ✅ Visual flash effect on collision
-                    leftAnt.element.style.color = "red";
-                    rightAnt.element.style.color = "red";
+                    // ✅ Flash white on collision, then return to original colors
+                    leftAnt.style.color = "white";
+                    rightAnt.style.color = "white";
+
                     setTimeout(() => {
-                        leftAnt.element.style.color = "white";
-                        rightAnt.element.style.color = "white";
-                    }, 100); // ✅ Flash back after 100ms
+                        leftAnt.style.color = "blue"; // ✅ Always blue
+                        rightAnt.style.color = "red"; // ✅ Always red
+                    }, 100); // ✅ Flash duration
                 }
+
 
 
             }
