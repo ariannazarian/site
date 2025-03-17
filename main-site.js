@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let maxStickWidth = 500; // Max stick length
     let stickWidth = Math.min(window.innerWidth * 0.9, maxStickWidth); // Stick scales up to 500px max
     let maxAnts = 50; // Max number of normal ants
-    let antSize = 1; // Ensuring visible size is correct
+    let antSize = 2; // Ensuring visible size is correct
 
     // ✅ Scale normal ants properly while adding 2 for special ants
     let numAnts = Math.min(maxAnts, Math.floor(stickWidth / (maxStickWidth / maxAnts)));
