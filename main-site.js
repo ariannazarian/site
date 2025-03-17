@@ -343,7 +343,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 let collisionThreshold = Math.max(antSize, distanceToMove * 1.1); // ✅ Ensure reliable collision
 
                 if (Math.abs(leftAnt.position - rightAnt.position) <= collisionThreshold) {
-                    console.log(`Collision detected: Left ${leftAnt.position}, Right ${rightAnt.position}`);
+                    console.log(`✅ Collision detected: Left ${leftAnt.position}, Right ${rightAnt.position}`); // ✅ Debugging log
 
                     // ✅ Swap directions
                     [leftAnt.direction, rightAnt.direction] = [rightAnt.direction, leftAnt.direction];
@@ -355,7 +355,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     leftAnt.classList.add("flash");
                     rightAnt.classList.add("flash");
 
-                    // ✅ Remove flash after 100ms, restoring CSS-defined color
+                    // ✅ Remove flash after 100ms
                     setTimeout(() => {
                         leftAnt.classList.remove("flash");
                         rightAnt.classList.remove("flash");
