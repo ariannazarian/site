@@ -354,10 +354,9 @@ document.addEventListener("DOMContentLoaded", function () {
             let prevCount = ants.length;
 
             ants = ants.filter(ant => {
-                let centerPosition = ant.position + antSize / 2; // ✅ Get center of arrow
 
                 if ((ant.direction === -1 && ant.position <= 0) || // ✅ Left ants clear when tip reaches 0px
-                    (ant.direction === 1 && centerPosition >= stickWidth)) { // ✅ Right ants clear when center reaches stickWidth
+                    (ant.direction === 1 && ant.position >= stickWidth)) { // ✅ Right ants clear when tip reaches stickWidth
                     ant.element.remove();
                     return false;
                 }
