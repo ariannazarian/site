@@ -340,14 +340,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 leftAnt.element.style.left = `${leftAnt.position}px`;
                 rightAnt.element.style.left = `${rightAnt.position}px`;
     
-                // ✅ Detect collision only once at the midpoint
-                if (Math.abs(leftAnt.position - rightAnt.position) <= antSize) {
+                // ✅ Dynamically adjust collision detection to ensure it always triggers
+                let collisionThreshold = Math.max(antSize, distanceToMove * 1.1); // ✅ Allow slight buffer
+
+                if (Math.abs(leftAnt.position - rightAnt.position) <= collisionThreshold) {
                     // ✅ Swap directions once and let them move apart
                     [leftAnt.direction, rightAnt.direction] = [rightAnt.direction, leftAnt.direction];
-    
+
                     leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
                     rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
                 }
+
             }
     
             // ✅ Step 3: Remove Both Normal and Special Ants When They Fall Off the Stick (Symmetric Clearing)
