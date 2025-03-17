@@ -349,7 +349,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
                     rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
+
+                    // ✅ Visual flash effect on collision
+                    leftAnt.element.style.color = "red";
+                    rightAnt.element.style.color = "red";
+                    setTimeout(() => {
+                        leftAnt.element.style.color = "white";
+                        rightAnt.element.style.color = "white";
+                    }, 100); // ✅ Flash back after 100ms
                 }
+
 
             }
     
