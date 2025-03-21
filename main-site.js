@@ -250,12 +250,12 @@ document.addEventListener("DOMContentLoaded", function () {
         specialAnts = [];
         startTime = performance.now();
     
-        // ✅ Ensure the stick’s position is stable before placing ants
+        // Wait for layout to stabilize (mobile-safe)
         requestAnimationFrame(() => {
             setTimeout(() => {
-                let stickRect = stick.getBoundingClientRect(); // ✅ Get updated stick position
+                let stickRect = stick.getBoundingClientRect();
     
-                // ✅ Ensure special ants container exists
+                // Ensure special ants container
                 let specialAntsContainer = document.getElementById("special-ants");
                 if (!specialAntsContainer) {
                     specialAntsContainer = document.createElement("div");
@@ -263,13 +263,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.body.appendChild(specialAntsContainer);
                 }
                 specialAntsContainer.innerHTML = "";
-    
                 specialAntsContainer.style.position = "absolute";
                 specialAntsContainer.style.left = `${stickRect.left}px`;
                 specialAntsContainer.style.width = `${stickWidth}px`;
                 specialAntsContainer.style.top = `${stickRect.bottom + 5}px`;
     
-                // ✅ Spawn random ants above the line AFTER layout is stable
+                // 🐜 Spawn random ants above the line
                 for (let i = 0; i < numAnts; i++) {
                     let position = Math.random() * (stickWidth - antSize);
                     let direction = Math.random() < 0.5 ? -1 : 1;
@@ -284,14 +283,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     ants.push({ element: ant, position, direction });
                 }
     
-                // ✅ Special left ant (starts at position 0, facing right)
+                // 🧭 Special left ant (cyan, starts at 0)
                 let leftAnt = document.createElement("div");
                 leftAnt.className = "special-ant left";
                 leftAnt.textContent = "▶";
                 leftAnt.style.left = "0px";
                 specialAntsContainer.appendChild(leftAnt);
     
-                // ✅ Special right ant (starts at max position, facing left)
+                // 🔴 Special right ant (red, starts at max)
                 let rightAnt = document.createElement("div");
                 rightAnt.className = "special-ant right";
                 rightAnt.textContent = "◀";
@@ -306,13 +305,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateRemainingAnts();
                 startTimer();
                 moveAnts();
-            }, 50); // ✅ Small delay ensures layout updates before placing ants
+            }, 100); // Slightly longer delay for mobile layout stability
         });
-    }
+    }    
     
 
     function moveAnts() {
         let lastUpdateTime = performance.now();
+        let lastCollisionTime = 0;
+        const EPSILON = 0.1;
     
         let moveInterval = setInterval(() => {
             let currentTime = performance.now();
@@ -321,77 +322,81 @@ document.addEventListener("DOMContentLoaded", function () {
     
             let distanceToMove = pixelsPerSecond * elapsedTime;
     
-            // ✅ Step 1: Move All Random Ants at Constant Speed
+            // Move random ants
             ants.forEach(ant => {
                 ant.position += ant.direction * distanceToMove;
                 ant.element.style.left = `${ant.position}px`;
             });
-
-            // ✅ Step 2: Move Special Ants and Handle Their Collision
+    
+            // Move special ants
             if (specialAnts.length === 2) {
                 let leftAnt = specialAnts[0];
                 let rightAnt = specialAnts[1];
-
+    
                 leftAnt.position += leftAnt.direction * distanceToMove;
                 rightAnt.position += rightAnt.direction * distanceToMove;
-
+    
                 leftAnt.element.style.left = `${leftAnt.position}px`;
                 rightAnt.element.style.left = `${rightAnt.position}px`;
-
-                let collisionThreshold = Math.max(antSize / 2, distanceToMove * 1.1); // ✅ Adjust collision range
-
-
+    
+                let collisionThreshold = Math.max(antSize / 2, distanceToMove * 1.1);
                 if (Math.abs(leftAnt.position - rightAnt.position) <= collisionThreshold) {
-                    console.log(`✅ Collision detected: Left ${leftAnt.position}, Right ${rightAnt.position}`); // ✅ Debugging log
-
-                    // ✅ Swap directions
-                    [leftAnt.direction, rightAnt.direction] = [rightAnt.direction, leftAnt.direction];
-
-                    leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
-                    rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
-
-                    // ✅ Fix: Access `.element` before adding the class
-                    leftAnt.element.classList.add("flash");
-                    rightAnt.element.classList.add("flash");
-
-                    // ✅ Remove flash after 100ms
-                    setTimeout(() => {
-                        leftAnt.element.classList.remove("flash");
-                        rightAnt.element.classList.remove("flash");
-                    }, 100);
+                    let now = performance.now();
+                    if (now - lastCollisionTime > 100) { // Cooldown to prevent bounce loops
+                        lastCollisionTime = now;
+    
+                        [leftAnt.direction, rightAnt.direction] = [rightAnt.direction, leftAnt.direction];
+                        leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
+                        rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
+    
+                        // Flash yellow
+                        leftAnt.element.classList.add("flash");
+                        rightAnt.element.classList.add("flash");
+                        setTimeout(() => {
+                            leftAnt.element.classList.remove("flash");
+                            rightAnt.element.classList.remove("flash");
+                        }, 100);
+                    }
                 }
-
             }
-
-            // ✅ Step 3: Remove Both Normal and Special Ants When They Fall Off the Stick (Symmetric Clearing)
+    
+            // Remove ants when they fall off
             let prevCount = ants.length + specialAnts.length;
-
-            function removeAnts(antArray) {
-                return antArray.filter(ant => {
-                    if ((ant.direction === -1 && ant.position + antSize <= 0) || // ✅ Left-moving ants (`◀`) clear when full width is off `0px`
-                        (ant.direction === 1 && ant.position >= stickWidth)) { // ✅ Right-moving ants (`▶`) clear when full width is off `stickWidth`
+            function removeAnts(array) {
+                return array.filter(ant => {
+                    if (
+                        (ant.direction === -1 && ant.position + antSize <= 0 + EPSILON) ||
+                        (ant.direction === 1 && ant.position >= stickWidth - EPSILON)
+                    ) {
                         ant.element.remove();
                         return false;
                     }
                     return true;
                 });
             }
-
+    
             ants = removeAnts(ants);
-            specialAnts = removeAnts(specialAnts); // ✅ Now uses the same clearing rules as normal ants
-
+            specialAnts = removeAnts(specialAnts);
+    
             if (ants.length + specialAnts.length !== prevCount) {
                 updateRemainingAnts();
             }
-
-            // ✅ Step 4: Stop Simulation Naturally When Last Ant Falls Off
+    
+            // Stop timer and animation when complete
             if (ants.length === 0 && specialAnts.length === 0) {
                 clearInterval(moveInterval);
                 stopTimer();
                 updateRemainingAnts();
             }
+    
+            // Debug: check for overrun
+            let elapsed = (performance.now() - startTime) / 1000;
+            if (elapsed > stickWidth / pixelsPerSecond + 1) {
+                console.warn("⚠️ Simulation running longer than theoretical max time");
+            }
         }, 50);
     }
+    
     
 
     function updateRemainingAnts() {
