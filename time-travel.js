@@ -32,21 +32,23 @@ document.addEventListener("DOMContentLoaded", () => {
         let hiddenText = document.querySelector("#hidden-text");
         let arrow = document.querySelector("#eternal-arrow");
         let expanded = hiddenText.style.display === "block";
-
+    
         if (!hasToggledEternalOnce) {
-            arrow.classList.remove("blink-arrow"); // Stop blinking after first toggle
+            arrow.classList.remove("blink-arrow");
             hasToggledEternalOnce = true;
         }
-
+    
         if (expanded) {
             hiddenText.style.display = "none";
             arrow.innerText = "▼";
+            toggleMusicIcon(false); // 🔇 Show sound off
             pauseAudio();
         } else {
             hiddenText.style.display = "block";
             arrow.innerText = "▲";
+            toggleMusicIcon(true); // 🎵 Show sound on
             playAudioWithFadeIn();
-
+    
             if (!hasRevealedStoryOnce) {
                 fadeInStoryGroups(() => {
                     fadeInWatchText();
@@ -61,6 +63,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
+
+    function toggleMusicIcon(isOpen) {
+        const musicIcon = document.getElementById("eternal-music-icon");
+        musicIcon.textContent = isOpen ? "♩Ø" : "♫";
+    }
+    
 
     document.querySelector("#hidden-text").style.display = "none";
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
@@ -305,5 +313,3 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-
-
