@@ -427,4 +427,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     resetSimulation();
+
+    // 🖱️ Allow restarting simulation on click, but only after it's finished
+    document.getElementById("ants-on-line").addEventListener("click", () => {
+        if (ants.length === 0 && specialAnts.length === 0) {
+            resetSimulation();
+        }
+    });
 });
