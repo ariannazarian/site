@@ -253,7 +253,8 @@ document.addEventListener("DOMContentLoaded", () => {
         function fadeInAudio(currentTime) {
             let elapsedTime = currentTime - startTime;
             let progress = elapsedTime / fadeDuration;
-            audio.volume = Math.min(progress, 0.5);
+            const targetVolume = 0.5; // or 1.0 for full volume
+            audio.volume = Math.min(progress * targetVolume, targetVolume);
             if (progress < 1) requestAnimationFrame(fadeInAudio);
         }
 
