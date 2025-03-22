@@ -240,29 +240,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function playAudioWithFadeIn() {
         if (!audio) return;
-
-        audio.volume = 0.0;
+    
         if (!hasStartedOnce) {
             audio.currentTime = 38.5;
             hasStartedOnce = true;
         }
-
-        let fadeDuration = 20000;
-        let startTime = performance.now();
-
+    
+        audio.volume = 0.0;
+    
+        const targetVolume = 0.5;
+        const fadeDuration = 20000;
+        const startTime = performance.now();
+    
         function fadeInAudio(currentTime) {
             let elapsedTime = currentTime - startTime;
             let progress = elapsedTime / fadeDuration;
-            const targetVolume = 0.5; // or 1.0 for full volume
             audio.volume = Math.min(progress * targetVolume, targetVolume);
-            if (progress < 1) requestAnimationFrame(fadeInAudio);
+            if (progress < 1) {
+                requestAnimationFrame(fadeInAudio);
+            }
         }
-
-        audio.play().then(() => {
-            isAudioPlaying = true;
-            requestAnimationFrame(fadeInAudio);
-        }).catch(console.error);
+    
+        // 👇 Play only if not already playing
+        if (!isAudioPlaying) {
+            audio.play().then(() => {
+                isAudioPlaying = true;
+                requestAnimationFrame(fadeInAudio); // 👈 Begin fading only if playback succeeded
+            }).catch(err => {
+                console.warn("Audio play failed:", err);
+            });
+        }
     }
+    
 
     function pauseAudio() {
         if (audio && !audio.paused) {
