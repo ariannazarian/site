@@ -297,29 +297,43 @@ document.addEventListener("DOMContentLoaded", function () {
     let popupYears = document.getElementById("popup-years");
     let popupReset = document.getElementById("popup-reset");
     let popupYearsBox = document.getElementById("popup-years-box");
-    let video = document.getElementById("popup-video");
+    let originalVideo = document.getElementById("popup-video");
+
+    // 🔁 Save original HTML to clone later
+    const originalVideoHTML = originalVideo.outerHTML;
 
     popupYears.addEventListener("change", function () {
         if (popupYears.checked) {
-            // Ensure accessibility is updated
             popupYearsBox.setAttribute("aria-hidden", "false");
 
-            // Load video source only when the pop-up is revealed
-            let source = video.querySelector("source");
-            if (!source.src) {
-                source.src = source.dataset.src;
-                video.load(); // Load the video
-            }
-            video.classList.remove("hidden"); // Show the video
+            // 🔁 Replace the video node
+            const container = document.createElement("div");
+            container.innerHTML = originalVideoHTML;
+            const freshVideo = container.firstElementChild;
+
+            // Make sure the new video is *not hidden*
+            freshVideo.classList.remove("hidden");
+
+            // Replace in DOM and update reference
+            popupYearsBox.replaceChild(freshVideo, originalVideo);
+            originalVideo = freshVideo;
+
+            // Reload + play
+            originalVideo.load();
+            originalVideo.play().catch(err => {
+                console.warn("Autoplay failed:", err);
+            });
         }
     });
 
     popupReset.addEventListener("change", function () {
         if (popupReset.checked) {
-            // Ensure accessibility is updated
             popupYearsBox.setAttribute("aria-hidden", "true");
 
-            video.classList.add("hidden"); // Hide the video when pop-up is closed
+            // Cleanly hide + reset latest video
+            originalVideo.pause();
+            originalVideo.currentTime = 0;
+            originalVideo.classList.add("hidden");
         }
     });
 });
