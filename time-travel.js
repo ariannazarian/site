@@ -294,29 +294,30 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const popupYears = document.getElementById("popup-years");
-    const popupReset = document.getElementById("popup-reset");
-    const popupYearsBox = document.getElementById("popup-years-box");
+    const openBtn = document.getElementById("coordinate-reflections"); // Or the clickable element that opens the popup
+    const closeBtn = document.getElementById("popup-close");
+    const popup = document.getElementById("popup-years-box");
     const videoContainer = document.getElementById("popup-video-container");
 
-    popupYears.addEventListener("change", function () {
-        if (popupYears.checked) {
-            popupYearsBox.setAttribute("aria-hidden", "false");
+    openBtn.addEventListener("click", function () {
+        // Insert a fresh video each time
+        videoContainer.innerHTML = `
+            <video id="popup-video" loop autoplay muted playsinline>
+                <source src="assets/images/london-time.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        `;
 
-            // Insert fresh video
-            videoContainer.innerHTML = `
-                <video id="popup-video" loop autoplay muted playsinline>
-                    <source src="assets/images/london-time.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            `;
-        }
+        popup.setAttribute("aria-hidden", "false");
+        popup.style.visibility = "visible";
+        popup.style.opacity = "1";
     });
 
-    popupReset.addEventListener("change", function () {
-        if (popupReset.checked) {
-            popupYearsBox.setAttribute("aria-hidden", "true");
-            videoContainer.innerHTML = ""; // Removes video to save resources
-        }
+    closeBtn.addEventListener("click", function () {
+        popup.setAttribute("aria-hidden", "true");
+        popup.style.visibility = "hidden";
+        popup.style.opacity = "0";
+        videoContainer.innerHTML = ""; // Cleanup the video
     });
 });
+
