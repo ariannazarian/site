@@ -551,77 +551,71 @@ a.clickable.bold-text:hover {
 #short-films-title:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
-/* 🐜 Ant Simulation Layout & Style */
-
-#ant-wrapper {
-    position: relative;              /* Contains special ants */
-    margin-top: 40px;
-    margin-bottom: 40px;
-    z-index: 0;
-}
 
 #ants-on-line {
     text-align: center;
+    margin-top: 40px; /* Adds space above the simulation */
+    margin-bottom: 40px; /* Adds space below the simulation */
     font-size: 16px;
     color: white;
 }
 
 #stick {
-    position: relative;              /* Anchors absolutely positioned ants */
+    position: relative;
     width: 90vw;
     max-width: 500px;
-    height: 5px;
+    height: 5px; /* Matches ant size for consistency */
     background: white;
     margin: 10px auto 5px;
 }
 
-/* 🟨 Simulation Info Panel */
-#ant-info {
-    display: inline-block;
-    margin-bottom: 20px;
-    line-height: 1.2;
-}
-
-#remaining-ants,
-#timer {
-    font-weight: bold;
-}
-
-/* 🐜 Normal Ants */
-.ant {
+.ant, .special-ant { /* ✅ All ants now share the same styling */
     position: absolute;
-    font-size: 10px;
-    top: -15px;                      /* Above the stick */
-    color: white;
+    font-size: 10px; /* ✅ Ensures normal & special ants are identical */
     transition: left 0.05s linear;
 }
 
+/* ✅ Normal ants above the stick */
+.ant {
+    top: -15px; /* Keeps ants above the line */
+    color: white;
+}
+
 #special-ants {
-    position: absolute;
-    top: 8px;        /* fine-tuned just below the stick */
-    left: 0;         /* flush left */
-    z-index: 2;
+    position: absolute; /* ✅ Ties it to the stick */
+    top: 10px; /* ✅ Moves it below the stick */
     height: 20px;
 }
 
-
-/* 🧭 Special Ants (cyan/red) */
+/* ✅ Special ants keep distinct colors */
 .special-ant {
     position: absolute;
-    font-size: 10px;
-    transition: color 0.1s ease;
+    font-size: 10px; /* ✅ Same size as normal ants */
+    transition: color 0.1s ease; /* ✅ Smooth transition for flash effect */
 }
 
 .special-ant.left {
-    color: #00ffff; /* Cyan */
+    color: #00ffff; /* ✅ Cyan */
 }
 
 .special-ant.right {
-    color: #ff0000; /* Red */
+    color: #ff0000; /* ✅ Red (complementary to cyan) */
 }
 
-/* ⚡ Flash on collision */
+/* ✅ Flash effect on collision */
 .special-ant.flash {
-    color: #ffff00 !important;
-    transition: color 0s;
+    color: #ffff00 !important; /* ✅ Force flash to override default colors */
+    transition: color 0s; /* ✅ Ensure instant flash */
+}
+
+/* ✅ Make only the numbers bold, not the labels */
+#remaining-ants, #timer {
+    font-weight: bold;
+}
+
+/* ✅ Add space between counters and the simulation */
+#ant-info {
+    display: inline-block; /* Ensures proper spacing */
+    margin-bottom: 20px; /* Increased for better separation */
+    line-height: 1.2; /* Adjusts spacing between text elements */
 }

@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (!specialAntsContainer) {
                     specialAntsContainer = document.createElement("div");
                     specialAntsContainer.id = "special-ants";
-                    document.getElementById("stick").appendChild(specialAntsContainer);
+                    document.body.appendChild(specialAntsContainer);
                 }
                 specialAntsContainer.innerHTML = "";
                 specialAntsContainer.style.position = "absolute";
