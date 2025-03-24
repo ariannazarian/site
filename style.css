@@ -457,6 +457,7 @@ img, a {
 
 .work-page .close-button {
     display: block;
+    width: 100%;
     margin-top: 10px;
     background: var(--black);       /* Maintains work page's black background */
     color: var(--white);            /* White text for contrast */
