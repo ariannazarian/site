@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleMusicIcon(isOpen) {
         const musicIcon = document.getElementById("eternal-music-icon");
-        musicIcon.textContent = isOpen ? "♪∅" : "♪♫";
+        musicIcon.textContent = isOpen ? "∅" : "♪";
     }
     
 
