@@ -294,40 +294,32 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const popupYears = document.getElementById("popup-years");
-    const popupReset = document.getElementById("popup-reset");
-    const popupYearsBox = document.getElementById("popup-years-box");
-    const video = document.getElementById("popup-video");
+    let popupYears = document.getElementById("popup-years");
+    let popupReset = document.getElementById("popup-reset");
+    let popupYearsBox = document.getElementById("popup-years-box");
+    let video = document.getElementById("popup-video");
 
     popupYears.addEventListener("change", function () {
         if (popupYears.checked) {
+            // Ensure accessibility is updated
             popupYearsBox.setAttribute("aria-hidden", "false");
 
-            // ✅ Make video visible without display toggle
-            video.style.visibility = "visible";
-            video.style.opacity = "1";
-
-            // ✅ Reset, load, and play
-            video.pause();
-            video.currentTime = 0;
-            video.load();
-            video.play().catch(err => {
-                console.warn("Autoplay issue:", err);
-            });
+            // Load video source only when the pop-up is revealed
+            let source = video.querySelector("source");
+            if (!source.src) {
+                source.src = source.dataset.src;
+                video.load(); // Load the video
+            }
+            video.classList.remove("hidden"); // Show the video
         }
     });
 
     popupReset.addEventListener("change", function () {
         if (popupReset.checked) {
+            // Ensure accessibility is updated
             popupYearsBox.setAttribute("aria-hidden", "true");
 
-            // ✅ Pause and reset
-            video.pause();
-            video.currentTime = 0;
-
-            // ✅ Hide visually without breaking playback on reopen
-            video.style.visibility = "hidden";
-            video.style.opacity = "0";
+            video.classList.add("hidden"); // Hide the video when pop-up is closed
         }
     });
 });
