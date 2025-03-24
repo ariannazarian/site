@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleMusicIcon(isOpen) {
         const musicIcon = document.getElementById("eternal-music-icon");
-        musicIcon.textContent = isOpen ? "∅" : "♪";
+        musicIcon.textContent = isOpen ? "∅" : "♬";
     }
     
 
@@ -301,29 +301,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     popupYears.addEventListener("change", function () {
         if (popupYears.checked) {
-            // Ensure accessibility is updated
             popupYearsBox.setAttribute("aria-hidden", "false");
 
-            // Load video source only when the pop-up is revealed
-            let source = video.querySelector("source");
-            if (!source.src) {
-                source.src = source.dataset.src;
-                video.load(); // Load the video
-            }
-            video.classList.remove("hidden"); // Show the video
+            // ✅ Always reset and reload to ensure autoplay works
+            video.pause();
+            video.currentTime = 0;
+            video.load(); // Reloads the source
+            video.classList.remove("hidden");
+
+            // ✅ Attempt to play the video again
+            video.play().catch(err => {
+                console.warn("Autoplay failed:", err);
+            });
         }
     });
 
     popupReset.addEventListener("change", function () {
         if (popupReset.checked) {
-            // Accessibility update
             popupYearsBox.setAttribute("aria-hidden", "true");
-    
-            // Reset the video when the popup is closed
-            video.pause();                 // Stop playback
-            video.currentTime = 0;        // Reset to start
-            video.classList.add("hidden"); // Hide the video
+
+            // ✅ Pause, rewind, and hide
+            video.pause();
+            video.currentTime = 0;
+            video.classList.add("hidden");
         }
     });
-    
 });
