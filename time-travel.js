@@ -294,34 +294,25 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    let popupYears = document.getElementById("popup-years");
-    let popupReset = document.getElementById("popup-reset");
-    let popupYearsBox = document.getElementById("popup-years-box");
-    let originalVideo = document.getElementById("popup-video");
-
-    // 🔁 Save original HTML to clone later
-    const originalVideoHTML = originalVideo.outerHTML;
+    const popupYears = document.getElementById("popup-years");
+    const popupReset = document.getElementById("popup-reset");
+    const popupYearsBox = document.getElementById("popup-years-box");
+    const video = document.getElementById("popup-video");
 
     popupYears.addEventListener("change", function () {
         if (popupYears.checked) {
             popupYearsBox.setAttribute("aria-hidden", "false");
 
-            // 🔁 Replace the video node
-            const container = document.createElement("div");
-            container.innerHTML = originalVideoHTML;
-            const freshVideo = container.firstElementChild;
+            // ✅ Make video visible without display toggle
+            video.style.visibility = "visible";
+            video.style.opacity = "1";
 
-            // Make sure the new video is *not hidden*
-            freshVideo.classList.remove("hidden");
-
-            // Replace in DOM and update reference
-            popupYearsBox.replaceChild(freshVideo, originalVideo);
-            originalVideo = freshVideo;
-
-            // Reload + play
-            originalVideo.load();
-            originalVideo.play().catch(err => {
-                console.warn("Autoplay failed:", err);
+            // ✅ Reset, load, and play
+            video.pause();
+            video.currentTime = 0;
+            video.load();
+            video.play().catch(err => {
+                console.warn("Autoplay issue:", err);
             });
         }
     });
@@ -330,10 +321,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (popupReset.checked) {
             popupYearsBox.setAttribute("aria-hidden", "true");
 
-            // Cleanly hide + reset latest video
-            originalVideo.pause();
-            originalVideo.currentTime = 0;
-            originalVideo.classList.add("hidden");
+            // ✅ Pause and reset
+            video.pause();
+            video.currentTime = 0;
+
+            // ✅ Hide visually without breaking playback on reopen
+            video.style.visibility = "hidden";
+            video.style.opacity = "0";
         }
     });
 });
