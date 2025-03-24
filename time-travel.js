@@ -294,32 +294,31 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    let popupYears = document.getElementById("popup-years");
-    let popupReset = document.getElementById("popup-reset");
-    let popupYearsBox = document.getElementById("popup-years-box");
-    let video = document.getElementById("popup-video");
+    const popupYears = document.getElementById("popup-years");
+    const popupReset = document.getElementById("popup-reset");
+    const popupYearsBox = document.getElementById("popup-years-box");
+    const videoContainer = document.getElementById("popup-video-container");
 
     popupYears.addEventListener("change", function () {
         if (popupYears.checked) {
-            // Ensure accessibility is updated
             popupYearsBox.setAttribute("aria-hidden", "false");
 
-            // Load video source only when the pop-up is revealed
-            let source = video.querySelector("source");
-            if (!source.src) {
-                source.src = source.dataset.src;
-                video.load(); // Load the video
-            }
-            video.classList.remove("hidden"); // Show the video
+            // 🔁 Insert a fresh video element
+            videoContainer.innerHTML = `
+                <video id="popup-video" loop autoplay muted playsinline>
+                    <source src="assets/images/london-time.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            `;
         }
     });
 
     popupReset.addEventListener("change", function () {
         if (popupReset.checked) {
-            // Ensure accessibility is updated
             popupYearsBox.setAttribute("aria-hidden", "true");
 
-            video.classList.add("hidden"); // Hide the video when pop-up is closed
+            // ❌ Remove the video entirely
+            videoContainer.innerHTML = "";
         }
     });
 });
