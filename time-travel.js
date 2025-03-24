@@ -303,7 +303,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (popupYears.checked) {
             popupYearsBox.setAttribute("aria-hidden", "false");
 
-            // 🔁 Insert a fresh video element
+            // Insert fresh video
             videoContainer.innerHTML = `
                 <video id="popup-video" loop autoplay muted playsinline>
                     <source src="assets/images/london-time.mp4" type="video/mp4">
@@ -316,9 +316,7 @@ document.addEventListener("DOMContentLoaded", function () {
     popupReset.addEventListener("change", function () {
         if (popupReset.checked) {
             popupYearsBox.setAttribute("aria-hidden", "true");
-
-            // ❌ Remove the video entirely
-            videoContainer.innerHTML = "";
+            videoContainer.innerHTML = ""; // Removes video to save resources
         }
     });
 });
