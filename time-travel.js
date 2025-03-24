@@ -316,10 +316,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     popupReset.addEventListener("change", function () {
         if (popupReset.checked) {
-            // Ensure accessibility is updated
+            // Accessibility update
             popupYearsBox.setAttribute("aria-hidden", "true");
-
-            video.classList.add("hidden"); // Hide the video when pop-up is closed
+    
+            // Reset the video when the popup is closed
+            video.pause();                 // Stop playback
+            video.currentTime = 0;        // Reset to start
+            video.classList.add("hidden"); // Hide the video
         }
     });
+    
 });
