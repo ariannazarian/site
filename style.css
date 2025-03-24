@@ -426,7 +426,7 @@ img, a {
     user-select: none; /* Prevents selection */
 }
 
-/* 🔹 Work Page-Specific Pop-Up Styling */
+/* 🔹 Work Page-Specific Pop-Up Styling (JS-driven) */
 .work-page .popup {
     position: fixed;
     top: 50%;
@@ -449,17 +449,10 @@ img, a {
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
-/* 🔹 Show the correct pop-up when its radio is selected */
-.work-page .popup-radio:checked + .popup {
+/* ✅ JavaScript-controlled visibility (no radios) */
+.work-page .popup[aria-hidden="false"] {
     opacity: 1;
     visibility: visible;
-    display: block;
-}
-
-/* 🔹 Hide all pop-ups when reset is checked */
-.work-page #popup-reset:checked ~ .popup {
-    opacity: 0;
-    visibility: hidden;
 }
 
 /* 🔹 Close button styling (Work Page) */
@@ -476,9 +469,8 @@ img, a {
     text-align: center;
 }
 
-/* 🔹 Close button hover effect */
 .work-page .close-button:hover {
-    background: #333; /* Slightly lighter black for hover effect */
+    background: #333;
 }
 
 /* 🔹 Clickable coordinate reflections & matching years */
@@ -491,13 +483,12 @@ img, a {
     transition: text-shadow 0.3s ease;
 }
 
-/* 🔹 Hover effect */
 .work-page #coordinate-reflections:hover,
 .work-page .year-item:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
 
-/* Ensure the video scales properly inside the pop-up */
+/* 🔹 Video scaling inside popup */
 .popup video {
     width: 100%;
     max-width: 100%;
@@ -507,10 +498,6 @@ img, a {
     border-radius: 8px;
 }
 
-/* Initially hide the video */
-.hidden {
-    display: none;
-}
 
 /* Ensure the Mathematical Framework link stays bold, same color, and no underline */
 a.clickable.bold-text {
