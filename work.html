@@ -73,17 +73,23 @@
             <span id="matching-years-list"></span>
         </p>
 
-        <!-- NEW JavaScript popup structure -->
+        <!-- 🔹 Preloaded hidden video (load once, reuse) -->
+        <video id="preload-video" muted playsinline preload="auto" style="display: none;">
+            <source src="assets/images/london-time.mp4" type="video/mp4">
+        </video>
+        
+        <!-- 🔹 JavaScript-controlled popup -->
         <div class="popup" id="popup-years-box" role="dialog" aria-label="Snippets of London from the 1880s to present day" aria-hidden="true">
             <p><strong>London, Timeless: 1880s–Present</strong></p>
-
-            <!-- JS will insert video here -->
+        
+            <!-- JS will insert cloned video here -->
             <div id="popup-video-container"></div>
-
+        
             <p>Time flies, the sun will rise… and the taxman never dies.</p>
-
+        
             <button id="popup-close" class="close-button">close</button>
         </div>
+  
 
 
 

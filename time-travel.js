@@ -294,45 +294,45 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+    const matchingYearsContainer = document.getElementById("matching-years-list");
     const popup = document.getElementById("popup-years-box");
     const videoContainer = document.getElementById("popup-video-container");
     const closeBtn = document.getElementById("popup-close");
-    const matchingYearsContainer = document.getElementById("matching-years-list");
+    const preloadVideo = document.getElementById("preload-video");
 
-    // ✅ Handle click on dynamically generated year
+    // ✅ Handle dynamic year clicks via event delegation
     matchingYearsContainer.addEventListener("click", function (event) {
         const target = event.target;
         if (target.classList.contains("year-item")) {
-            // Show popup
+            // Clone the preloaded video
+            const clonedVideo = preloadVideo.cloneNode(true);
+            clonedVideo.id = "popup-video"; // Assign new ID for consistency
+            clonedVideo.setAttribute("loop", "");
+            clonedVideo.style.display = "block";
+
+            // Clear container & insert cloned video
+            videoContainer.innerHTML = "";
+            videoContainer.appendChild(clonedVideo);
+
+            // Show the popup
             popup.setAttribute("aria-hidden", "false");
             popup.style.visibility = "visible";
             popup.style.opacity = "1";
 
-            // Insert fresh video
-            videoContainer.innerHTML = `
-                <video id="popup-video" loop autoplay muted playsinline>
-                    <source src="assets/images/london-time.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            `;
-
-            // Try to autoplay after layout
+            // Force playback
             setTimeout(() => {
-                const video = document.getElementById("popup-video");
-                if (video) {
-                    video.play().catch(err => {
-                        console.warn("Autoplay blocked:", err);
-                    });
-                }
-            }, 50);
+                clonedVideo.play().catch(err => {
+                    console.warn("Autoplay blocked:", err);
+                });
+            }, 10);
         }
     });
 
-    // ✅ Close popup and stop video
+    // ✅ Handle close button
     closeBtn.addEventListener("click", function () {
         popup.setAttribute("aria-hidden", "true");
         popup.style.visibility = "hidden";
         popup.style.opacity = "0";
-        videoContainer.innerHTML = ""; // Fully remove video to stop loop
+        videoContainer.innerHTML = ""; // Remove the video
     });
 });
