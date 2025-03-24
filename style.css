@@ -569,7 +569,25 @@ a.clickable.bold-text:hover {
     margin: 10px auto 5px;
 }
 
-.ant, .special-ant { /* ✅ All ants now share the same styling */
+/* 🧱 Wrapper for ant simulation to contain special ants */
+#ant-wrapper {
+    position: relative;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    z-index: 0;
+}
+
+/* ✅ Special ants container always positioned below the stick */
+#special-ants {
+    position: absolute;
+    top: 100%;     /* just below the stick */
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    height: 20px;
+}
+
+.ant { /* ✅ All ants now share the same styling */
     position: absolute;
     font-size: 10px; /* ✅ Ensures normal & special ants are identical */
     transition: left 0.05s linear;
@@ -619,4 +637,3 @@ a.clickable.bold-text:hover {
     margin-bottom: 20px; /* Increased for better separation */
     line-height: 1.2; /* Adjusts spacing between text elements */
 }
-
