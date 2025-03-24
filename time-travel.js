@@ -301,29 +301,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     popupYears.addEventListener("change", function () {
         if (popupYears.checked) {
+            // Ensure accessibility is updated
             popupYearsBox.setAttribute("aria-hidden", "false");
 
-            // ✅ Always reset and reload to ensure autoplay works
-            video.pause();
-            video.currentTime = 0;
-            video.load(); // Reloads the source
-            video.classList.remove("hidden");
-
-            // ✅ Attempt to play the video again
-            video.play().catch(err => {
-                console.warn("Autoplay failed:", err);
-            });
+            // Load video source only when the pop-up is revealed
+            let source = video.querySelector("source");
+            if (!source.src) {
+                source.src = source.dataset.src;
+                video.load(); // Load the video
+            }
+            video.classList.remove("hidden"); // Show the video
         }
     });
 
     popupReset.addEventListener("change", function () {
         if (popupReset.checked) {
+            // Ensure accessibility is updated
             popupYearsBox.setAttribute("aria-hidden", "true");
 
-            // ✅ Pause, rewind, and hide
-            video.pause();
-            video.currentTime = 0;
-            video.classList.add("hidden");
+            video.classList.add("hidden"); // Hide the video when pop-up is closed
         }
     });
 });
