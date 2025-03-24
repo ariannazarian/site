@@ -294,32 +294,51 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    let popupYears = document.getElementById("popup-years");
-    let popupReset = document.getElementById("popup-reset");
-    let popupYearsBox = document.getElementById("popup-years-box");
-    let video = document.getElementById("popup-video");
+    const popupYears = document.getElementById("popup-years");
+    const popupReset = document.getElementById("popup-reset");
+    const popupYearsBox = document.getElementById("popup-years-box");
+    const video = document.getElementById("popup-video");
 
-    popupYears.addEventListener("change", function () {
-        if (popupYears.checked) {
-            // Ensure accessibility is updated
-            popupYearsBox.setAttribute("aria-hidden", "false");
+    const eternalTitle = document.getElementById("eternal-title");
+    const hiddenText = document.getElementById("hidden-text");
 
-            // Load video source only when the pop-up is revealed
-            let source = video.querySelector("source");
-            if (!source.src) {
-                source.src = source.dataset.src;
-                video.load(); // Load the video
-            }
-            video.classList.remove("hidden"); // Show the video
+    // Handle Eternal Watch toggle
+    eternalTitle.addEventListener("click", function () {
+        const isExpanded = eternalTitle.getAttribute("aria-expanded") === "true";
+
+        if (isExpanded) {
+            // Collapse The Eternal Watch
+            hiddenText.classList.add("hidden");
+            eternalTitle.setAttribute("aria-expanded", "false");
+
+            // ✅ Also close the popup and stop the video safely
+            popupReset.checked = true;
+        } else {
+            // Expand The Eternal Watch
+            hiddenText.classList.remove("hidden");
+            eternalTitle.setAttribute("aria-expanded", "true");
         }
     });
 
+    // When the popup is opened
+    popupYears.addEventListener("change", function () {
+        if (popupYears.checked) {
+            popupYearsBox.setAttribute("aria-hidden", "false");
+
+            // Make sure video is visible
+            video.classList.remove("hidden");
+        }
+    });
+
+    // When the popup is closed
     popupReset.addEventListener("change", function () {
         if (popupReset.checked) {
-            // Ensure accessibility is updated
             popupYearsBox.setAttribute("aria-hidden", "true");
 
-            video.classList.add("hidden"); // Hide the video when pop-up is closed
+            // Hide the video visually
+            video.classList.add("hidden");
+
+            // ✅ No pause(), no currentTime reset, no load()
         }
     });
 });
