@@ -596,15 +596,14 @@ a.clickable.bold-text:hover {
     transition: left 0.05s linear;
 }
 
-/* 🐜 Special Ant Container */
 #special-ants {
     position: absolute;
-    top: 10px;                       /* Just below the stick */
-    left: 0;
-    width: 100%;
-    height: 20px;
+    top: 8px;        /* fine-tuned just below the stick */
+    left: 0;         /* flush left */
     z-index: 2;
+    height: 20px;
 }
+
 
 /* 🧭 Special Ants (cyan/red) */
 .special-ant {
