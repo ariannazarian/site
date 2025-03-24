@@ -455,22 +455,24 @@ img, a {
     visibility: visible;
 }
 
-/* 🔹 Close button styling (Work Page) */
 .work-page .close-button {
     display: block;
     margin-top: 10px;
-    background: var(--black); /* Black background */
-    color: var(--white); /* White text */
-    padding: 5px 10px;
-    border-radius: 5px;
+    background: var(--black);       /* Maintains work page's black background */
+    color: var(--white);            /* White text for contrast */
+    padding: 5px 10px;              /* Same spacing as other popups */
+    border-radius: 5px;             /* Same rounded corners */
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     text-align: center;
+    font-family: inherit;
+    border: none;
+    transition: background 0.2s ease;
 }
 
 .work-page .close-button:hover {
-    background: #333;
+    background: #000000;
 }
 
 /* 🔹 Clickable coordinate reflections & matching years */
