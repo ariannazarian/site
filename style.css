@@ -619,3 +619,11 @@ a.clickable.bold-text:hover {
     margin-bottom: 20px; /* Increased for better separation */
     line-height: 1.2; /* Adjusts spacing between text elements */
 }
+
+.work-page .video-title {
+    color: black !important; /* Make it visible on white popup */
+}
+
+.work-page .video-title:hover {
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); /* subtle black glow */
+}
