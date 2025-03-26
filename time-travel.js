@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const frozenTime = new Date();
     const audio = document.querySelector("#eternal-audio");
-    let isAudioPlaying = false;
-    let hasStartedOnce = false;
     let hasRevealedStoryOnce = false;
     let hasRevealedYearsOnce = false;
     let hasRevealedLatinOnce = false;
@@ -41,13 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (expanded) {
             hiddenText.style.display = "none";
             arrow.innerText = "▼";
-            toggleMusicIcon(false); // 🔇 Show sound off
-            pauseAudio();
         } else {
             hiddenText.style.display = "block";
             arrow.innerText = "▲";
-            toggleMusicIcon(true); // 🎵 Show sound on
-            playAudioWithFadeIn();
     
             if (!hasRevealedStoryOnce) {
                 fadeInStoryGroups(() => {
@@ -62,11 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 fadeInWatchText();
             }
         }
-    }
-
-    function toggleMusicIcon(isOpen) {
-        const musicIcon = document.getElementById("eternal-music-icon");
-        musicIcon.textContent = isOpen ? "∅" : "♬";
     }
     
 
@@ -238,48 +227,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 50);
     }
 
-    function playAudioWithFadeIn() {
-        if (!audio) return;
-    
-        if (!hasStartedOnce) {
-            audio.currentTime = 38.5;
-            hasStartedOnce = true;
-        }
-    
-        audio.volume = 0.0;
-    
-        const targetVolume = 0.5;
-        const fadeDuration = 20000;
-        const startTime = performance.now();
-    
-        function fadeInAudio(currentTime) {
-            let elapsedTime = currentTime - startTime;
-            let progress = elapsedTime / fadeDuration;
-            audio.volume = Math.min(progress * targetVolume, targetVolume);
-            if (progress < 1) {
-                requestAnimationFrame(fadeInAudio);
-            }
-        }
-    
-        // 👇 Play only if not already playing
-        if (!isAudioPlaying) {
-            audio.play().then(() => {
-                isAudioPlaying = true;
-                requestAnimationFrame(fadeInAudio); // 👈 Begin fading only if playback succeeded
-            }).catch(err => {
-                console.warn("Audio play failed:", err);
-            });
-        }
-    }
-    
-
-    function pauseAudio() {
-        if (audio && !audio.paused) {
-            audio.pause();
-            isAudioPlaying = false;
-        }
-    }
-
     document.querySelectorAll(".toggle-text").forEach(element => {
         element.addEventListener("click", () => {
             let translations = {
@@ -335,4 +282,53 @@ document.addEventListener("DOMContentLoaded", function () {
         popup.style.opacity = "0";
         videoContainer.innerHTML = ""; // Fully remove video to stop loop
     });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const audio = document.getElementById("eternal-audio");
+    const popupToggle = document.getElementById("popup-audio-toggle");
+    const audioIcon = document.getElementById("popup-audio-icon");
+    const popupCloseBtn = document.getElementById("popup-close");
+
+    let fadeInterval = null;
+
+    function fadeInAudio() {
+        audio.volume = 0;
+        audio.currentTime = 38.5;
+        audio.play().catch(() => {});
+        clearInterval(fadeInterval);
+        fadeInterval = setInterval(() => {
+            if (audio.volume < 0.8) {
+                audio.volume = Math.min(audio.volume + 0.02, 0.8);
+            } else {
+                clearInterval(fadeInterval);
+            }
+        }, 100);
+    }
+
+    function toggleAudioPlayback() {
+        if (audio.paused) {
+            fadeInAudio();
+            audioIcon.textContent = "∅";
+        } else {
+            audio.pause();
+            audioIcon.textContent = "♬";
+        }
+    }
+
+    function stopAndResetAudio() {
+        audio.pause();
+        audio.currentTime = 38.5;
+        audio.volume = 0;
+        audioIcon.textContent = "♬";
+        clearInterval(fadeInterval);
+    }
+
+    if (popupToggle) {
+        popupToggle.addEventListener("click", toggleAudioPlayback);
+    }
+
+    if (popupCloseBtn) {
+        popupCloseBtn.addEventListener("click", stopAndResetAudio);
+    }
 });
