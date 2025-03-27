@@ -627,3 +627,18 @@ a.clickable.bold-text:hover {
 .work-page .video-title:hover {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); /* subtle black glow */
 }
+
+@keyframes wiggleScale {
+    0%   { transform: scale(1) rotate(0deg); }
+    15%  { transform: scale(1.03) rotate(-3deg); }
+    30%  { transform: scale(1.03) rotate(3deg); }
+    45%  { transform: scale(1.02) rotate(-2deg); }
+    60%  { transform: scale(1.02) rotate(2deg); }
+    75%  { transform: scale(1.01) rotate(-1deg); }
+    90%  { transform: scale(1.01) rotate(1deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+.attention-pulse {
+    animation: wiggleScale 1s ease-in-out;
+}
