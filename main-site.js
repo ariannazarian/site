@@ -437,38 +437,40 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Only run on homepage
-    if (!document.body.contains(document.querySelector(".personal-text"))) return;
-
+    // Only run on index.html
+    const isHomepage = document.querySelector(".personal-text");
+    if (!isHomepage) return;
+  
     const targets = [
-        document.querySelector('label[for="popup-ariann"]'),
-        document.querySelector('label[for="popup-usc"]'),
-        document.querySelector('label[for="popup-edu"]'),
-        document.querySelector('a[href="personal.html"]'),
-        document.querySelector('a[href="work.html"]'),
-        document.querySelector('#header-image')
-    ];
-
+      document.querySelector('label[for="popup-ariann"]'),
+      document.querySelector('label[for="popup-usc"]'),
+      document.querySelector('label[for="popup-edu"]'),
+      document.querySelector('a[href="personal.html"]'),
+      document.querySelector('a[href="work.html"]'),
+      document.querySelector('#header-image')
+    ].filter(Boolean); // Remove nulls if any elements are missing
+  
     const clicked = new Set();
-
+  
     targets.forEach(el => {
-        if (el) {
-            el.addEventListener("click", () => clicked.add(el));
-        }
+      el.addEventListener("click", () => {
+        clicked.add(el);
+      });
     });
-
+  
     function pulseOneUnclicked() {
-        const unclicked = targets.filter(el => el && !clicked.has(el));
-        if (unclicked.length === 0) return;
-
-        const randomEl = unclicked[Math.floor(Math.random() * unclicked.length)];
-        randomEl.classList.add("attention-pulse");
-
-        // Remove the class after animation ends so it can be re-applied later
-        setTimeout(() => {
-            randomEl.classList.remove("attention-pulse");
-        }, 1200); // Slightly more than 1s
+      const unclicked = targets.filter(el => !clicked.has(el));
+      if (unclicked.length === 0) return;
+  
+      const randomEl = unclicked[Math.floor(Math.random() * unclicked.length)];
+      randomEl.classList.add("attention-pulse");
+  
+      // Remove class after animation ends
+      setTimeout(() => {
+        randomEl.classList.remove("attention-pulse");
+      }, 1200); // Slightly more than 1s
     }
-
-    setInterval(pulseOneUnclicked, 15000); // Every 15 seconds
-});
+  
+    setInterval(pulseOneUnclicked, 15000);
+  });
+  
