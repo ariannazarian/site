@@ -437,70 +437,80 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // ✅ Prevent any animation setup if not on index
-    if (!document.body.classList.contains('index-page')) return;
-  
-    // 🧠 Wiggle logic begins here — ONLY on index.html
     const targets = {
-      'link-personal': document.querySelector('#link-personal'),
-      'link-work': document.querySelector('#link-work'),
-      'label-ariann': document.querySelector('#label-ariann'),
-      'label-usc': document.querySelector('#label-usc'),
-      'label-edu': document.querySelector('#label-edu'),
-      'header-img': document.querySelector('#header-img')
+        'link-personal': document.querySelector('#link-personal'),
+        'link-work': document.querySelector('#link-work'),
+        'label-ariann': document.querySelector('#label-ariann'),
+        'label-usc': document.querySelector('#label-usc'),
+        'label-edu': document.querySelector('#label-edu'),
+        'header-img': document.querySelector('#header-img')
     };
-  
+
     const unclicked = new Set(Object.keys(targets));
     let lastAnimated = null;
     let secondLastAnimated = null;
-  
-    const markClicked = (id) => {
-      unclicked.delete(id);
-    };
-  
-    for (const [id, element] of Object.entries(targets)) {
-      if (element) {
-        element.addEventListener('click', () => markClicked(id));
-      }
-    }
-  
+
+    // Visibility tracking
+    const visibleTargets = new Set();
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const id = Object.entries(targets).find(([_, el]) => el === entry.target)?.[0];
+            if (!id) return;
+
+            if (entry.isIntersecting) {
+                visibleTargets.add(id);
+            } else {
+                visibleTargets.delete(id);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    // Observe all targets
+    Object.entries(targets).forEach(([id, el]) => {
+        if (el) observer.observe(el);
+        el?.addEventListener('click', () => unclicked.delete(id));
+    });
+
     const animateRandom = () => {
-      if (unclicked.size === 0) return;
-  
-      const unclickedArray = Array.from(unclicked);
-      let candidates = [...unclickedArray];
-  
-      if (unclickedArray.length > 2) {
-        candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
-      } else if (unclickedArray.length === 2 && lastAnimated !== null) {
-        candidates = candidates.filter(id => id !== lastAnimated);
-      }
-  
-      if (candidates.length === 0) {
-        candidates = unclickedArray;
-      }
-  
-      const randomId = candidates[Math.floor(Math.random() * candidates.length)];
-      const element = targets[randomId];
-  
-      if (element) {
-        element.classList.remove('wiggle');
-        void element.offsetWidth;
-        element.classList.add('wiggle');
-  
-        secondLastAnimated = lastAnimated;
-        lastAnimated = randomId;
-  
-        setTimeout(() => {
-          element.classList.remove('wiggle');
-        }, 1100); // match duration
-      }
+        if (unclicked.size === 0) return;
+
+        const eligible = Array.from(unclicked).filter(id => visibleTargets.has(id));
+        if (eligible.length === 0) return;
+
+        let candidates = [...eligible];
+
+        if (eligible.length > 2) {
+            candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
+        } else if (eligible.length === 2 && lastAnimated) {
+            candidates = candidates.filter(id => id !== lastAnimated);
+        }
+
+        if (candidates.length === 0) {
+            candidates = eligible;
+        }
+
+        const randomId = candidates[Math.floor(Math.random() * candidates.length)];
+        const element = targets[randomId];
+
+        if (element) {
+            element.classList.remove('wiggle');
+            void element.offsetWidth;
+            element.classList.add('wiggle');
+
+            secondLastAnimated = lastAnimated;
+            lastAnimated = randomId;
+
+            setTimeout(() => {
+                element.classList.remove('wiggle');
+            }, 1100); // match duration
+        }
     };
-  
-    // ⏱ Custom timing: first wait 13.9s, then every 6.4s
+
+    // First run after 13.9s, then every 6.4s
     setTimeout(() => {
-      animateRandom();
-      setInterval(animateRandom, 6400);
+        animateRandom();
+        setInterval(animateRandom, 6400);
     }, 13900);
-  });
-  
+});
+
