@@ -471,5 +471,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    setInterval(animateRandom, 15000); // every 15 seconds
+    setInterval(animateRandom, 7000); // every 7 seconds
 });
