@@ -437,7 +437,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Target interactive elements
+    // Interactive element targets
     const targets = {
         'link-personal': document.querySelector('#link-personal'),
         'link-work': document.querySelector('#link-work'),
@@ -451,19 +451,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastAnimated = null;
     let secondLastAnimated = null;
 
-    // Mark an element as clicked so it no longer animates
     const markClicked = (id) => {
         unclicked.delete(id);
     };
 
-    // Attach click handlers
     for (const [id, element] of Object.entries(targets)) {
         if (element) {
             element.addEventListener('click', () => markClicked(id));
         }
     }
 
-    // Function to animate a random unclicked element
     const animateRandom = () => {
         if (unclicked.size === 0) return;
 
@@ -471,14 +468,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let candidates = [...unclickedArray];
 
         if (unclickedArray.length > 2) {
-            // Avoid last two animated
             candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
         } else if (unclickedArray.length === 2 && lastAnimated !== null) {
-            // Alternate between last two
             candidates = candidates.filter(id => id !== lastAnimated);
         }
 
-        // If filtering leaves no candidates, use full unclicked array
         if (candidates.length === 0) {
             candidates = unclickedArray;
         }
@@ -488,24 +482,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (element) {
             element.classList.remove('wiggle');
-            void element.offsetWidth; // force reflow
+            void element.offsetWidth; // trigger reflow
             element.classList.add('wiggle');
 
-            // Update history
             secondLastAnimated = lastAnimated;
             lastAnimated = randomId;
 
             setTimeout(() => {
                 element.classList.remove('wiggle');
-            }, 900); // match animation duration (0.9s)
+            }, 1100); // match animation duration
         }
     };
 
-    // First animation after 14.1 seconds
+    // First animation after 13.9s, then every 6.4s
     setTimeout(() => {
         animateRandom();
-
-        // Then repeat every 6.6 seconds
-        setInterval(animateRandom, 6600);
-    }, 14100);
+        setInterval(animateRandom, 6400);
+    }, 13900);
 });
