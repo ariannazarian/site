@@ -471,6 +471,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    setInterval(animateRandom, 7000); // every 7 seconds
+    setInterval(animateRandom, 3000); // every 3 seconds
+
+    console.log("Loaded elements:");
+for (const [id, el] of Object.entries(targets)) {
+    console.log(id, "->", el);
+}
+
 });
 

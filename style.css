@@ -638,4 +638,7 @@ a.clickable.bold-text:hover {
 
 .wiggle {
     animation: gentle-wiggle 0.6s ease;
+    outline: 3px dashed yellow !important;
+    background-color: rgba(255,255,0,0.1) !important;
 }
+
