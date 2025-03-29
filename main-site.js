@@ -440,10 +440,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const targets = {
         'link-personal': document.querySelector('#link-personal'),
         'link-work': document.querySelector('#link-work'),
-        'label-ariann': document.querySelector('label[for="popup-ariann"]'),
-        'label-usc': document.querySelector('label[for="popup-usc"]'),
-        'label-edu': document.querySelector('label[for="popup-edu"]'),
-        'header-image': document.querySelector('#header-image')
+        'label-ariann': document.querySelector('#label-ariann'),
+        'label-usc': document.querySelector('#label-usc'),
+        'label-edu': document.querySelector('#label-edu'),
+        'header-img': document.querySelector('#header-img')
     };
 
     const unclicked = new Set(Object.keys(targets));
@@ -467,9 +467,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (element) {
             element.classList.add('wiggle');
-            setTimeout(() => element.classList.remove('wiggle'), 600); // match animation duration
+            setTimeout(() => element.classList.remove('wiggle'), 600);
         }
     };
 
     setInterval(animateRandom, 7000); // every 7 seconds
 });
+
