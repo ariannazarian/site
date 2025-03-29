@@ -437,6 +437,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (!document.body.classList.contains('index-page')) return;
     const targets = {
         'link-personal': document.querySelector('#link-personal'),
         'link-work': document.querySelector('#link-work'),
