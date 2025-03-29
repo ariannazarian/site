@@ -493,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 element.classList.remove('wiggle');
-            }, 600);
+            }, 900);
         }
     };
 
