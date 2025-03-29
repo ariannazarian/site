@@ -513,3 +513,65 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(animateRandom, 6400);
     }, 13900);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  
+    if (!prefersReduced) return;
+  
+    // Elements to spotlight
+    const targetIDs = [
+      'link-personal',
+      'link-work',
+      'label-ariann',
+      'label-usc',
+      'label-edu',
+      'header-img'
+    ];
+  
+    const targets = targetIDs
+      .map(id => document.getElementById(id))
+      .filter(el => el !== null);
+  
+    const unclicked = new Set(targets.map(el => el.id));
+    let spotlightIndex = 0;
+  
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'spotlight-overlay';
+    document.body.appendChild(overlay);
+  
+    // Mark clicked
+    targets.forEach(el => {
+      el.addEventListener('click', () => unclicked.delete(el.id));
+    });
+  
+    const cycleSpotlight = () => {
+      const eligible = targets.filter(el => unclicked.has(el.id));
+      if (eligible.length === 0) {
+        overlay.classList.remove('active');
+        targets.forEach(el => el.classList.remove('spotlighted'));
+        return;
+      }
+  
+      // Remove old spotlight
+      targets.forEach(el => el.classList.remove('spotlighted'));
+  
+      // Update overlay
+      overlay.classList.add('active');
+  
+      // Hesitate before lighting next
+      setTimeout(() => {
+        const el = eligible[spotlightIndex % eligible.length];
+        el.classList.add('spotlighted');
+        spotlightIndex++;
+      }, 350); // Hesitation delay
+    };
+  
+    // Initial trigger
+    setTimeout(() => {
+      cycleSpotlight();
+      setInterval(cycleSpotlight, 6400);
+    }, 13900);
+  });
+  
