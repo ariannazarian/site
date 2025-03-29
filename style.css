@@ -630,25 +630,37 @@ a.clickable.bold-text:hover {
 
 @keyframes refined-wiggle {
     0%   { transform: scale(1, 1) rotate(0deg); filter: blur(0px); }
-  
     10%  { transform: scale(1.025, 0.975) rotate(-2deg); filter: blur(0.05px); }
     22%  { transform: scale(0.98, 1.02) rotate(2deg); filter: blur(0.15px); }
     36%  { transform: scale(1.015, 0.985) rotate(-1.4deg); filter: blur(0.2px); }
     52%  { transform: scale(0.99, 1.01) rotate(1.1deg); filter: blur(0.1px); }
     68%  { transform: scale(1.005, 0.995) rotate(-0.6deg); filter: blur(0.05px); }
     84%  { transform: scale(0.997, 1.003) rotate(0.3deg); filter: blur(0.02px); }
-  
     100% { transform: scale(1, 1) rotate(0deg); filter: blur(0px); }
   }
   
   .wiggle {
-    animation: refined-wiggle 1.1s cubic-bezier(0.45, 0, 0.2, 1);
+    animation: refined-wiggle 1.2s cubic-bezier(0.45, 0, 0.2, 1);
     animation-fill-mode: both;
     will-change: transform, filter;
     transform-origin: center;
   }
   
-    
+  /* ✅ Reduced motion users get a soft glow instead of movement */
+  @media (prefers-reduced-motion: reduce) {
+    @keyframes glow-pulse {
+      0%   { box-shadow: 0 0 0 transparent; }
+      50%  { box-shadow: 0 0 10px rgba(255, 240, 150, 0.25); }
+      100% { box-shadow: 0 0 0 transparent; }
+    }
+  
+    .wiggle {
+      animation: glow-pulse 1.2s ease-in-out;
+      animation-fill-mode: both;
+      transform: none !important;
+      filter: none !important;
+    }
+  }  
 
 /* Allow transform animations to show */
 #link-personal,

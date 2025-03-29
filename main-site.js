@@ -450,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const unclicked = new Set(Object.keys(targets));
     let lastAnimated = null;
     let secondLastAnimated = null;
-    const animationDuration = 1100; // match refined-wiggle duration in ms
+    const animationDuration = 1200; // match refined-wiggle duration in ms
   
     // Mark elements as clicked when interacted with
     for (const [id, element] of Object.entries(targets)) {
@@ -504,10 +504,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
   
-    // Start after 13.9s, repeat every 6.4s
+    // Start after 13.8s, repeat every 6.3s
     setTimeout(() => {
       animateRandom();
-      setInterval(animateRandom, 6400);
-    }, 13900);
+      setInterval(animateRandom, 6300);
+    }, 13800);
   });
   
