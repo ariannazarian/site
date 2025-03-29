@@ -451,16 +451,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastAnimated = null;
     let secondLastAnimated = null;
 
+    // Mark an element as clicked so it no longer animates
     const markClicked = (id) => {
         unclicked.delete(id);
     };
 
+    // Attach click handlers
     for (const [id, element] of Object.entries(targets)) {
         if (element) {
             element.addEventListener('click', () => markClicked(id));
         }
     }
 
+    // Function to animate a random unclicked element
     const animateRandom = () => {
         if (unclicked.size === 0) return;
 
@@ -468,13 +471,14 @@ document.addEventListener('DOMContentLoaded', () => {
         let candidates = [...unclickedArray];
 
         if (unclickedArray.length > 2) {
-            // Avoid last two
+            // Avoid last two animated
             candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
         } else if (unclickedArray.length === 2 && lastAnimated !== null) {
-            // Avoid repeating the same one twice in a row
+            // Alternate between last two
             candidates = candidates.filter(id => id !== lastAnimated);
         }
-        // If only 1 left, use it — fallback to full list if all filtered
+
+        // If filtering leaves no candidates, use full unclicked array
         if (candidates.length === 0) {
             candidates = unclickedArray;
         }
@@ -484,18 +488,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (element) {
             element.classList.remove('wiggle');
-            void element.offsetWidth;
+            void element.offsetWidth; // force reflow
             element.classList.add('wiggle');
 
-            // Update animation history
+            // Update history
             secondLastAnimated = lastAnimated;
             lastAnimated = randomId;
 
             setTimeout(() => {
                 element.classList.remove('wiggle');
-            }, 900);
+            }, 900); // match animation duration (0.9s)
         }
     };
 
-    setInterval(animateRandom, 5000); // Every 5s
+    // First animation after 14.1 seconds
+    setTimeout(() => {
+        animateRandom();
+
+        // Then repeat every 6.6 seconds
+        setInterval(animateRandom, 6600);
+    }, 14100);
 });
