@@ -516,10 +516,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  
     if (!prefersReduced) return;
   
-    // Elements to spotlight
     const targetIDs = [
       'link-personal',
       'link-work',
@@ -536,39 +534,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const unclicked = new Set(targets.map(el => el.id));
     let spotlightIndex = 0;
   
-    // Create overlay
-    const overlay = document.createElement('div');
-    overlay.id = 'spotlight-overlay';
-    document.body.appendChild(overlay);
+    // Create spotlight wrapper and elements
+    const wrapper = document.createElement('div');
+    wrapper.id = 'reduced-spotlight-wrapper';
   
-    // Mark clicked
+    const overlay = document.createElement('div');
+    overlay.id = 'reduced-spotlight-overlay';
+  
+    const beam = document.createElement('div');
+    beam.id = 'reduced-spotlight-circle';
+  
+    wrapper.appendChild(overlay);
+    wrapper.appendChild(beam);
+    document.body.appendChild(wrapper);
+  
+    // Handle clicks
     targets.forEach(el => {
       el.addEventListener('click', () => unclicked.delete(el.id));
     });
   
+    const moveSpotlightTo = (element) => {
+      const rect = element.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      beam.style.transform = `translate(${x}px, ${y}px)`;
+    };
+  
     const cycleSpotlight = () => {
       const eligible = targets.filter(el => unclicked.has(el.id));
       if (eligible.length === 0) {
-        overlay.classList.remove('active');
-        targets.forEach(el => el.classList.remove('spotlighted'));
+        wrapper.style.display = 'none';
         return;
       }
   
-      // Remove old spotlight
-      targets.forEach(el => el.classList.remove('spotlighted'));
+      const target = eligible[spotlightIndex % eligible.length];
+      spotlightIndex++;
   
-      // Update overlay
-      overlay.classList.add('active');
-  
-      // Hesitate before lighting next
-      setTimeout(() => {
-        const el = eligible[spotlightIndex % eligible.length];
-        el.classList.add('spotlighted');
-        spotlightIndex++;
-      }, 350); // Hesitation delay
+      moveSpotlightTo(target);
     };
   
-    // Initial trigger
+    // First movement after 14.1s, then every 6.6s
     setTimeout(() => {
       cycleSpotlight();
       setInterval(cycleSpotlight, 6400);
