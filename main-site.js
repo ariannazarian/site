@@ -437,80 +437,77 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Define clickable targets by ID
     const targets = {
-        'link-personal': document.querySelector('#link-personal'),
-        'link-work': document.querySelector('#link-work'),
-        'label-ariann': document.querySelector('#label-ariann'),
-        'label-usc': document.querySelector('#label-usc'),
-        'label-edu': document.querySelector('#label-edu'),
-        'header-img': document.querySelector('#header-img')
+      'link-personal': document.querySelector('#link-personal'),
+      'link-work': document.querySelector('#link-work'),
+      'label-ariann': document.querySelector('#label-ariann'),
+      'label-usc': document.querySelector('#label-usc'),
+      'label-edu': document.querySelector('#label-edu'),
+      'header-img': document.querySelector('#header-img')
     };
-
+  
     const unclicked = new Set(Object.keys(targets));
     let lastAnimated = null;
     let secondLastAnimated = null;
-
-    // Visibility tracking
-    const visibleTargets = new Set();
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            const id = Object.entries(targets).find(([_, el]) => el === entry.target)?.[0];
-            if (!id) return;
-
-            if (entry.isIntersecting) {
-                visibleTargets.add(id);
-            } else {
-                visibleTargets.delete(id);
-            }
+    const animationDuration = 1100; // match refined-wiggle duration in ms
+  
+    // Mark elements as clicked when interacted with
+    for (const [id, element] of Object.entries(targets)) {
+      if (element) {
+        element.addEventListener('click', () => {
+          unclicked.delete(id);
         });
-    }, { threshold: 0.1 });
-
-    // Observe all targets
-    Object.entries(targets).forEach(([id, el]) => {
-        if (el) observer.observe(el);
-        el?.addEventListener('click', () => unclicked.delete(id));
-    });
-
+      }
+    }
+  
     const animateRandom = () => {
-        if (unclicked.size === 0) return;
-
-        const eligible = Array.from(unclicked).filter(id => visibleTargets.has(id));
-        if (eligible.length === 0) return;
-
-        let candidates = [...eligible];
-
-        if (eligible.length > 2) {
-            candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
-        } else if (eligible.length === 2 && lastAnimated) {
-            candidates = candidates.filter(id => id !== lastAnimated);
-        }
-
-        if (candidates.length === 0) {
-            candidates = eligible;
-        }
-
-        const randomId = candidates[Math.floor(Math.random() * candidates.length)];
-        const element = targets[randomId];
-
-        if (element) {
-            element.classList.remove('wiggle');
-            void element.offsetWidth;
-            element.classList.add('wiggle');
-
-            secondLastAnimated = lastAnimated;
-            lastAnimated = randomId;
-
-            setTimeout(() => {
-                element.classList.remove('wiggle');
-            }, 1100); // match duration
-        }
+      if (unclicked.size === 0) return;
+  
+      const unclickedArray = Array.from(unclicked);
+      let candidates = [...unclickedArray];
+  
+      if (unclickedArray.length > 2) {
+        candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
+      } else if (unclickedArray.length === 2 && lastAnimated !== null) {
+        candidates = candidates.filter(id => id !== lastAnimated);
+      }
+  
+      if (candidates.length === 0) {
+        candidates = unclickedArray;
+        lastAnimated = null;
+        secondLastAnimated = null;
+      }
+  
+      const randomId = candidates[Math.floor(Math.random() * candidates.length)];
+      const element = targets[randomId];
+  
+      if (element) {
+        // Prevent retriggering if animation is still active
+        if (element.classList.contains('wiggle')) return;
+  
+        element.classList.remove('wiggle');
+        void element.offsetWidth; // force reflow
+  
+        // Use requestAnimationFrame to minimize "clickiness"
+        requestAnimationFrame(() => {
+          element.classList.add('wiggle');
+        });
+  
+        // Clean up wiggle class after duration
+        setTimeout(() => {
+          element.classList.remove('wiggle');
+        }, animationDuration);
+  
+        secondLastAnimated = lastAnimated;
+        lastAnimated = randomId;
+      }
     };
-
-    // First run after 13.9s, then every 6.4s
+  
+    // Start after 13.9s, repeat every 6.4s
     setTimeout(() => {
-        animateRandom();
-        setInterval(animateRandom, 6400);
+      animateRandom();
+      setInterval(animateRandom, 6400);
     }, 13900);
-});
-
+  });
+  
