@@ -629,13 +629,13 @@ a.clickable.bold-text:hover {
 }
 
 @keyframes wiggle-scale {
-    0%   { transform: scale(1) translateX(0); }
-    15%  { transform: scale(1.04) translateX(-2px); }
-    30%  { transform: scale(1.02) translateX(2px); }
-    45%  { transform: scale(1.04) translateX(-1px); }
-    60%  { transform: scale(1.02) translateX(1px); }
-    75%  { transform: scale(1.03) translateX(0); }
-    100% { transform: scale(1) translateX(0); }
+    0%   { transform: scale(1) rotate(0deg); }
+    15%  { transform: scale(1.04) rotate(-2deg); }
+    30%  { transform: scale(1.02) rotate(2deg); }
+    45%  { transform: scale(1.04) rotate(-1.5deg); }
+    60%  { transform: scale(1.02) rotate(1.5deg); }
+    75%  { transform: scale(1.03) rotate(-1deg); }
+    100% { transform: scale(1) rotate(0deg); }
 }
 
 .wiggle {
@@ -643,7 +643,6 @@ a.clickable.bold-text:hover {
     will-change: transform;
     backface-visibility: hidden;
 }
-
 
 /* Allow transform animations to show */
 #link-personal,
