@@ -494,6 +494,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Run every 15 seconds (adjust as needed)
-    setInterval(animateRandom, 3000);
+    // Run every 7.5 seconds (adjust as needed)
+    setInterval(animateRandom, 7500);
 });
