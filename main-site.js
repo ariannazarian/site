@@ -437,7 +437,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Reference all clickable targets
+    // Target interactive elements
     const targets = {
         'link-personal': document.querySelector('#link-personal'),
         'link-work': document.querySelector('#link-work'),
@@ -447,53 +447,55 @@ document.addEventListener('DOMContentLoaded', () => {
         'header-img': document.querySelector('#header-img')
     };
 
-    // Track unclicked elements
     const unclicked = new Set(Object.keys(targets));
     let lastAnimated = null;
+    let secondLastAnimated = null;
 
-    // Mark clicked elements so they no longer animate
     const markClicked = (id) => {
         unclicked.delete(id);
     };
 
-    // Register click listeners on all targets
     for (const [id, element] of Object.entries(targets)) {
         if (element) {
             element.addEventListener('click', () => markClicked(id));
         }
     }
 
-    // Animation loop: pick a random unclicked element every 15s
     const animateRandom = () => {
         if (unclicked.size === 0) return;
 
         const unclickedArray = Array.from(unclicked);
+        let candidates = [...unclickedArray];
 
-        // Exclude last animated element unless it's the only one left
-        let candidates = unclickedArray;
-        if (unclickedArray.length > 1 && lastAnimated !== null) {
-            candidates = unclickedArray.filter(id => id !== lastAnimated);
+        if (unclickedArray.length > 2) {
+            // Avoid last two
+            candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
+        } else if (unclickedArray.length === 2 && lastAnimated !== null) {
+            // Avoid repeating the same one twice in a row
+            candidates = candidates.filter(id => id !== lastAnimated);
+        }
+        // If only 1 left, use it — fallback to full list if all filtered
+        if (candidates.length === 0) {
+            candidates = unclickedArray;
         }
 
-        // Pick one at random
         const randomId = candidates[Math.floor(Math.random() * candidates.length)];
         const element = targets[randomId];
 
         if (element) {
-            // Reset class in case it's still active
             element.classList.remove('wiggle');
-            void element.offsetWidth; // force reflow to retrigger animation
-
+            void element.offsetWidth;
             element.classList.add('wiggle');
+
+            // Update animation history
+            secondLastAnimated = lastAnimated;
             lastAnimated = randomId;
 
-            // Remove class after animation completes
             setTimeout(() => {
                 element.classList.remove('wiggle');
-            }, 600); // match animation duration
+            }, 600);
         }
     };
 
-    // Run every 7.5 seconds (adjust as needed)
-    setInterval(animateRandom, 3000);
+    setInterval(animateRandom, 5000); // Every 5s
 });
