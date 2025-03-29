@@ -436,3 +436,40 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const targets = {
+        'link-personal': document.querySelector('#link-personal'),
+        'link-work': document.querySelector('#link-work'),
+        'label-ariann': document.querySelector('label[for="popup-ariann"]'),
+        'label-usc': document.querySelector('label[for="popup-usc"]'),
+        'label-edu': document.querySelector('label[for="popup-edu"]'),
+        'header-image': document.querySelector('#header-image')
+    };
+
+    const unclicked = new Set(Object.keys(targets));
+
+    const markClicked = (id) => {
+        unclicked.delete(id);
+    };
+
+    for (const [id, element] of Object.entries(targets)) {
+        if (element) {
+            element.addEventListener('click', () => markClicked(id));
+        }
+    }
+
+    const animateRandom = () => {
+        if (unclicked.size === 0) return;
+
+        const unclickedArray = Array.from(unclicked);
+        const randomId = unclickedArray[Math.floor(Math.random() * unclickedArray.length)];
+        const element = targets[randomId];
+
+        if (element) {
+            element.classList.add('wiggle');
+            setTimeout(() => element.classList.remove('wiggle'), 600); // match animation duration
+        }
+    };
+
+    setInterval(animateRandom, 15000); // every 15 seconds
+});
