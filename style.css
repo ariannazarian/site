@@ -629,30 +629,26 @@ a.clickable.bold-text:hover {
 }
 
 @keyframes refined-wiggle {
-    0% {
-      transform: scale(1, 1) rotate(0deg);
-    }
-    15% {
-      transform: scale(1.04, 0.96) rotate(-2deg);
-    }
-    35% {
-      transform: scale(0.97, 1.03) rotate(2.2deg);
-    }
-    55% {
-      transform: scale(1.03, 0.97) rotate(-1.5deg);
-    }
-    75% {
-      transform: scale(0.98, 1.02) rotate(1.2deg);
-    }
-    100% {
-      transform: scale(1, 1) rotate(0deg);
-    }
+    0%   { transform: scale(1, 1) rotate(0deg); }
+    15%  { transform: scale(1.02, 0.98) rotate(-1.5deg); }
+    35%  { transform: scale(0.985, 1.015) rotate(1.5deg); }
+    55%  { transform: scale(1.015, 0.985) rotate(-1.2deg); }
+    75%  { transform: scale(0.99, 1.01) rotate(1deg); }
+    100% { transform: scale(1, 1) rotate(0deg); }
   }
   
   .wiggle {
-    animation: refined-wiggle 1.1s ease-in-out;
+    animation: refined-wiggle 1.1s cubic-bezier(0.42, 0, 0.3, 1);
     will-change: transform;
   }
+  
+  /* 🧘‍♂️ Accessibility: Respect user preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .wiggle {
+      animation: none !important;
+    }
+  }
+  
   
 
 /* Allow transform animations to show */

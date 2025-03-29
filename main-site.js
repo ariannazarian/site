@@ -437,7 +437,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Interactive element targets
     const targets = {
         'link-personal': document.querySelector('#link-personal'),
         'link-work': document.querySelector('#link-work'),
@@ -451,30 +450,44 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastAnimated = null;
     let secondLastAnimated = null;
 
-    const markClicked = (id) => {
-        unclicked.delete(id);
-    };
+    // Visibility tracking
+    const visibleTargets = new Set();
 
-    for (const [id, element] of Object.entries(targets)) {
-        if (element) {
-            element.addEventListener('click', () => markClicked(id));
-        }
-    }
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const id = Object.entries(targets).find(([_, el]) => el === entry.target)?.[0];
+            if (!id) return;
+
+            if (entry.isIntersecting) {
+                visibleTargets.add(id);
+            } else {
+                visibleTargets.delete(id);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    // Observe all targets
+    Object.entries(targets).forEach(([id, el]) => {
+        if (el) observer.observe(el);
+        el?.addEventListener('click', () => unclicked.delete(id));
+    });
 
     const animateRandom = () => {
         if (unclicked.size === 0) return;
 
-        const unclickedArray = Array.from(unclicked);
-        let candidates = [...unclickedArray];
+        const eligible = Array.from(unclicked).filter(id => visibleTargets.has(id));
+        if (eligible.length === 0) return;
 
-        if (unclickedArray.length > 2) {
+        let candidates = [...eligible];
+
+        if (eligible.length > 2) {
             candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
-        } else if (unclickedArray.length === 2 && lastAnimated !== null) {
+        } else if (eligible.length === 2 && lastAnimated) {
             candidates = candidates.filter(id => id !== lastAnimated);
         }
 
         if (candidates.length === 0) {
-            candidates = unclickedArray;
+            candidates = eligible;
         }
 
         const randomId = candidates[Math.floor(Math.random() * candidates.length)];
@@ -482,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (element) {
             element.classList.remove('wiggle');
-            void element.offsetWidth; // trigger reflow
+            void element.offsetWidth;
             element.classList.add('wiggle');
 
             secondLastAnimated = lastAnimated;
@@ -490,11 +503,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 element.classList.remove('wiggle');
-            }, 1100); // match animation duration
+            }, 1100); // match duration
         }
     };
 
-    // First animation after 13.9s, then every 6.4s
+    // First run after 13.9s, then every 6.4s
     setTimeout(() => {
         animateRandom();
         setInterval(animateRandom, 6400);
