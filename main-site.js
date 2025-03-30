@@ -450,9 +450,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const unclicked = new Set(Object.keys(targets));
     let lastAnimated = null;
     let secondLastAnimated = null;
-    const animationDuration = 1200; // match refined-wiggle duration in ms
+    const animationDuration = 1200;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   
-    // Mark elements as clicked when interacted with
+    // Mark clicked elements to stop animating them
     for (const [id, element] of Object.entries(targets)) {
       if (element) {
         element.addEventListener('click', () => {
@@ -462,60 +463,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   
     const animateRandom = () => {
-        if (unclicked.size === 0) return;
-      
-        const unclickedArray = Array.from(unclicked);
-        let candidates = [...unclickedArray];
-      
-        if (unclickedArray.length > 2) {
-          candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
-        } else if (unclickedArray.length === 2 && lastAnimated !== null) {
-          candidates = candidates.filter(id => id !== lastAnimated);
-        }
-      
-        if (candidates.length === 0) {
-          candidates = unclickedArray;
-          lastAnimated = null;
-          secondLastAnimated = null;
-        }
-      
-        const randomId = candidates[Math.floor(Math.random() * candidates.length)];
-        const element = targets[randomId];
-      
-        if (element) {
-          element.classList.remove('wiggle', 'reduced-text', 'reduced-image');
-          void element.offsetWidth;
-      
-          if (prefersReduced) {
-            if (element.id === 'header-img') {
-              element.classList.add('wiggle', 'reduced-image');
-            } else {
-              // Wrap characters only once if not already done
-              if (!element.querySelector('span')) {
-                const text = element.textContent;
-                element.innerHTML = [...text].map(c => `<span>${c}</span>`).join('');
-              }
-              element.classList.add('wiggle', 'reduced-text');
-            }
-          } else {
-            element.classList.add('wiggle');
-          }
-      
-          setTimeout(() => {
-            element.classList.remove('wiggle', 'reduced-text', 'reduced-image');
-            if (prefersReduced && element.id !== 'header-img') {
-              const spanStripped = element.textContent;
-              element.innerHTML = spanStripped;
-            }
-          }, animationDuration);
-      
-          secondLastAnimated = lastAnimated;
-          lastAnimated = randomId;
-        }
-      };
-      
+      if (unclicked.size === 0) return;
   
-    // Start after 13.8s, repeat every 6.3s
+      const unclickedArray = Array.from(unclicked);
+      let candidates = [...unclickedArray];
+  
+      if (unclickedArray.length > 2) {
+        candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
+      } else if (unclickedArray.length === 2 && lastAnimated !== null) {
+        candidates = candidates.filter(id => id !== lastAnimated);
+      }
+  
+      if (candidates.length === 0) {
+        candidates = unclickedArray;
+        lastAnimated = null;
+        secondLastAnimated = null;
+      }
+  
+      const randomId = candidates[Math.floor(Math.random() * candidates.length)];
+      const element = targets[randomId];
+  
+      if (element) {
+        element.classList.remove('wiggle', 'reduced-text', 'reduced-image');
+        void element.offsetWidth; // Force reflow
+  
+        element.classList.add('wiggle');
+  
+        if (prefersReduced) {
+          if (element.id === 'header-img') {
+            element.classList.add('reduced-image');
+          } else {
+            if (!element.querySelector('span')) {
+              const originalText = element.textContent;
+              element.innerHTML = [...originalText].map(c => `<span>${c}</span>`).join('');
+            }
+            element.classList.add('reduced-text');
+          }
+        }
+  
+        setTimeout(() => {
+          element.classList.remove('wiggle', 'reduced-text', 'reduced-image');
+          if (prefersReduced && element.id !== 'header-img') {
+            element.textContent = element.textContent; // strip <span>s by resetting to text
+          }
+        }, animationDuration);
+  
+        secondLastAnimated = lastAnimated;
+        lastAnimated = randomId;
+      }
+    };
+  
+    // Start the loop: first after 13.8s, then every 6.3s
     setTimeout(() => {
       animateRandom();
       setInterval(animateRandom, 6300);

@@ -647,6 +647,10 @@ a.clickable.bold-text:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .wiggle {
+      animation: none !important;
+    }
+  
     .wiggle.reduced-text span {
       display: inline-block;
       animation: highlight-blue 1.2s ease-in-out;
@@ -668,7 +672,8 @@ a.clickable.bold-text:hover {
       0%, 100% { filter: brightness(1) drop-shadow(0 0 0px #3390ff); }
       50%      { filter: brightness(1.2) drop-shadow(0 0 6px #3390ff); }
     }
-  }  
+  }
+  
 
 /* Allow transform animations to show */
 #link-personal,
