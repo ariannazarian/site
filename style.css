@@ -647,48 +647,42 @@ a.clickable.bold-text:hover {
   }
   
   @media (prefers-reduced-motion: reduce) {
-    /* Prevent all motion effects */
-    .wiggle {
-      animation: none !important;
-      transform: none !important;
-      filter: none !important;
-      will-change: auto;
-    }
-  
-    /* Ensure the wrapper does not affect layout */
-    .wiggle-wrapper {
-      display: inline-block;
-      position: relative;
-    }
-  
-    /* Ensure image fills its wrapper for proper overlay */
-    .wiggle-wrapper img {
-      display: block;
-    }
-  
-    /* Simulated selection highlight effect */
-    .wiggle-wrapper::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: #bcdcff; /* Native selection-like blue */
-      opacity: 0.3;
-      pointer-events: none;
-      z-index: 1;
-      transform: scaleX(0);
-      transform-origin: left;
-      animation: highlight-bar 1.3s ease-in-out;
-    }
-  
-    /* Animated bar highlight: swipe left → right → fade */
-    @keyframes highlight-bar {
-      0%   { transform: scaleX(0); opacity: 0; }
-      50%  { transform: scaleX(1); opacity: 0.3; }
-      100% { transform: scaleX(0); opacity: 0; }
-    }
+  .wiggle-wrapper {
+    display: inline-block;
+    position: relative;
   }
-  
-  
+
+  .wiggle-wrapper img {
+    display: block; /* ensures wrapper contains image space */
+  }
+
+  .wiggle-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #bcdcff;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 1;
+    animation: highlight-bar 1.3s ease-in-out;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  @keyframes highlight-bar {
+    0%   { transform: scaleX(0); opacity: 0; }
+    50%  { transform: scaleX(1); opacity: 0.3; }
+    100% { transform: scaleX(0); opacity: 0; }
+  }
+
+  .wiggle {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+    will-change: auto;
+  }
+}
+
 
 /* Allow transform animations to show */
 #link-personal,
