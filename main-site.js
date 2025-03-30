@@ -481,43 +481,58 @@ document.addEventListener('DOMContentLoaded', () => {
       const randomId = candidates[Math.floor(Math.random() * candidates.length)];
       const element = targets[randomId];
   
-      if (element) {
-        element.classList.remove('wiggle', 'reduced-text', 'reduced-image');
-        void element.offsetWidth;
+      if (!element) return;
   
-        element.classList.add('wiggle');
+      element.classList.remove('wiggle', 'reduced-text', 'reduced-image');
+      void element.offsetWidth;
+      element.classList.add('wiggle');
+  
+      if (prefersReduced) {
+        if (element.id === 'header-img') {
+          // Wrap the image inside a temporary container
+          const parent = element.parentElement;
+          const wrapper = document.createElement('div');
+          wrapper.classList.add('wiggle', 'reduced-image-wrapper', 'step-1');
+          parent.replaceChild(wrapper, element);
+          wrapper.appendChild(element);
+  
+          // Sequentially add step classes to trigger each slice
+          setTimeout(() => wrapper.classList.replace('step-1', 'step-2'), 300);
+          setTimeout(() => wrapper.classList.replace('step-2', 'step-3'), 600);
+        } else {
+          const originalText = element.textContent;
+          const chars = [...originalText];
+          const stepDuration = 300;
+          const stepCount = Math.ceil(chars.length / 2);
+  
+          element.innerHTML = chars.map((char, i) => {
+            const pairIndex = Math.floor(i / 2);
+            return `<span style="animation-delay: ${pairIndex * stepDuration}ms">${char}</span>`;
+          }).join('');
+          element.classList.add('reduced-text');
+        }
+      }
+  
+      const cleanupTime = prefersReduced ? 1800 : animationDuration;
+  
+      setTimeout(() => {
+        element.classList.remove('wiggle', 'reduced-text');
   
         if (prefersReduced) {
           if (element.id === 'header-img') {
-            element.classList.add('reduced-image');
+            const wrapper = element.parentElement;
+            const parent = wrapper.parentElement;
+            wrapper.classList.remove('reduced-image-wrapper', 'step-3');
+            parent.replaceChild(element, wrapper);
           } else {
-            const originalText = element.textContent;
-            const chars = [...originalText];
-            const stepDuration = 300;
-            const stepCount = Math.ceil(chars.length / 2);
-  
-            element.innerHTML = chars.map((char, i) => {
-              const pairIndex = Math.floor(i / 2);
-              return `<span style="animation-delay: ${pairIndex * stepDuration}ms">${char}</span>`;
-            }).join('');
-  
-            element.classList.add('reduced-text');
-          }
-        }
-  
-        const cleanupTime = prefersReduced ? 1800 : animationDuration;
-  
-        setTimeout(() => {
-          element.classList.remove('wiggle', 'reduced-text', 'reduced-image');
-          if (prefersReduced && element.id !== 'header-img') {
             const spanStripped = element.textContent;
             element.textContent = spanStripped;
           }
-        }, cleanupTime);
+        }
+      }, cleanupTime);
   
-        secondLastAnimated = lastAnimated;
-        lastAnimated = randomId;
-      }
+      secondLastAnimated = lastAnimated;
+      lastAnimated = randomId;
     };
   
     setTimeout(() => {
