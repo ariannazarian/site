@@ -653,55 +653,57 @@ a.clickable.bold-text:hover {
   
     .wiggle.reduced-text span {
       display: inline-block;
-      animation: highlight-blue 0.5s ease-in-out forwards;
-      background-color: transparent;
-      color: inherit;
+      animation: highlight-blue 1s ease-in-out forwards;
     }
   
     @keyframes highlight-blue {
       0%   { background-color: transparent; color: inherit; }
+      25%  { background-color: #3390FF; color: white; }
       100% { background-color: #3390FF; color: white; }
     }
   
-    .wiggle.reduced-image-wrapper {
+    #header-img.reduced-image {
       position: relative;
-      display: inline-block;
+      z-index: 0;
     }
   
-    .wiggle.reduced-image-wrapper::before {
-      content: '';
+    .highlight-overlay {
       position: absolute;
       top: 0;
-      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      z-index: 2;
+      pointer-events: none;
+    }
+  
+    .highlight-overlay .segment {
+      flex: 1;
       background: white;
       mix-blend-mode: difference;
-      pointer-events: none;
       opacity: 0;
-      transition: opacity 0.3s ease-in-out;
+      animation: segment-flash 0.3s ease-in-out forwards;
     }
   
-    .wiggle.reduced-image-wrapper.step-1::before {
-      left: 0;
-      width: 33.33%;
-      opacity: 1;
-      transition-delay: 0ms;
+    .highlight-overlay .segment:nth-child(1) {
+      animation-delay: 0s;
     }
   
-    .wiggle.reduced-image-wrapper.step-2::before {
-      left: 33.33%;
-      width: 33.33%;
-      opacity: 1;
-      transition-delay: 500ms;
+    .highlight-overlay .segment:nth-child(2) {
+      animation-delay: 0.5s;
     }
   
-    .wiggle.reduced-image-wrapper.step-3::before {
-      left: 66.66%;
-      width: 33.33%;
-      opacity: 1;
-      transition-delay: 1000ms;
+    .highlight-overlay .segment:nth-child(3) {
+      animation-delay: 1s;
     }
-  }
   
+    @keyframes segment-flash {
+      0%   { opacity: 0; }
+      50%  { opacity: 1; }
+      100% { opacity: 1; }
+    }
+  }    
   
 /* Allow transform animations to show */
 #link-personal,
