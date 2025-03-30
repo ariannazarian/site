@@ -495,24 +495,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const overlay = document.createElement('div');
             overlay.className = `highlight-overlay step-${i}`;
             overlay.style.left = `${(i - 1) * 33.33}%`;
+            overlay.style.animationDelay = `${(i - 1) * 300}ms`;
             container.appendChild(overlay);
   
-            setTimeout(() => overlay.remove(), 3000);
+            setTimeout(() => overlay.remove(), 1800);
           }
         } else {
           const originalText = element.textContent;
           const chars = [...originalText];
-          const stepDuration = 500;
+          const stepDuration = 300;
   
+          // TRUE left-to-right highlight by inserting animation delay on pairs
           element.innerHTML = chars.map((char, i) => {
             const pairIndex = Math.floor(i / 2);
             return `<span style="animation-delay: ${pairIndex * stepDuration}ms">${char}</span>`;
           }).join('');
+  
           element.classList.add('reduced-text');
         }
       }
   
-      const cleanupTime = prefersReduced ? 3000 : animationDuration;
+      const cleanupTime = prefersReduced ? 1800 : animationDuration;
   
       setTimeout(() => {
         element.classList.remove('wiggle', 'reduced-text');
