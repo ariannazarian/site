@@ -650,23 +650,34 @@ a.clickable.bold-text:hover {
     .wiggle {
       position: relative;
       overflow: hidden;
+      animation: none !important;
       transform: none !important;
       filter: none !important;
-      animation: highlight-swipe 1.2s ease-in-out;
+      will-change: auto;
     }
   
-    .wiggle::after {
+    /* For text-based elements */
+    .wiggle:not(img)::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 0%;
-      height: 100%;
-      background: #bcdcff; /* Native macOS/iOS selection blue */
+      background: #bcdcff;
       opacity: 0.5;
       pointer-events: none;
-      z-index: -1;
-      animation: highlight-bar 1.2s ease-in-out;
+      z-index: 0;
+      animation: highlight-bar 1.3s ease-in-out;
+    }
+  
+    /* For the header image */
+    img.wiggle::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: #bcdcff;
+      opacity: 0.3;
+      pointer-events: none;
+      animation: image-highlight 1.3s ease-in-out;
     }
   
     @keyframes highlight-bar {
@@ -675,13 +686,12 @@ a.clickable.bold-text:hover {
       100% { width: 0%; }
     }
   
-    @keyframes highlight-swipe {
-      0%   { background-color: transparent; }
-      50%  { background-color: transparent; }
-      100% { background-color: transparent; }
+    @keyframes image-highlight {
+      0%   { opacity: 0; }
+      50%  { opacity: 0.3; }
+      100% { opacity: 0; }
     }
   }
-    
 
 /* Allow transform animations to show */
 #link-personal,
