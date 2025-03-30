@@ -487,38 +487,29 @@ document.addEventListener('DOMContentLoaded', () => {
       void element.offsetWidth;
       element.classList.add('wiggle');
   
-      if (prefersReduced) {
-        if (element.id === 'header-img') {
-          const parent = element.parentElement;
-  
-          const wrapper = document.createElement('div');
-          wrapper.classList.add('wiggle', 'reduced-image-wrapper');
-          wrapper.style.display = 'inline-block';
-          wrapper.style.position = 'relative';
-          wrapper.style.width = element.offsetWidth + 'px';
-          wrapper.style.height = element.offsetHeight + 'px';
-          wrapper.style.verticalAlign = 'middle';
-  
-          parent.replaceChild(wrapper, element);
-          wrapper.appendChild(element);
-  
-          // Trigger highlight steps
-          setTimeout(() => wrapper.classList.add('step-1'), 0);
-          setTimeout(() => wrapper.classList.add('step-2'), 500);
-          setTimeout(() => wrapper.classList.add('step-3'), 1000);
-        } else {
-          const originalText = element.textContent;
-          const chars = [...originalText];
-          const stepDuration = 500;
-          const stepCount = Math.ceil(chars.length / 2);
-  
-          element.innerHTML = chars.map((char, i) => {
-            const pairIndex = Math.floor(i / 2);
-            return `<span style="animation-delay: ${pairIndex * stepDuration}ms">${char}</span>`;
-          }).join('');
-          element.classList.add('reduced-text');
+      if (element.id === 'header-img') {
+        element.classList.add('reduced-image');
+      
+        const overlay = document.createElement('div');
+        overlay.className = 'highlight-overlay';
+      
+        for (let i = 0; i < 3; i++) {
+          const segment = document.createElement('div');
+          segment.className = 'segment';
+          overlay.appendChild(segment);
         }
-      }
+      
+        // Position overlay inside parent <picture>
+        const container = element.parentElement;
+        container.style.position = 'relative';
+        container.appendChild(overlay);
+      
+        // Cleanup overlay after 3s
+        setTimeout(() => {
+          overlay.remove();
+          element.classList.remove('reduced-image');
+        }, 3000);
+      }      
   
       const cleanupTime = prefersReduced ? 3000 : animationDuration;
   
