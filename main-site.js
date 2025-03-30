@@ -437,7 +437,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Define clickable targets by ID
     const targets = {
       'link-personal': document.querySelector('#link-personal'),
       'link-work': document.querySelector('#link-work'),
@@ -453,7 +452,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const animationDuration = 1200;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   
-    // Mark clicked elements to stop animating them
     for (const [id, element] of Object.entries(targets)) {
       if (element) {
         element.addEventListener('click', () => {
@@ -485,7 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
       if (element) {
         element.classList.remove('wiggle', 'reduced-text', 'reduced-image');
-        void element.offsetWidth; // Force reflow
+        void element.offsetWidth;
   
         element.classList.add('wiggle');
   
@@ -493,27 +491,35 @@ document.addEventListener('DOMContentLoaded', () => {
           if (element.id === 'header-img') {
             element.classList.add('reduced-image');
           } else {
-            if (!element.querySelector('span')) {
-              const originalText = element.textContent;
-              element.innerHTML = [...originalText].map(c => `<span>${c}</span>`).join('');
-            }
+            const originalText = element.textContent;
+            const chars = [...originalText];
+            const stepDuration = 300;
+            const stepCount = Math.ceil(chars.length / 2);
+  
+            element.innerHTML = chars.map((char, i) => {
+              const pairIndex = Math.floor(i / 2);
+              return `<span style="animation-delay: ${pairIndex * stepDuration}ms">${char}</span>`;
+            }).join('');
+  
             element.classList.add('reduced-text');
           }
         }
   
+        const cleanupTime = prefersReduced ? 1800 : animationDuration;
+  
         setTimeout(() => {
           element.classList.remove('wiggle', 'reduced-text', 'reduced-image');
           if (prefersReduced && element.id !== 'header-img') {
-            element.textContent = element.textContent; // strip <span>s by resetting to text
+            const spanStripped = element.textContent;
+            element.textContent = spanStripped;
           }
-        }, animationDuration);
+        }, cleanupTime);
   
         secondLastAnimated = lastAnimated;
         lastAnimated = randomId;
       }
     };
   
-    // Start the loop: first after 13.8s, then every 6.3s
     setTimeout(() => {
       animateRandom();
       setInterval(animateRandom, 6300);

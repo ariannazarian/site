@@ -653,28 +653,25 @@ a.clickable.bold-text:hover {
   
     .wiggle.reduced-text span {
       display: inline-block;
-      animation: highlight-blue 1.2s ease-in-out;
-      animation-fill-mode: both;
+      animation: highlight-blue 0.3s ease-in-out forwards;
     }
   
     .wiggle.reduced-image {
-      animation: glow-blue 1.2s ease-in-out;
+      animation: glow-blue 1.8s ease-in-out;
       animation-fill-mode: both;
     }
   
     @keyframes highlight-blue {
       0%   { background-color: transparent; }
-      10%  { background-color: #3390ff; color: white; }
-      100% { background-color: transparent; }
+      100% { background-color: #ACCEF7; color: black; }
     }
   
     @keyframes glow-blue {
       0%, 100% { filter: brightness(1) drop-shadow(0 0 0px #3390ff); }
-      50%      { filter: brightness(1.2) drop-shadow(0 0 6px #3390ff); }
+      50%      { filter: brightness(1.4) drop-shadow(0 0 10px #3390ff); }
     }
   }
   
-
 /* Allow transform animations to show */
 #link-personal,
 #link-work,
