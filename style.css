@@ -647,42 +647,41 @@ a.clickable.bold-text:hover {
   }
   
   @media (prefers-reduced-motion: reduce) {
-  .wiggle-wrapper {
-    display: inline-block;
-    position: relative;
+    .wiggle {
+      position: relative;
+      overflow: hidden;
+      transform: none !important;
+      filter: none !important;
+      animation: highlight-swipe 1.2s ease-in-out;
+    }
+  
+    .wiggle::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background: #bcdcff; /* Native macOS/iOS selection blue */
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: -1;
+      animation: highlight-bar 1.2s ease-in-out;
+    }
+  
+    @keyframes highlight-bar {
+      0%   { width: 0%; }
+      50%  { width: 100%; }
+      100% { width: 0%; }
+    }
+  
+    @keyframes highlight-swipe {
+      0%   { background-color: transparent; }
+      50%  { background-color: transparent; }
+      100% { background-color: transparent; }
+    }
   }
-
-  .wiggle-wrapper img {
-    display: block; /* ensures wrapper contains image space */
-  }
-
-  .wiggle-wrapper::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: #bcdcff;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 1;
-    animation: highlight-bar 1.3s ease-in-out;
-    transform: scaleX(0);
-    transform-origin: left;
-  }
-
-  @keyframes highlight-bar {
-    0%   { transform: scaleX(0); opacity: 0; }
-    50%  { transform: scaleX(1); opacity: 0.3; }
-    100% { transform: scaleX(0); opacity: 0; }
-  }
-
-  .wiggle {
-    animation: none !important;
-    transform: none !important;
-    filter: none !important;
-    will-change: auto;
-  }
-}
-
+    
 
 /* Allow transform animations to show */
 #link-personal,
