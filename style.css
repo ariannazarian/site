@@ -646,21 +646,42 @@ a.clickable.bold-text:hover {
     transform-origin: center;
   }
   
-  /* ✅ Reduced motion users get a soft glow instead of movement */
   @media (prefers-reduced-motion: reduce) {
-    @keyframes glow-pulse {
-      0%   { box-shadow: 0 0 0 transparent; }
-      50%  { box-shadow: 0 0 10px rgba(255, 240, 150, 0.25); }
-      100% { box-shadow: 0 0 0 transparent; }
-    }
-  
     .wiggle {
-      animation: glow-pulse 1.2s ease-in-out;
-      animation-fill-mode: both;
+      position: relative;
+      overflow: hidden;
       transform: none !important;
       filter: none !important;
+      animation: highlight-swipe 1.2s ease-in-out;
     }
-  }  
+  
+    .wiggle::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background: #bcdcff; /* Native macOS/iOS selection blue */
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: -1;
+      animation: highlight-bar 1.2s ease-in-out;
+    }
+  
+    @keyframes highlight-bar {
+      0%   { width: 0%; }
+      50%  { width: 100%; }
+      100% { width: 0%; }
+    }
+  
+    @keyframes highlight-swipe {
+      0%   { background-color: transparent; }
+      50%  { background-color: transparent; }
+      100% { background-color: transparent; }
+    }
+  }
+    
 
 /* Allow transform animations to show */
 #link-personal,
