@@ -654,45 +654,46 @@ a.clickable.bold-text:hover {
       will-change: auto;
     }
   
-    /* Force .wiggle elements to respect size boundaries */
-    .wiggle {
-      position: relative;
+    .wiggle-wrapper {
       display: inline-block;
+      position: relative;
       vertical-align: middle;
-      line-height: 1; /* helps tighten box */
+      line-height: 1;
+      white-space: nowrap;
     }
   
-    .wiggle::after {
+    .wiggle-wrapper::after {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       height: 100%;
-      width: 0%;
+      width: 100%;
       background: #bcdcff;
-      opacity: 0.5;
+      opacity: 0;
       pointer-events: none;
-      z-index: -1;
+      z-index: 0;
       animation: highlight-bar 1.2s ease-in-out;
+      transform: scaleX(0);
+      transform-origin: left;
     }
   
     @keyframes highlight-bar {
-      0%   { width: 0%; }
-      50%  { width: 100%; }
-      100% { width: 0%; }
+      0%   { transform: scaleX(0); opacity: 0; }
+      50%  { transform: scaleX(1); opacity: 0.5; }
+      100% { transform: scaleX(0); opacity: 0; }
     }
   
-    /* Header image fix: wrap and apply effect to wrapper instead */
-    .wiggle img {
+    .wiggle-wrapper.image-highlight img {
       display: block;
     }
   
-    .wiggle.image-highlight::after {
+    .wiggle-wrapper.image-highlight::after {
       content: '';
       position: absolute;
       inset: 0;
       background: #bcdcff;
-      opacity: 0.3;
+      opacity: 0;
       pointer-events: none;
       z-index: 1;
       animation: image-highlight 1.2s ease-in-out;
@@ -704,6 +705,7 @@ a.clickable.bold-text:hover {
       100% { opacity: 0; }
     }
   }
+  
     
 
 /* Allow transform animations to show */
