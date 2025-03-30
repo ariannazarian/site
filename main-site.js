@@ -483,26 +483,33 @@ document.addEventListener('DOMContentLoaded', () => {
   
       if (!element) return;
   
-      element.classList.remove('wiggle', 'reduced-text', 'reduced-image');
+      element.classList.remove('wiggle', 'reduced-text', 'reduced-image-wrapper', 'step-1', 'step-2', 'step-3');
       void element.offsetWidth;
       element.classList.add('wiggle');
   
       if (prefersReduced) {
         if (element.id === 'header-img') {
-          // Wrap the image inside a temporary container
           const parent = element.parentElement;
+  
           const wrapper = document.createElement('div');
-          wrapper.classList.add('wiggle', 'reduced-image-wrapper', 'step-1');
+          wrapper.classList.add('wiggle', 'reduced-image-wrapper');
+          wrapper.style.display = 'inline-block';
+          wrapper.style.position = 'relative';
+          wrapper.style.width = element.offsetWidth + 'px';
+          wrapper.style.height = element.offsetHeight + 'px';
+          wrapper.style.verticalAlign = 'middle';
+  
           parent.replaceChild(wrapper, element);
           wrapper.appendChild(element);
   
-          // Sequentially add step classes to trigger each slice
-          setTimeout(() => wrapper.classList.replace('step-1', 'step-2'), 300);
-          setTimeout(() => wrapper.classList.replace('step-2', 'step-3'), 600);
+          // Trigger highlight steps
+          setTimeout(() => wrapper.classList.add('step-1'), 0);
+          setTimeout(() => wrapper.classList.add('step-2'), 500);
+          setTimeout(() => wrapper.classList.add('step-3'), 1000);
         } else {
           const originalText = element.textContent;
           const chars = [...originalText];
-          const stepDuration = 300;
+          const stepDuration = 500;
           const stepCount = Math.ceil(chars.length / 2);
   
           element.innerHTML = chars.map((char, i) => {
@@ -513,20 +520,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
   
-      const cleanupTime = prefersReduced ? 1800 : animationDuration;
+      const cleanupTime = prefersReduced ? 3000 : animationDuration;
   
       setTimeout(() => {
-        element.classList.remove('wiggle', 'reduced-text');
+        element.classList.remove('wiggle', 'reduced-text', 'reduced-image-wrapper', 'step-1', 'step-2', 'step-3');
   
         if (prefersReduced) {
           if (element.id === 'header-img') {
             const wrapper = element.parentElement;
             const parent = wrapper.parentElement;
-            wrapper.classList.remove('reduced-image-wrapper', 'step-3');
             parent.replaceChild(element, wrapper);
           } else {
-            const spanStripped = element.textContent;
-            element.textContent = spanStripped;
+            element.textContent = element.textContent;
           }
         }
       }, cleanupTime);

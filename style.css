@@ -653,7 +653,7 @@ a.clickable.bold-text:hover {
   
     .wiggle.reduced-text span {
       display: inline-block;
-      animation: highlight-blue 0.3s ease-in-out forwards;
+      animation: highlight-blue 0.5s ease-in-out forwards;
       background-color: transparent;
       color: inherit;
     }
@@ -663,14 +663,12 @@ a.clickable.bold-text:hover {
       100% { background-color: #3390FF; color: white; }
     }
   
-    /* Split image into 3 vertical slices and animate each */
     .wiggle.reduced-image-wrapper {
       position: relative;
       display: inline-block;
     }
   
-    .wiggle.reduced-image-wrapper::before,
-    .wiggle.reduced-image-wrapper::after {
+    .wiggle.reduced-image-wrapper::before {
       content: '';
       position: absolute;
       top: 0;
@@ -678,32 +676,32 @@ a.clickable.bold-text:hover {
       background: white;
       mix-blend-mode: difference;
       pointer-events: none;
-      animation: image-highlight-step 0.3s ease-in-out forwards;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
     }
   
     .wiggle.reduced-image-wrapper.step-1::before {
       left: 0;
       width: 33.33%;
-      animation-delay: 0ms;
+      opacity: 1;
+      transition-delay: 0ms;
     }
   
     .wiggle.reduced-image-wrapper.step-2::before {
       left: 33.33%;
       width: 33.33%;
-      animation-delay: 300ms;
+      opacity: 1;
+      transition-delay: 500ms;
     }
   
     .wiggle.reduced-image-wrapper.step-3::before {
       left: 66.66%;
       width: 33.33%;
-      animation-delay: 600ms;
+      opacity: 1;
+      transition-delay: 1000ms;
     }
+  }
   
-    @keyframes image-highlight-step {
-      0%   { opacity: 0; }
-      100% { opacity: 1; }
-    }
-  }  
   
 /* Allow transform animations to show */
 #link-personal,
