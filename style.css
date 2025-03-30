@@ -648,11 +648,18 @@ a.clickable.bold-text:hover {
   
   @media (prefers-reduced-motion: reduce) {
     .wiggle {
-      position: relative;
-      overflow: hidden;
+      animation: none !important;
       transform: none !important;
       filter: none !important;
-      animation: highlight-swipe 1.2s ease-in-out;
+      will-change: auto;
+    }
+  
+    /* Force .wiggle elements to respect size boundaries */
+    .wiggle {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1; /* helps tighten box */
     }
   
     .wiggle::after {
@@ -660,9 +667,9 @@ a.clickable.bold-text:hover {
       position: absolute;
       top: 0;
       left: 0;
-      width: 0%;
       height: 100%;
-      background: #bcdcff; /* Native macOS/iOS selection blue */
+      width: 0%;
+      background: #bcdcff;
       opacity: 0.5;
       pointer-events: none;
       z-index: -1;
@@ -675,10 +682,26 @@ a.clickable.bold-text:hover {
       100% { width: 0%; }
     }
   
-    @keyframes highlight-swipe {
-      0%   { background-color: transparent; }
-      50%  { background-color: transparent; }
-      100% { background-color: transparent; }
+    /* Header image fix: wrap and apply effect to wrapper instead */
+    .wiggle img {
+      display: block;
+    }
+  
+    .wiggle.image-highlight::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: #bcdcff;
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 1;
+      animation: image-highlight 1.2s ease-in-out;
+    }
+  
+    @keyframes image-highlight {
+      0%   { opacity: 0; }
+      50%  { opacity: 0.3; }
+      100% { opacity: 0; }
     }
   }
     
