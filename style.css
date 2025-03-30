@@ -652,17 +652,14 @@ a.clickable.bold-text:hover {
       transform: none !important;
       filter: none !important;
       will-change: auto;
-    }
-  
-    .wiggle-wrapper {
-      display: inline-block;
       position: relative;
+      display: inline-block;
       vertical-align: middle;
       line-height: 1;
       white-space: nowrap;
     }
   
-    .wiggle-wrapper::after {
+    .wiggle::after {
       content: '';
       position: absolute;
       top: 0;
@@ -672,7 +669,7 @@ a.clickable.bold-text:hover {
       background: #bcdcff;
       opacity: 0;
       pointer-events: none;
-      z-index: 0;
+      z-index: -1;
       animation: highlight-bar 1.2s ease-in-out;
       transform: scaleX(0);
       transform-origin: left;
@@ -684,11 +681,8 @@ a.clickable.bold-text:hover {
       100% { transform: scaleX(0); opacity: 0; }
     }
   
-    .wiggle-wrapper.image-highlight img {
-      display: block;
-    }
-  
-    .wiggle-wrapper.image-highlight::after {
+    /* HEADER IMAGE */
+    .wiggle.image-highlight::after {
       content: '';
       position: absolute;
       inset: 0;
@@ -704,9 +698,12 @@ a.clickable.bold-text:hover {
       50%  { opacity: 0.3; }
       100% { opacity: 0; }
     }
+  
+    .wiggle.image-highlight img {
+      display: block;
+    }
   }
   
-    
 
 /* Allow transform animations to show */
 #link-personal,
