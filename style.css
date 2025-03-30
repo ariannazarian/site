@@ -652,9 +652,9 @@ a.clickable.bold-text:hover {
     }
   
     .reduced-text span {
-      display: inline-block;
-      animation: highlight-blue 0.3s ease-in-out forwards;
-    }
+        display: inline-block;
+        animation: highlight-blue 0.3s linear forwards;
+      }      
   
     @keyframes highlight-blue {
       0%   { background-color: transparent; color: inherit; }
