@@ -462,47 +462,58 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   
     const animateRandom = () => {
-      if (unclicked.size === 0) return;
-  
-      const unclickedArray = Array.from(unclicked);
-      let candidates = [...unclickedArray];
-  
-      if (unclickedArray.length > 2) {
-        candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
-      } else if (unclickedArray.length === 2 && lastAnimated !== null) {
-        candidates = candidates.filter(id => id !== lastAnimated);
-      }
-  
-      if (candidates.length === 0) {
-        candidates = unclickedArray;
-        lastAnimated = null;
-        secondLastAnimated = null;
-      }
-  
-      const randomId = candidates[Math.floor(Math.random() * candidates.length)];
-      const element = targets[randomId];
-  
-      if (element) {
-        // Prevent retriggering if animation is still active
-        if (element.classList.contains('wiggle')) return;
-  
-        element.classList.remove('wiggle');
-        void element.offsetWidth; // force reflow
-  
-        // Use requestAnimationFrame to minimize "clickiness"
-        requestAnimationFrame(() => {
-          element.classList.add('wiggle');
-        });
-  
-        // Clean up wiggle class after duration
-        setTimeout(() => {
-          element.classList.remove('wiggle');
-        }, animationDuration);
-  
-        secondLastAnimated = lastAnimated;
-        lastAnimated = randomId;
-      }
-    };
+        if (unclicked.size === 0) return;
+      
+        const unclickedArray = Array.from(unclicked);
+        let candidates = [...unclickedArray];
+      
+        if (unclickedArray.length > 2) {
+          candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
+        } else if (unclickedArray.length === 2 && lastAnimated !== null) {
+          candidates = candidates.filter(id => id !== lastAnimated);
+        }
+      
+        if (candidates.length === 0) {
+          candidates = unclickedArray;
+          lastAnimated = null;
+          secondLastAnimated = null;
+        }
+      
+        const randomId = candidates[Math.floor(Math.random() * candidates.length)];
+        const element = targets[randomId];
+      
+        if (element) {
+          element.classList.remove('wiggle', 'reduced-text', 'reduced-image');
+          void element.offsetWidth;
+      
+          if (prefersReduced) {
+            if (element.id === 'header-img') {
+              element.classList.add('wiggle', 'reduced-image');
+            } else {
+              // Wrap characters only once if not already done
+              if (!element.querySelector('span')) {
+                const text = element.textContent;
+                element.innerHTML = [...text].map(c => `<span>${c}</span>`).join('');
+              }
+              element.classList.add('wiggle', 'reduced-text');
+            }
+          } else {
+            element.classList.add('wiggle');
+          }
+      
+          setTimeout(() => {
+            element.classList.remove('wiggle', 'reduced-text', 'reduced-image');
+            if (prefersReduced && element.id !== 'header-img') {
+              const spanStripped = element.textContent;
+              element.innerHTML = spanStripped;
+            }
+          }, animationDuration);
+      
+          secondLastAnimated = lastAnimated;
+          lastAnimated = randomId;
+        }
+      };
+      
   
     // Start after 13.8s, repeat every 6.3s
     setTimeout(() => {
