@@ -629,81 +629,23 @@ a.clickable.bold-text:hover {
 }
 
 @keyframes refined-wiggle {
-    0%   { transform: scale(1, 1) rotate(0deg); filter: blur(0px); }
-    10%  { transform: scale(1.025, 0.975) rotate(-2deg); filter: blur(0.05px); }
-    22%  { transform: scale(0.98, 1.02) rotate(2deg); filter: blur(0.15px); }
-    36%  { transform: scale(1.015, 0.985) rotate(-1.4deg); filter: blur(0.2px); }
-    52%  { transform: scale(0.99, 1.01) rotate(1.1deg); filter: blur(0.1px); }
-    68%  { transform: scale(1.005, 0.995) rotate(-0.6deg); filter: blur(0.05px); }
-    84%  { transform: scale(0.997, 1.003) rotate(0.3deg); filter: blur(0.02px); }
-    100% { transform: scale(1, 1) rotate(0deg); filter: blur(0px); }
-  }
-  
-  .wiggle {
-    animation: refined-wiggle 1.2s cubic-bezier(0.45, 0, 0.2, 1);
-    animation-fill-mode: both;
-    will-change: transform, filter;
-    transform-origin: center;
-  }
-  
-  @media (prefers-reduced-motion: reduce) {
-    .wiggle {
-      animation: none !important;
-      transform: none !important;
-      filter: none !important;
-      will-change: auto;
-      position: relative;
-      display: inline-block;
-      vertical-align: middle;
-      line-height: 1;
-      white-space: nowrap;
-    }
-  
-    .wiggle::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background: #bcdcff;
-      opacity: 0;
-      pointer-events: none;
-      z-index: -1;
-      animation: highlight-bar 1.2s ease-in-out;
-      transform: scaleX(0);
-      transform-origin: left;
-    }
-  
-    @keyframes highlight-bar {
-      0%   { transform: scaleX(0); opacity: 0; }
-      50%  { transform: scaleX(1); opacity: 0.5; }
-      100% { transform: scaleX(0); opacity: 0; }
-    }
-  
-    /* HEADER IMAGE */
-    .wiggle.image-highlight::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: #bcdcff;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 1;
-      animation: image-highlight 1.2s ease-in-out;
-    }
-  
-    @keyframes image-highlight {
-      0%   { opacity: 0; }
-      50%  { opacity: 0.3; }
-      100% { opacity: 0; }
-    }
-  
-    .wiggle.image-highlight img {
-      display: block;
-    }
-  }
-  
+  0%   { transform: scale(1, 1) rotate(0deg); filter: blur(0px); }
+  10%  { transform: scale(1.025, 0.975) rotate(-2deg); filter: blur(0.5px); }
+  22%  { transform: scale(0.98, 1.02) rotate(2deg); filter: blur(0.15px); }
+  36%  { transform: scale(1.015, 0.985) rotate(-1.4deg); filter: blur(0.2px); }
+  52%  { transform: scale(0.99, 1.01) rotate(1.1deg); filter: blur(0.1px); }
+  68%  { transform: scale(1.005, 0.995) rotate(-0.6deg); filter: blur(0.05px); }
+  84%  { transform: scale(0.997, 1.003) rotate(0.3deg); filter: blur(0.02px); }
+  100% { transform: scale(1, 1) rotate(0deg); filter: blur(0px); }
+}
+
+.wiggle {
+  animation: refined-wiggle 1.2s cubic-bezier(0.45, 0, 0.2, 1);
+  animation-fill-mode: both;
+  will-change: transform, filter;
+  transform-origin: center;
+}
+
 
 /* Allow transform animations to show */
 #link-personal,
