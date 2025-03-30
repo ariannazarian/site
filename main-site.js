@@ -439,13 +439,14 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener('DOMContentLoaded', () => {
     // Define clickable targets by ID
     const targets = {
-      'link-personal': document.querySelector('#link-personal'),
-      'link-work': document.querySelector('#link-work'),
-      'label-ariann': document.querySelector('#label-ariann'),
-      'label-usc': document.querySelector('#label-usc'),
-      'label-edu': document.querySelector('#label-edu'),
-      'header-img': document.querySelector('#header-img')
-    };
+        'link-personal': document.querySelector('#link-personal')?.closest('.wiggle-wrapper'),
+        'link-work': document.querySelector('#link-work')?.closest('.wiggle-wrapper'),
+        'label-ariann': document.querySelector('#label-ariann')?.closest('.wiggle-wrapper'),
+        'label-usc': document.querySelector('#label-usc')?.closest('.wiggle-wrapper'),
+        'label-edu': document.querySelector('#label-edu')?.closest('.wiggle-wrapper'),
+        'header-img': document.querySelector('#header-img')?.closest('.wiggle-wrapper')
+      };
+      
   
     const unclicked = new Set(Object.keys(targets));
     let lastAnimated = null;
