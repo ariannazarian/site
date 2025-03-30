@@ -647,51 +647,48 @@ a.clickable.bold-text:hover {
   }
   
   @media (prefers-reduced-motion: reduce) {
+    /* Prevent all motion effects */
     .wiggle {
-      position: relative;
-      overflow: hidden;
       animation: none !important;
       transform: none !important;
       filter: none !important;
       will-change: auto;
     }
   
-    /* For text-based elements */
-    .wiggle:not(img)::after {
+    /* Ensure the wrapper does not affect layout */
+    .wiggle-wrapper {
+      display: inline-block;
+      position: relative;
+    }
+  
+    /* Ensure image fills its wrapper for proper overlay */
+    .wiggle-wrapper img {
+      display: block;
+    }
+  
+    /* Simulated selection highlight effect */
+    .wiggle-wrapper::before {
       content: '';
       position: absolute;
       inset: 0;
-      width: 0%;
-      background: #bcdcff;
-      opacity: 0.5;
+      background: #bcdcff; /* Native selection-like blue */
+      opacity: 0.3;
       pointer-events: none;
-      z-index: 0;
+      z-index: 1;
+      transform: scaleX(0);
+      transform-origin: left;
       animation: highlight-bar 1.3s ease-in-out;
     }
   
-    /* For the header image */
-    img.wiggle::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: #bcdcff;
-      opacity: 0.3;
-      pointer-events: none;
-      animation: image-highlight 1.3s ease-in-out;
-    }
-  
+    /* Animated bar highlight: swipe left → right → fade */
     @keyframes highlight-bar {
-      0%   { width: 0%; }
-      50%  { width: 100%; }
-      100% { width: 0%; }
-    }
-  
-    @keyframes image-highlight {
-      0%   { opacity: 0; }
-      50%  { opacity: 0.3; }
-      100% { opacity: 0; }
+      0%   { transform: scaleX(0); opacity: 0; }
+      50%  { transform: scaleX(1); opacity: 0.3; }
+      100% { transform: scaleX(0); opacity: 0; }
     }
   }
+  
+  
 
 /* Allow transform animations to show */
 #link-personal,
