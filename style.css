@@ -651,7 +651,8 @@ a.clickable.bold-text:hover {
       animation: none !important;
     }
   
-    .wiggle.reduced-text span {
+    /* Text Highlight */
+    .reduced-text span {
       display: inline-block;
       animation: highlight-blue 1s ease-in-out forwards;
     }
@@ -662,34 +663,27 @@ a.clickable.bold-text:hover {
       100% { background-color: #3390FF; color: white; }
     }
   
+    /* Header Image Highlight Overlay */
     .highlight-overlay {
       position: absolute;
       top: 0;
-      left: 0;
       height: 100%;
       width: 33.33%;
-      background: rgba(51, 144, 255, 0.4);
+      background: rgba(51, 144, 255, 0.35); /* soft blue overlay */
       pointer-events: none;
       opacity: 0;
       animation: image-sweep 0.5s ease-in-out forwards;
     }
   
-    .highlight-overlay.step-2 {
-      left: 33.33%;
-      animation-delay: 0.5s;
-    }
-  
-    .highlight-overlay.step-3 {
-      left: 66.66%;
-      animation-delay: 1s;
-    }
+    .highlight-overlay.step-2 { left: 33.33%; animation-delay: 0.5s; }
+    .highlight-overlay.step-3 { left: 66.66%; animation-delay: 1s; }
   
     @keyframes image-sweep {
-      0% { opacity: 0; }
+      0%   { opacity: 0; }
       100% { opacity: 1; }
     }
   }
-    
+  
   
 /* Allow transform animations to show */
 #link-personal,

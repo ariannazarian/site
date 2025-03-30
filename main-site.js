@@ -480,126 +480,44 @@ document.addEventListener('DOMContentLoaded', () => {
   
       const randomId = candidates[Math.floor(Math.random() * candidates.length)];
       const element = targets[randomId];
-  
       if (!element) return;
   
-      element.classList.remove('wiggle', 'reduced-text', 'reduced-image-wrapper', 'step-1', 'step-2', 'step-3');
+      element.classList.remove('wiggle', 'reduced-text');
       void element.offsetWidth;
       element.classList.add('wiggle');
   
-      document.addEventListener('DOMContentLoaded', () => {
-        const targets = {
-          'link-personal': document.querySelector('#link-personal'),
-          'link-work': document.querySelector('#link-work'),
-          'label-ariann': document.querySelector('#label-ariann'),
-          'label-usc': document.querySelector('#label-usc'),
-          'label-edu': document.querySelector('#label-edu'),
-          'header-img': document.querySelector('#header-img')
-        };
-      
-        const unclicked = new Set(Object.keys(targets));
-        let lastAnimated = null;
-        let secondLastAnimated = null;
-        const animationDuration = 1200;
-        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      
-        for (const [id, element] of Object.entries(targets)) {
-          if (element) {
-            element.addEventListener('click', () => {
-              unclicked.delete(id);
-            });
+      if (prefersReduced) {
+        if (element.id === 'header-img') {
+          const container = element.parentElement;
+          container.style.position = 'relative';
+  
+          for (let i = 1; i <= 3; i++) {
+            const overlay = document.createElement('div');
+            overlay.className = `highlight-overlay step-${i}`;
+            overlay.style.left = `${(i - 1) * 33.33}%`;
+            container.appendChild(overlay);
+  
+            setTimeout(() => overlay.remove(), 3000);
           }
+        } else {
+          const originalText = element.textContent;
+          const chars = [...originalText];
+          const stepDuration = 500;
+  
+          element.innerHTML = chars.map((char, i) => {
+            const pairIndex = Math.floor(i / 2);
+            return `<span style="animation-delay: ${pairIndex * stepDuration}ms">${char}</span>`;
+          }).join('');
+          element.classList.add('reduced-text');
         }
-      
-        const animateRandom = () => {
-          if (unclicked.size === 0) return;
-      
-          const unclickedArray = Array.from(unclicked);
-          let candidates = [...unclickedArray];
-      
-          if (unclickedArray.length > 2) {
-            candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
-          } else if (unclickedArray.length === 2 && lastAnimated !== null) {
-            candidates = candidates.filter(id => id !== lastAnimated);
-          }
-      
-          if (candidates.length === 0) {
-            candidates = unclickedArray;
-            lastAnimated = null;
-            secondLastAnimated = null;
-          }
-      
-          const randomId = candidates[Math.floor(Math.random() * candidates.length)];
-          const element = targets[randomId];
-      
-          if (!element) return;
-      
-          element.classList.remove('wiggle', 'reduced-text');
-          void element.offsetWidth;
-          element.classList.add('wiggle');
-      
-          if (prefersReduced) {
-            if (element.id === 'header-img') {
-              const container = element.parentElement;
-              container.style.position = 'relative';
-      
-              for (let i = 1; i <= 3; i++) {
-                const overlay = document.createElement('div');
-                overlay.className = `highlight-overlay step-${i}`;
-                overlay.style.position = 'absolute';
-                container.appendChild(overlay);
-      
-                setTimeout(() => {
-                  overlay.remove();
-                }, 3000); // Cleanup after full sequence
-              }
-            } else {
-              const originalText = element.textContent;
-              const chars = [...originalText];
-              const stepDuration = 500;
-              const stepCount = Math.ceil(chars.length / 2);
-      
-              element.innerHTML = chars.map((char, i) => {
-                const pairIndex = Math.floor(i / 2);
-                return `<span style="animation-delay: ${pairIndex * stepDuration}ms">${char}</span>`;
-              }).join('');
-              element.classList.add('reduced-text');
-            }
-          }
-      
-          const cleanupTime = prefersReduced ? 3000 : animationDuration;
-      
-          setTimeout(() => {
-            element.classList.remove('wiggle', 'reduced-text');
-            if (prefersReduced && element.id !== 'header-img') {
-              element.textContent = element.textContent;
-            }
-          }, cleanupTime);
-      
-          secondLastAnimated = lastAnimated;
-          lastAnimated = randomId;
-        };
-      
-        setTimeout(() => {
-          animateRandom();
-          setInterval(animateRandom, 6300);
-        }, 13800);
-      });
-      
+      }
   
       const cleanupTime = prefersReduced ? 3000 : animationDuration;
   
       setTimeout(() => {
-        element.classList.remove('wiggle', 'reduced-text', 'reduced-image-wrapper', 'step-1', 'step-2', 'step-3');
-  
-        if (prefersReduced) {
-          if (element.id === 'header-img') {
-            const wrapper = element.parentElement;
-            const parent = wrapper.parentElement;
-            parent.replaceChild(element, wrapper);
-          } else {
-            element.textContent = element.textContent;
-          }
+        element.classList.remove('wiggle', 'reduced-text');
+        if (prefersReduced && element.id !== 'header-img') {
+          element.textContent = element.textContent;
         }
       }, cleanupTime);
   
