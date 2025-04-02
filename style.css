@@ -668,11 +668,11 @@ a.clickable.bold-text:hover {
         color: inherit;
       }
       20% {
-        background-color: rgba(51, 144, 255, 0.35);
+        background-color: rgba(51, 144, 255, 0.4);
         color: white;
       }
       100% {
-        background-color: rgba(51, 144, 255, 0.35);
+        background-color: rgba(51, 144, 255, 0.4);
         color: white;
       }
     }
@@ -682,7 +682,7 @@ a.clickable.bold-text:hover {
         position: absolute;
         top: 0;
         height: 100%;
-        background: rgba(51, 144, 255, 0.35); /* semi-transparent highlight */
+        background: rgba(51, 144, 255, 0.4); /* semi-transparent highlight */
         pointer-events: none;
         opacity: 0;
         animation: image-sweep 0.3s ease-out forwards;
