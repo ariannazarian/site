@@ -494,37 +494,49 @@ document.addEventListener('DOMContentLoaded', () => {
           const container = element.parentElement;
           container.style.position = 'relative';
   
-          for (let i = 1; i <= 3; i++) {
-            const overlay = document.createElement('div');
-            overlay.className = `highlight-overlay step-${i}`;
-            overlay.style.left = `${(i - 1) * 33.33}%`;
-            overlay.style.animationDelay = `${(i - 1) * 100}ms`;
-            container.appendChild(overlay);
+          const fadeDuration = 300;              // fade-in for each overlay
+          const delays = [0, 300, 600];          // step-1, step-2, step-3
+          const totalDuration = 1800;            // all overlays removed at once
   
-            setTimeout(() => overlay.remove(), 600); // snappy removal
-          }
+          delays.forEach((delay, i) => {
+            const overlay = document.createElement('div');
+            overlay.className = `highlight-overlay step-${i + 1}`;
+            overlay.style.left = `${i * 33.33}%`;
+            overlay.style.animationDelay = `${delay}ms`;
+            overlay.style.animationDuration = `${fadeDuration}ms`;
+            overlay.style.animationFillMode = 'forwards';
+            container.appendChild(overlay);
+          });
+  
+          // Remove all overlays after 1.8s total
+          setTimeout(() => {
+            const overlays = container.querySelectorAll('.highlight-overlay');
+            overlays.forEach(overlay => overlay.remove());
+          }, totalDuration);
   
         } else {
           const originalText = element.textContent;
           const chars = [...originalText];
   
-          element.innerHTML = chars.map((char, i) => {
-            return `<span style="animation-delay: ${i * 40}ms">${char}</span>`;
-          }).join('');
+          element.innerHTML = '';
+          chars.forEach((char, i) => {
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.style.animationDelay = `${i * 40}ms`;
+            element.appendChild(span);
+          });
   
           element.classList.add('reduced-text');
-  
-          // force reflow to trigger animation
-          void element.offsetWidth;
+          void element.offsetWidth; // force reflow for animations to start
         }
       }
   
-      const cleanupTime = prefersReduced ? 800 : animationDuration;
+      const cleanupTime = prefersReduced ? 1800 : animationDuration;
   
       setTimeout(() => {
         element.classList.remove('wiggle', 'reduced-text');
         if (prefersReduced && element.id !== 'header-img') {
-          element.textContent = element.textContent;
+          element.textContent = element.textContent; // restore original
         }
       }, cleanupTime);
   

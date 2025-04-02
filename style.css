@@ -647,6 +647,35 @@ a.clickable.bold-text:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .wiggle {
+      animation: none !important;
+    }
+  
+    .reduced-text span {
+      display: inline-block;
+      opacity: 0;
+      animation: highlight-blue 0.3s ease-out forwards;
+      animation-fill-mode: forwards;
+    }
+  
+    @keyframes highlight-blue {
+      0% {
+        background-color: transparent;
+        color: inherit;
+        opacity: 0;
+      }
+      20% {
+        background-color: #3390FF;
+        color: white;
+        opacity: 1;
+      }
+      100% {
+        background-color: #3390FF;
+        color: white;
+        opacity: 1;
+      }
+    }
+  
     .highlight-overlay {
       position: absolute;
       top: 0;
@@ -659,14 +688,16 @@ a.clickable.bold-text:hover {
       animation-fill-mode: forwards;
     }
   
+    .highlight-overlay.step-1 {
+      left: 0%;
+    }
+  
     .highlight-overlay.step-2 {
       left: 33.33%;
-      animation-delay: 0.1s;
     }
   
     .highlight-overlay.step-3 {
       left: 66.66%;
-      animation-delay: 0.2s;
     }
   
     @keyframes image-sweep {
@@ -674,6 +705,7 @@ a.clickable.bold-text:hover {
       100% { opacity: 1; }
     }
   }
+  
   
   
 /* Allow transform animations to show */
