@@ -653,13 +653,27 @@ a.clickable.bold-text:hover {
   
     .reduced-text span {
       display: inline-block;
+      opacity: 0;
       animation: highlight-blue 0.3s linear forwards;
+      animation-fill-mode: forwards;
     }
   
     @keyframes highlight-blue {
-      0%   { background-color: transparent; color: inherit; }
-      25%  { background-color: #3390FF; color: white; }
-      100% { background-color: #3390FF; color: white; }
+      0% {
+        background-color: transparent;
+        color: inherit;
+        opacity: 0;
+      }
+      20% {
+        background-color: #3390FF;
+        color: white;
+        opacity: 1;
+      }
+      100% {
+        background-color: #3390FF;
+        color: white;
+        opacity: 1;
+      }
     }
   
     .highlight-overlay {
@@ -671,24 +685,24 @@ a.clickable.bold-text:hover {
       pointer-events: none;
       opacity: 0;
       animation: image-sweep 0.3s ease-in-out forwards;
+      animation-fill-mode: forwards;
     }
   
     .highlight-overlay.step-2 {
       left: 33.33%;
-      animation-delay: 0.15s;}
+      animation-delay: 0.1s;
+    }
   
     .highlight-overlay.step-3 {
       left: 66.66%;
-      animation-delay: 0.3s;}
+      animation-delay: 0.2s;
+    }
   
     @keyframes image-sweep {
       0%   { opacity: 0; }
       100% { opacity: 1; }
     }
-  }
-  
-  
-  
+  }  
   
 /* Allow transform animations to show */
 #link-personal,
