@@ -679,15 +679,16 @@ a.clickable.bold-text:hover {
   
     /* Image section highlight (6 dynamic sections via JS) */
     .highlight-overlay {
-      position: absolute;
-      top: 0;
-      height: 100%;
-      background: #3390FF; /* same as highlight-blue */
-      pointer-events: none;
-      opacity: 0;
-      animation: image-sweep 0.3s ease-out forwards;
-      animation-fill-mode: forwards;
-    }
+        position: absolute;
+        top: 0;
+        height: 100%;
+        background: rgba(51, 144, 255, 0.35); /* semi-transparent highlight */
+        pointer-events: none;
+        opacity: 0;
+        animation: image-sweep 0.3s ease-out forwards;
+        animation-fill-mode: forwards;
+      }
+      
   
     @keyframes image-sweep {
       0%   { opacity: 0; }
