@@ -484,7 +484,10 @@ document.addEventListener('DOMContentLoaded', () => {
   
       element.classList.remove('wiggle', 'reduced-text');
       void element.offsetWidth;
-      element.classList.add('wiggle');
+  
+      if (!prefersReduced) {
+        element.classList.add('wiggle');
+      }
   
       if (prefersReduced) {
         if (element.id === 'header-img') {
@@ -497,27 +500,26 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.style.left = `${(i - 1) * 33.33}%`;
             overlay.style.animationDelay = `${(i - 1) * 100}ms`;
             container.appendChild(overlay);
-          
-            // Shorter overall duration
-            setTimeout(() => overlay.remove(), 1800); // feels snappy
+  
+            setTimeout(() => overlay.remove(), 600); // snappy removal
           }
-          
+  
         } else {
           const originalText = element.textContent;
           const chars = [...originalText];
-          const stepDuration = 300;
   
-          // TRUE left-to-right highlight by inserting animation delay on pairs
           element.innerHTML = chars.map((char, i) => {
-            const pairIndex = Math.floor(i / 2);
-            return `<span style="animation-delay: ${pairIndex * stepDuration}ms">${char}</span>`;
+            return `<span style="animation-delay: ${i * 40}ms">${char}</span>`;
           }).join('');
   
           element.classList.add('reduced-text');
+  
+          // force reflow to trigger animation
+          void element.offsetWidth;
         }
       }
   
-      const cleanupTime = prefersReduced ? 1800 : animationDuration;
+      const cleanupTime = prefersReduced ? 800 : animationDuration;
   
       setTimeout(() => {
         element.classList.remove('wiggle', 'reduced-text');
@@ -530,9 +532,11 @@ document.addEventListener('DOMContentLoaded', () => {
       lastAnimated = randomId;
     };
   
+    // Fast test timing (adjust later if needed)
     setTimeout(() => {
       animateRandom();
       setInterval(animateRandom, 3300);
     }, 3800);
   });
+  
   
