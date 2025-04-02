@@ -494,25 +494,26 @@ document.addEventListener('DOMContentLoaded', () => {
           const container = element.parentElement;
           container.style.position = 'relative';
   
-          const fadeDuration = 300;              // fade-in for each overlay
-          const delays = [0, 300, 600];          // step-1, step-2, step-3
-          const totalDuration = 1800;            // all overlays removed at once
+          const sectionCount = 6;
+          const stepDelay = 40;         // 40ms per section
+          const fadeDuration = 300;     // fade-in duration
+          const totalHoldTime = 1800;   // total display time from start
   
-          delays.forEach((delay, i) => {
+          for (let i = 0; i < sectionCount; i++) {
             const overlay = document.createElement('div');
             overlay.className = `highlight-overlay step-${i + 1}`;
-            overlay.style.left = `${i * 33.33}%`;
-            overlay.style.animationDelay = `${delay}ms`;
+            overlay.style.left = `${i * (100 / sectionCount)}%`;
+            overlay.style.width = `${100 / sectionCount}%`;
+            overlay.style.animationDelay = `${i * stepDelay}ms`;
             overlay.style.animationDuration = `${fadeDuration}ms`;
             overlay.style.animationFillMode = 'forwards';
             container.appendChild(overlay);
-          });
+          }
   
-          // Remove all overlays after 1.8s total
           setTimeout(() => {
             const overlays = container.querySelectorAll('.highlight-overlay');
             overlays.forEach(overlay => overlay.remove());
-          }, totalDuration);
+          }, totalHoldTime);
   
         } else {
           const originalText = element.textContent;
@@ -527,7 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
   
           element.classList.add('reduced-text');
-          void element.offsetWidth; // force reflow for animations to start
+          void element.offsetWidth;
         }
       }
   
@@ -536,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         element.classList.remove('wiggle', 'reduced-text');
         if (prefersReduced && element.id !== 'header-img') {
-          element.textContent = element.textContent; // restore original
+          element.textContent = element.textContent;
         }
       }, cleanupTime);
   
@@ -544,11 +545,9 @@ document.addEventListener('DOMContentLoaded', () => {
       lastAnimated = randomId;
     };
   
-    // Fast test timing (adjust later if needed)
     setTimeout(() => {
       animateRandom();
       setInterval(animateRandom, 3300);
     }, 3800);
   });
-  
   

@@ -647,17 +647,19 @@ a.clickable.bold-text:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    /* Disable wiggle animations */
     .wiggle {
       animation: none !important;
     }
   
+    /* Text character highlight */
     .reduced-text span {
       display: inline-block;
       background-color: transparent;
       color: inherit;
       animation: highlight-blue 0.3s ease-out forwards;
       animation-fill-mode: forwards;
-      opacity: 1; /* no fade from 0 */
+      opacity: 1; /* always visible, don't fade in */
     }
   
     @keyframes highlight-blue {
@@ -675,38 +677,23 @@ a.clickable.bold-text:hover {
       }
     }
   
-  
+    /* Image section highlight (6 dynamic sections via JS) */
     .highlight-overlay {
       position: absolute;
       top: 0;
       height: 100%;
-      width: 33.33%;
-      background: rgba(51, 144, 255, 0.35);
+      background: #3390FF; /* same as highlight-blue */
       pointer-events: none;
       opacity: 0;
       animation: image-sweep 0.3s ease-out forwards;
       animation-fill-mode: forwards;
     }
   
-    .highlight-overlay.step-1 {
-      left: 0%;
-    }
-  
-    .highlight-overlay.step-2 {
-      left: 33.33%;
-    }
-  
-    .highlight-overlay.step-3 {
-      left: 66.66%;
-    }
-  
     @keyframes image-sweep {
       0%   { opacity: 0; }
       100% { opacity: 1; }
     }
-  }
-  
-  
+  }  
   
 /* Allow transform animations to show */
 #link-personal,
