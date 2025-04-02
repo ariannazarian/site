@@ -645,7 +645,7 @@ a.clickable.bold-text:hover {
   
 
 .wiggle {
-  animation: refined-wiggle 1.2s cubic-bezier(0.45, 0, 0.2, 1);
+  animation: refined-wiggle 1.2s cubic-bezier(0.25, 1.25, 0.5, 1);
   animation-fill-mode: both;
   will-change: transform, filter;
   transform-origin: center;

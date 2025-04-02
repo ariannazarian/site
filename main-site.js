@@ -550,7 +550,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     setTimeout(() => {
       animateRandom();
-      setInterval(animateRandom, 3300);
-    }, 3800);
+      setInterval(animateRandom, 5400);
+    }, 9600);
   });
   
