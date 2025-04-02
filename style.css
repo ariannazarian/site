@@ -663,19 +663,20 @@ a.clickable.bold-text:hover {
     }
   
     @keyframes highlight-blue {
-      0% {
-        background-color: transparent;
-        color: inherit;
+        0% {
+          background-color: transparent;
+          color: inherit;
+        }
+        20% {
+          background-color: rgba(51, 144, 255, 0.35);
+          color: black; /* or inherit, depending on your style */
+        }
+        100% {
+          background-color: rgba(51, 144, 255, 0.35);
+          color: black;
+        }
       }
-      20% {
-        background-color: #3390FF;
-        color: white;
-      }
-      100% {
-        background-color: #3390FF;
-        color: white;
-      }
-    }
+      
   
     /* Image section highlight (6 dynamic sections via JS) */
     .highlight-overlay {
