@@ -452,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const unclicked = new Set(Object.keys(targets));
     let lastAnimated = null;
     let secondLastAnimated = null;
-    const animationDuration = 1300;
+    const animationDuration = 1200;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   
     for (const [id, element] of Object.entries(targets)) {
