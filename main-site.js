@@ -495,11 +495,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const overlay = document.createElement('div');
             overlay.className = `highlight-overlay step-${i}`;
             overlay.style.left = `${(i - 1) * 33.33}%`;
-            overlay.style.animationDelay = `${(i - 1) * 300}ms`;
+            overlay.style.animationDelay = `${(i - 1) * 100}ms`;
             container.appendChild(overlay);
-  
-            setTimeout(() => overlay.remove(), 1800);
+          
+            // Shorter overall duration
+            setTimeout(() => overlay.remove(), 1800); // feels snappy
           }
+          
         } else {
           const originalText = element.textContent;
           const chars = [...originalText];
@@ -530,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     setTimeout(() => {
       animateRandom();
-      setInterval(animateRandom, 6300);
-    }, 13800);
+      setInterval(animateRandom, 3300);
+    }, 3800);
   });
   
