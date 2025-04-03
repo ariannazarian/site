@@ -27,22 +27,22 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#current-time").innerText = getFrozenUTCDate();
 
     function toggleEternalWatch() {
-        const hiddenText = document.querySelector("#hidden-text");
-        const arrow = document.querySelector("#eternal-arrow");
-        const wasHidden = hiddenText.classList.contains("hidden");
+        let hiddenText = document.querySelector("#hidden-text");
+        let arrow = document.querySelector("#eternal-arrow");
+        let expanded = hiddenText.style.display === "block";
     
-        // Stop blink on first use
         if (!hasToggledEternalOnce) {
             arrow.classList.remove("blink-arrow");
             hasToggledEternalOnce = true;
         }
     
-        // Toggle visibility
-        hiddenText.classList.toggle("hidden");
-        arrow.innerText = wasHidden ? "▲" : "▼";
-        document.querySelector("#eternal-title").setAttribute("aria-expanded", wasHidden ? "true" : "false");
+        if (expanded) {
+            hiddenText.style.display = "none";
+            arrow.innerText = "▼";
+        } else {
+            hiddenText.style.display = "block";
+            arrow.innerText = "▲";
     
-        if (wasHidden) {
             if (!hasRevealedStoryOnce) {
                 fadeInStoryGroups(() => {
                     fadeInWatchText();
@@ -57,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
-        
     
 
     document.querySelector("#hidden-text").style.display = "none";
@@ -198,6 +197,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    document.querySelector("#eternal-title").addEventListener("click", () => {
+        toggleWatchText();
+    });
     document.querySelector("#current-time").addEventListener("click", () => {
         toggleWatchText();
     });

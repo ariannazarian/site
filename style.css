@@ -551,120 +551,72 @@ a.clickable.bold-text:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
 
-#ants-title {
-    font-size: var(--text-size);
-    font-weight: bold;
-    margin-top: 20px;
-    margin-bottom: 0px;
-    text-align: center;
-    transition: text-shadow 0.3s ease;
-}
-
-/* ✅ Utility class for hiding sections */
-.hidden {
-    display: none !important;
-}
-
-/* ✅ Title hover effect */
-#ants-title {
-    font-size: var(--text-size);
-    font-weight: bold;
-    margin-top: 20px;
-    margin-bottom: 0px;
-    text-align: center;
-    transition: text-shadow 0.3s ease;
-}
-
-#ants-title:hover {
-    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
-}
-
-/* ✅ Arrow animation & control */
-#ants-arrow {
-    transition: opacity 0.3s ease-in-out;
-}
-
-#ants-arrow:not(.blink-arrow) {
-    animation: none !important;
-}
-
-.blink-arrow {
-    animation: blink 1s infinite alternate;
-}
-
-@keyframes blink {
-    0% { opacity: 1; }
-    100% { opacity: 0.3; }
-}
-
-/* ✅ Section container */
 #ants-on-line {
     text-align: center;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin-top: 40px; /* Adds space above the simulation */
+    margin-bottom: 40px; /* Adds space below the simulation */
     font-size: 16px;
     color: white;
 }
 
-/* ✅ Stick appearance */
 #stick {
     position: relative;
     width: 90vw;
     max-width: 500px;
-    height: 5px;
+    height: 5px; /* Matches ant size for consistency */
     background: white;
     margin: 10px auto 5px;
 }
 
-/* ✅ Ant appearance and shared animation */
-.ant, .special-ant {
+.ant, .special-ant { /* ✅ All ants now share the same styling */
     position: absolute;
-    font-size: 10px;
+    font-size: 10px; /* ✅ Ensures normal & special ants are identical */
     transition: left 0.05s linear;
 }
 
 /* ✅ Normal ants above the stick */
 .ant {
-    top: -15px;
+    top: -15px; /* Keeps ants above the line */
     color: white;
 }
 
-/* ✅ Special ant container */
 #special-ants {
-    position: absolute;
-    top: 10px;
+    position: absolute; /* ✅ Ties it to the stick */
+    top: 10px; /* ✅ Moves it below the stick */
     height: 20px;
 }
 
-/* ✅ Special ant coloring */
+/* ✅ Special ants keep distinct colors */
 .special-ant {
-    font-size: 10px;
-    transition: color 0.1s ease;
+    position: absolute;
+    font-size: 10px; /* ✅ Same size as normal ants */
+    transition: color 0.1s ease; /* ✅ Smooth transition for flash effect */
 }
 
 .special-ant.left {
-    color: #00ffff; /* Cyan */
+    color: #00ffff; /* ✅ Cyan */
 }
 
 .special-ant.right {
-    color: #ff0000; /* Red */
+    color: #ff0000; /* ✅ Red (complementary to cyan) */
 }
 
 /* ✅ Flash effect on collision */
 .special-ant.flash {
-    color: #ffff00 !important;
-    transition: color 0s;
+    color: #ffff00 !important; /* ✅ Force flash to override default colors */
+    transition: color 0s; /* ✅ Ensure instant flash */
 }
 
-/* ✅ Info section: spacing + bold numbers */
+/* ✅ Make only the numbers bold, not the labels */
 #remaining-ants, #timer {
     font-weight: bold;
 }
 
+/* ✅ Add space between counters and the simulation */
 #ant-info {
-    display: inline-block;
-    margin-bottom: 20px;
-    line-height: 1.2;
+    display: inline-block; /* Ensures proper spacing */
+    margin-bottom: 20px; /* Increased for better separation */
+    line-height: 1.2; /* Adjusts spacing between text elements */
 }
 
 .work-page .video-title {
