@@ -476,14 +476,13 @@ img, a {
     background: #333333;
 }
 
-/* 🔹 Clickable coordinate reflections & matching years */
 .work-page #coordinate-reflections,
 .work-page .year-item {
     font-weight: bold;
     color: var(--white);
     text-decoration: none;
     cursor: pointer;
-    transition: text-shadow 0.3s ease;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease;
 }
 
 .work-page #coordinate-reflections:hover,
