@@ -29,20 +29,16 @@ document.addEventListener("DOMContentLoaded", () => {
     function toggleEternalWatch() {
         let hiddenText = document.querySelector("#hidden-text");
         let arrow = document.querySelector("#eternal-arrow");
-        let expanded = hiddenText.style.display === "block";
+        const isHidden = hiddenText.classList.toggle("hidden");
     
         if (!hasToggledEternalOnce) {
             arrow.classList.remove("blink-arrow");
             hasToggledEternalOnce = true;
         }
     
-        if (expanded) {
-            hiddenText.style.display = "none";
-            arrow.innerText = "▼";
-        } else {
-            hiddenText.style.display = "block";
-            arrow.innerText = "▲";
+        arrow.innerText = !isHidden ? "▲" : "▼";
     
+        if (!isHidden) {
             if (!hasRevealedStoryOnce) {
                 fadeInStoryGroups(() => {
                     fadeInWatchText();
@@ -56,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 fadeInWatchText();
             }
         }
-    }
+    }    
     
 
     document.querySelector("#hidden-text").style.display = "none";
