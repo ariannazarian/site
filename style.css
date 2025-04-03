@@ -708,3 +708,24 @@ a.clickable.bold-text:hover {
 #label-edu {
     display: inline-block;
 }
+
+#ants-title {
+    font-size: var(--text-size);
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    text-align: center;
+    transition: text-shadow 0.3s ease;
+}
+
+#ants-title:hover {
+    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
+}
+
+#ants-arrow {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#ants-arrow:not(.blink-arrow) {
+    animation: none !important;
+}

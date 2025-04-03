@@ -232,10 +232,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const isHidden = antsSection.classList.toggle("hidden");
 
             // Update aria-expanded
-            antsTitle.setAttribute("aria-expanded", String(!isHidden));
+            antsTitle.setAttribute("aria-expanded", !isHidden ? "true" : "false");
 
             // Change arrow direction and stop blinking after first click
-            antsArrow.textContent = isHidden ? "▼" : "▲";
+            antsArrow.textContent = !isHidden ? "▲" : "▼";
             antsArrow.classList.remove("blink-arrow");
         });
     }
