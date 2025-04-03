@@ -192,16 +192,21 @@ document.addEventListener("DOMContentLoaded", function () {
         clearInterval(timerInterval);
     }
 
-    // Toggle behavior
+    // ✅ Final unified toggle logic
     if (antsTitle && antsSection && antsArrow) {
         antsTitle.addEventListener("click", () => {
             const isHidden = antsSection.classList.toggle("hidden");
-            antsTitle.setAttribute("aria-expanded", String(!isHidden));
-            antsArrow.textContent = isHidden ? "▼" : "▲";
+
+            // Update aria
+            antsTitle.setAttribute("aria-expanded", !isHidden ? "true" : "false");
+
+            // Switch arrow direction + stop blinking
+            antsArrow.textContent = !isHidden ? "▲" : "▼";
             antsArrow.classList.remove("blink-arrow");
 
+            // Simulation control
             if (!isHidden) {
-                resetSimulation(); // Start when shown
+                resetSimulation();
             } else {
                 clearInterval(moveInterval);
                 stopTimer();
@@ -213,30 +218,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Allow manual restart on click (after sim ends)
+    // ✅ Manual restart only after sim ends
     antsSection.addEventListener("click", () => {
         if (ants.length === 0 && specialAnts.length === 0) {
             resetSimulation();
         }
     });
-});
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    const antsTitle = document.getElementById("ants-title");
-    const antsArrow = document.getElementById("ants-arrow");
-    const antsSection = document.getElementById("ants-on-line");
-
-    if (antsTitle && antsSection && antsArrow) {
-        antsTitle.addEventListener("click", () => {
-            const isHidden = antsSection.classList.toggle("hidden");
-
-            // Update aria-expanded
-            antsTitle.setAttribute("aria-expanded", !isHidden ? "true" : "false");
-
-            // Change arrow direction and stop blinking after first click
-            antsArrow.textContent = !isHidden ? "▲" : "▼";
-            antsArrow.classList.remove("blink-arrow");
-        });
-    }
 });
