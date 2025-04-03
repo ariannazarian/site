@@ -13,6 +13,8 @@
     <!-- JavaScript (Moved Here for Better Page Load Performance) -->
     <script src="main-site.js" defer></script>
     <script src="time-travel.js" defer></script>
+    <script src="ants.js" defer></script>
+
 </head>
 <body class="work-page">
     <header>
@@ -95,18 +97,26 @@
             </a>
         </p>
 
-    </section>
+     </section>
 
-    <section id="ants-on-line">
-        <div id="ant-info">
-            <span id="remaining-ants">0</span> ants remaining<br>
-            <span id="timer">0.00</span> seconds elapsed
-        </div>
-    
-        <div id="stick">
-            <div id="special-ants"></div> <!-- Moved inside the stick -->
-        </div>
-    </section>
+       <!-- Ants on a Stick Title -->
+        <h2 id="ants-title" class="clickable" role="button" aria-expanded="false">
+            Ants on a Stick <span id="ants-arrow" class="blink-arrow">▼</span>
+        </h2>
+
+        <!-- Ants Simulation Section (initially hidden) -->
+        <section id="ants-on-line" class="hidden">
+            <div id="ant-info">
+                <span id="remaining-ants">0</span> ants remaining<br>
+                <span id="timer">0.00</span> seconds elapsed
+            </div>
+
+            <div id="stick">
+                <div id="special-ants"></div> <!-- Special ants go here -->
+            </div>
+        </section>
+
+
     <main>
     </main>
     <footer>
