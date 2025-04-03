@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
 
     document.querySelector("#hidden-text").style.display = "none";
+    document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
     document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
 
     document.querySelector("#reveal-matching-alt").addEventListener("click", toggleMatchingYears);
@@ -197,9 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    document.querySelector("#eternal-title").addEventListener("click", () => {
-        toggleWatchText();
-    });
     document.querySelector("#current-time").addEventListener("click", () => {
         toggleWatchText();
     });
