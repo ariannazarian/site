@@ -27,18 +27,22 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#current-time").innerText = getFrozenUTCDate();
 
     function toggleEternalWatch() {
-        let hiddenText = document.querySelector("#hidden-text");
-        let arrow = document.querySelector("#eternal-arrow");
-        const isHidden = hiddenText.classList.toggle("hidden");
+        const hiddenText = document.querySelector("#hidden-text");
+        const arrow = document.querySelector("#eternal-arrow");
+        const wasHidden = hiddenText.classList.contains("hidden");
     
+        // Stop blink on first use
         if (!hasToggledEternalOnce) {
             arrow.classList.remove("blink-arrow");
             hasToggledEternalOnce = true;
         }
     
-        arrow.innerText = !isHidden ? "▲" : "▼";
+        // Toggle visibility
+        hiddenText.classList.toggle("hidden");
+        arrow.innerText = wasHidden ? "▲" : "▼";
+        document.querySelector("#eternal-title").setAttribute("aria-expanded", wasHidden ? "true" : "false");
     
-        if (!isHidden) {
+        if (wasHidden) {
             if (!hasRevealedStoryOnce) {
                 fadeInStoryGroups(() => {
                     fadeInWatchText();
@@ -52,7 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 fadeInWatchText();
             }
         }
-    }    
+    }
+        
     
 
     document.querySelector("#hidden-text").style.display = "none";
