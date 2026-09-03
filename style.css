@@ -723,6 +723,13 @@ a.clickable.bold-text:hover {
 }
 
 
+/* Major-page sections: create space only between explicitly marked siblings.
+   The general-sibling selector remains correct even when non-section UI
+   elements (such as a fixed popup) sit between the sections in the DOM. */
+.major-section ~ .major-section {
+    margin-top: 2.5rem;
+}
+
 /* ========================================================================== */
 /* Graphics section + refined image interaction language                      */
 /* ========================================================================== */
