@@ -726,23 +726,25 @@ a.clickable.bold-text:hover {
 /* Graphics section + refined image interaction language                      */
 /* ========================================================================== */
 
-/* Clickable header images live on white; keep the normal state unchanged. */
+/* Clickable header images live on white; keep the normal state unchanged.
+   Use box-shadow here so the hover cue never competes with the homepage
+   wiggle animation, which intentionally animates the filter property. */
 .header-image {
-    transition: opacity 0.3s ease-in-out, filter 0.25s ease;
+    transition: opacity 0.3s ease-in-out, box-shadow 0.25s ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
     .header-image:hover {
-        filter:
-            drop-shadow(0 0 4px rgba(0, 0, 0, 0.22))
-            drop-shadow(0 0 10px rgba(0, 0, 0, 0.10));
+        box-shadow:
+            0 0 5px rgba(0, 0, 0, 0.18),
+            0 0 12px rgba(0, 0, 0, 0.08);
     }
 }
 
 .header-image:active {
-    filter:
-        drop-shadow(0 0 4px rgba(0, 0, 0, 0.22))
-        drop-shadow(0 0 10px rgba(0, 0, 0, 0.10));
+    box-shadow:
+        0 0 5px rgba(0, 0, 0, 0.18),
+        0 0 12px rgba(0, 0, 0, 0.08);
 }
 
 /* Graphics follows the same collapsible-title vocabulary as Short Films. */
