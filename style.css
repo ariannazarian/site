@@ -575,7 +575,7 @@ a.clickable.bold-text:hover {
     position: relative;
     width: 90vw;
     max-width: 500px;
-    height: 5px; /* Matches ant size for consistency */
+    height: 5px; /* Thin visual baseline for the point-particle simulation */
     background: white;
     margin: 10px auto 5px;
 }
@@ -583,6 +583,7 @@ a.clickable.bold-text:hover {
 .ant, .special-ant { /* ✅ All ants now share the same styling */
     position: absolute;
     font-size: 10px; /* ✅ Ensures normal & special ants are identical */
+    transform: translateX(-50%); /* Render each glyph around its mathematical point position */
     transition: left 0.05s linear;
 }
 
@@ -1162,12 +1163,13 @@ nav a {
 /* ========================================================================== */
 
 /*
-   The simulation is intentionally inert while it is running. JavaScript adds
-   .is-resettable only after every ant has left the stick, so the same visible
-   simulation unit becomes gently interactive exactly when a click can restart
-   it. Hovering either the counters or the stick moves and illuminates the
-   complete unit together; blank space around the centered simulation does not
-   trigger the cue.
+   The simulation is intentionally inert while it is running. The white Monte
+   Carlo timer may finish first; JavaScript adds .is-resettable only after the
+   separate red/blue L/v benchmark has also completed. The same visible unit
+   therefore becomes gently interactive exactly when a click can restart it.
+   Hovering either the counters or the stick moves and illuminates the complete
+   unit together; blank space around the centered simulation does not trigger
+   the cue.
 */
 #ants-on-line {
     transform-origin: center;

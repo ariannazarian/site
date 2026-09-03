@@ -252,16 +252,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const pixelsPerSecond = 20;
     const maxStickWidth = 500;
     const maxAnts = 50;
-    const antSize = 5;
-    const EPSILON = 0.1;
 
     let stickWidth = 0;
     let numAnts = 0;
     let ants = [];
     let specialAnts = [];
     let startTime = null;
+    let whiteCompletionTime = 0;
+    let theoreticalMaxTime = 0;
     let timerInterval = null;
     let moveInterval = null;
+    let collisionFlashTimeout = null;
+    let specialCollisionFlashed = false;
     let simulationComplete = false;
     let hasToggledAntsOnce = false;
 
@@ -279,9 +281,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function stopCollisionFlash() {
+        if (collisionFlashTimeout !== null) {
+            clearTimeout(collisionFlashTimeout);
+            collisionFlashTimeout = null;
+        }
+    }
+
     function stopAndClearSimulation() {
         stopMovement();
         stopTimer();
+        stopCollisionFlash();
 
         stick.querySelectorAll(".ant").forEach(ant => ant.remove());
         specialAntsContainer.replaceChildren();
@@ -289,6 +299,9 @@ document.addEventListener("DOMContentLoaded", function () {
         ants = [];
         specialAnts = [];
         startTime = null;
+        whiteCompletionTime = 0;
+        theoreticalMaxTime = 0;
+        specialCollisionFlashed = false;
         simulationComplete = false;
         antsSection.classList.remove("is-resettable");
 
@@ -297,107 +310,140 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateRemainingAnts() {
-        const totalAnts = numAnts + 2;
-        const remainingAnts = ants.length + specialAnts.length;
-        remainingAntsDisplay.textContent = `${remainingAnts}/${totalAnts}`;
+        // The counter intentionally describes only the white Monte Carlo sample.
+        // The colored pair below the stick is a separate deterministic L/v benchmark.
+        remainingAntsDisplay.textContent = `${ants.length}/${numAnts}`;
     }
 
     function startTimer() {
-        const maxTime = (stickWidth / pixelsPerSecond).toFixed(2);
-        timerDisplay.textContent = `0.00 / ${maxTime}`;
+        const maxTimeText = theoreticalMaxTime.toFixed(2);
+        timerDisplay.textContent = `0.00 / ${maxTimeText}`;
 
         stopTimer();
         timerInterval = setInterval(() => {
-            if (ants.length === 0 && specialAnts.length === 0) {
-                stopTimer();
+            if (startTime === null) {
                 return;
             }
 
             const elapsed = (performance.now() - startTime) / 1000;
-            timerDisplay.textContent = `${elapsed.toFixed(2)} / ${maxTime}`;
+
+            // Freeze the timer at the exact completion time of the white sample.
+            // The red/blue benchmark continues independently to L/v.
+            if (elapsed >= whiteCompletionTime) {
+                timerDisplay.textContent = `${whiteCompletionTime.toFixed(2)} / ${maxTimeText}`;
+                stopTimer();
+                return;
+            }
+
+            timerDisplay.textContent = `${elapsed.toFixed(2)} / ${maxTimeText}`;
         }, 100);
     }
 
-    function removeFallenAnts(array) {
-        return array.filter(ant => {
-            const fellOffLeft = ant.direction === -1 && ant.position + antSize <= EPSILON;
-            const fellOffRight = ant.direction === 1 && ant.position >= stickWidth - EPSILON;
+    function randomOpenUnit() {
+        // Math.random() is in [0, 1). Reject the only endpoint it can return so
+        // white ants begin in the open interval (0, L), matching the point model.
+        let value = Math.random();
+        while (value === 0) {
+            value = Math.random();
+        }
+        return value;
+    }
 
-            if (fellOffLeft || fellOffRight) {
-                ant.element.remove();
-                return false;
-            }
+    function flashSpecialAnts(leftAnt, rightAnt) {
+        if (specialCollisionFlashed) {
+            return;
+        }
 
-            return true;
-        });
+        specialCollisionFlashed = true;
+        leftAnt.element.classList.add("flash");
+        rightAnt.element.classList.add("flash");
+
+        stopCollisionFlash();
+        collisionFlashTimeout = setTimeout(() => {
+            leftAnt.element.classList.remove("flash");
+            rightAnt.element.classList.remove("flash");
+            collisionFlashTimeout = null;
+        }, 100);
     }
 
     function moveAnts() {
-        let lastUpdateTime = performance.now();
-        let lastCollisionTime = 0;
-
         stopMovement();
         moveInterval = setInterval(() => {
-            const currentTime = performance.now();
-            const elapsedTime = (currentTime - lastUpdateTime) / 1000;
-            lastUpdateTime = currentTime;
-            const distanceToMove = pixelsPerSecond * elapsedTime;
-
-            ants.forEach(ant => {
-                ant.position += ant.direction * distanceToMove;
-                ant.element.style.left = `${ant.position}px`;
-            });
-
-            if (specialAnts.length === 2) {
-                const leftAnt = specialAnts[0];
-                const rightAnt = specialAnts[1];
-
-                leftAnt.position += leftAnt.direction * distanceToMove;
-                rightAnt.position += rightAnt.direction * distanceToMove;
-
-                leftAnt.element.style.left = `${leftAnt.position}px`;
-                rightAnt.element.style.left = `${rightAnt.position}px`;
-
-                const collisionThreshold = Math.max(antSize / 2, distanceToMove * 1.1);
-                if (Math.abs(leftAnt.position - rightAnt.position) <= collisionThreshold) {
-                    const now = performance.now();
-                    if (now - lastCollisionTime > 100) {
-                        lastCollisionTime = now;
-
-                        [leftAnt.direction, rightAnt.direction] = [rightAnt.direction, leftAnt.direction];
-                        leftAnt.element.textContent = leftAnt.direction === -1 ? "◀" : "▶";
-                        rightAnt.element.textContent = rightAnt.direction === -1 ? "◀" : "▶";
-
-                        leftAnt.element.classList.add("flash");
-                        rightAnt.element.classList.add("flash");
-                        setTimeout(() => {
-                            leftAnt.element.classList.remove("flash");
-                            rightAnt.element.classList.remove("flash");
-                        }, 100);
-                    }
-                }
-            }
-
-            const previousCount = ants.length + specialAnts.length;
-            ants = removeFallenAnts(ants);
-            specialAnts = removeFallenAnts(specialAnts);
-
-            if (ants.length + specialAnts.length !== previousCount) {
-                updateRemainingAnts();
-            }
-
-            if (ants.length === 0 && specialAnts.length === 0) {
-                stopMovement();
-                stopTimer();
-                updateRemainingAnts();
-                simulationComplete = true;
-                antsSection.classList.add("is-resettable");
+            if (startTime === null) {
                 return;
             }
 
             const elapsed = (performance.now() - startTime) / 1000;
-            if (elapsed > stickWidth / pixelsPerSecond + 1) {
-                console.warn("⚠️ Simulation running longer than theoretical max time");
+            let whiteCountChanged = false;
+
+            // White ants use the collision-invariant pass-through model. Their
+            // positions and exit times are analytical, so timer throttling or a
+            // slow browser cannot change the mathematical result.
+            ants = ants.filter(ant => {
+                if (elapsed >= ant.exitTime) {
+                    ant.element.remove();
+                    whiteCountChanged = true;
+                    return false;
+                }
+
+                ant.position = ant.startPosition + ant.direction * pixelsPerSecond * elapsed;
+                ant.element.style.left = `${ant.position}px`;
+                return true;
+            });
+
+            if (whiteCountChanged) {
+                updateRemainingAnts();
+
+                // Keep the visible timer synchronized with the frame in which
+                // the final white ant disappears, while preserving the exact T.
+                if (ants.length === 0) {
+                    timerDisplay.textContent = `${whiteCompletionTime.toFixed(2)} / ${theoreticalMaxTime.toFixed(2)}`;
+                    stopTimer();
+                }
+            }
+
+            // The colored pair is a separate exact worst-case benchmark. It
+            // starts at the endpoints, meets at L/2, reverses, and finishes at L/v.
+            if (specialAnts.length === 2) {
+                const leftAnt = specialAnts[0];
+                const rightAnt = specialAnts[1];
+                const collisionTime = theoreticalMaxTime / 2;
+
+                if (elapsed >= theoreticalMaxTime) {
+                    leftAnt.element.style.left = "0px";
+                    rightAnt.element.style.left = `${stickWidth}px`;
+                    leftAnt.element.remove();
+                    rightAnt.element.remove();
+                    specialAnts = [];
+
+                    stopMovement();
+                    stopTimer();
+                    updateRemainingAnts();
+                    simulationComplete = true;
+                    antsSection.classList.add("is-resettable");
+                    return;
+                }
+
+                if (elapsed < collisionTime) {
+                    leftAnt.position = pixelsPerSecond * elapsed;
+                    rightAnt.position = stickWidth - pixelsPerSecond * elapsed;
+                } else {
+                    const sinceCollision = elapsed - collisionTime;
+
+                    if (!specialCollisionFlashed) {
+                        leftAnt.direction = -1;
+                        rightAnt.direction = 1;
+                        leftAnt.element.textContent = "◀";
+                        rightAnt.element.textContent = "▶";
+                        flashSpecialAnts(leftAnt, rightAnt);
+                    }
+
+                    leftAnt.position = stickWidth / 2 - pixelsPerSecond * sinceCollision;
+                    rightAnt.position = stickWidth / 2 + pixelsPerSecond * sinceCollision;
+                }
+
+                leftAnt.element.style.left = `${leftAnt.position}px`;
+                rightAnt.element.style.left = `${rightAnt.position}px`;
             }
         }, 50);
     }
@@ -406,13 +452,15 @@ document.addEventListener("DOMContentLoaded", function () {
         stopAndClearSimulation();
 
         stickWidth = Math.min(window.innerWidth * 0.9, maxStickWidth);
-        numAnts = Math.min(maxAnts, Math.floor(stickWidth / (maxStickWidth / maxAnts)));
+        numAnts = Math.max(1, Math.min(maxAnts, Math.floor(stickWidth / (maxStickWidth / maxAnts))));
         stick.style.width = `${stickWidth}px`;
-        startTime = performance.now();
+        theoreticalMaxTime = stickWidth / pixelsPerSecond;
 
         for (let i = 0; i < numAnts; i++) {
-            const position = Math.random() * (stickWidth - antSize);
+            const position = randomOpenUnit() * stickWidth;
             const direction = Math.random() < 0.5 ? -1 : 1;
+            const exitDistance = direction === -1 ? position : stickWidth - position;
+            const exitTime = exitDistance / pixelsPerSecond;
 
             const ant = document.createElement("div");
             ant.className = "ant";
@@ -420,8 +468,16 @@ document.addEventListener("DOMContentLoaded", function () {
             ant.style.left = `${position}px`;
             stick.insertBefore(ant, specialAntsContainer);
 
-            ants.push({ element: ant, position, direction });
+            ants.push({
+                element: ant,
+                startPosition: position,
+                position,
+                direction,
+                exitTime
+            });
         }
+
+        whiteCompletionTime = Math.max(...ants.map(ant => ant.exitTime));
 
         const leftAnt = document.createElement("div");
         leftAnt.className = "special-ant left";
@@ -432,15 +488,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const rightAnt = document.createElement("div");
         rightAnt.className = "special-ant right";
         rightAnt.textContent = "◀";
-        rightAnt.style.left = `${stickWidth - antSize}px`;
+        rightAnt.style.left = `${stickWidth}px`;
         specialAntsContainer.appendChild(rightAnt);
 
         specialAnts = [
             { element: leftAnt, position: 0, direction: 1 },
-            { element: rightAnt, position: stickWidth - antSize, direction: -1 }
+            { element: rightAnt, position: stickWidth, direction: -1 }
         ];
 
+        specialCollisionFlashed = false;
         simulationComplete = false;
+        startTime = performance.now();
         updateRemainingAnts();
         startTimer();
         moveAnts();

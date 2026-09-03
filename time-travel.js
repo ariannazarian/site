@@ -114,14 +114,24 @@ document.addEventListener("DOMContentLoaded", () => {
         matchingYearsList.innerHTML = ""; // Clear previous years
         matchingYearsContainer.style.display = "block"; // Show the section
     
-        let now = new Date(frozenTime);
-        let month = now.getMonth() + 1;
-        let day = now.getDate();
-        let weekday = now.getDay();
-        let currentYear = new Date().getFullYear();
+        const month = frozenTime.getUTCMonth() + 1;
+        const day = frozenTime.getUTCDate();
+        const weekday = frozenTime.getUTCDay();
+        const currentYear = frozenTime.getUTCFullYear();
     
-        let years = Array.from({ length: currentYear - 1880 }, (_, i) => i + 1880)
-                         .filter(year => new Date(year, month - 1, day).getDay() === weekday);
+        const years = Array.from({ length: currentYear - 1880 }, (_, i) => i + 1880)
+            .filter(year => {
+                const candidate = new Date(Date.UTC(year, month - 1, day));
+
+                // Date() normalizes impossible dates (for example, February 29
+                // in a non-leap year). Verify that the requested calendar date
+                // survived construction before comparing its weekday.
+                const isSameDate =
+                    candidate.getUTCMonth() === month - 1 &&
+                    candidate.getUTCDate() === day;
+
+                return isSameDate && candidate.getUTCDay() === weekday;
+            });
     
         if (years.length > 0) {
             // Add "Coordinate Reflections:" before the first year.
