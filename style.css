@@ -799,6 +799,64 @@ a.clickable.bold-text:hover {
     font-size: var(--text-size);
 }
 
+/* The final status text is available to assistive technology immediately, while
+   the visible copy is typed only on its first reveal. */
+.model-is-accessible {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* The invisible measure reserves the final phrase width before typing starts,
+   preventing the line from changing geometry as characters appear. */
+.model-is-type-slot {
+    display: inline-grid;
+    vertical-align: baseline;
+}
+
+.model-is-measure,
+.model-is-typed {
+    grid-area: 1 / 1;
+    white-space: pre;
+}
+
+.model-is-measure {
+    visibility: hidden;
+}
+
+.model-is-typed {
+    justify-self: start;
+}
+
+/* A real insertion-caret metaphor: solid while text is being entered, then a
+   persistent discrete blink. This intentionally remains active in reduced-motion
+   mode so the status behaves identically across site variants and platforms. */
+.model-is-typed::after {
+    content: "";
+    display: inline-block;
+    width: 1px;
+    height: 1em;
+    margin-left: 2px;
+    background: currentColor;
+    vertical-align: -0.12em;
+    opacity: 1;
+}
+
+.model-is-typed.is-complete::after {
+    animation: model-is-caret-blink 1s step-end infinite;
+}
+
+@keyframes model-is-caret-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
 /* Main Fair Use shirt grid: same overall width rule as Short Films. */
 .fair-use-grid {
     width: 50%;
@@ -834,7 +892,7 @@ a.clickable.bold-text:hover {
     height: 100%;
     object-fit: contain;
     opacity: 0;
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s ease, filter 0.25s ease;
+    transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.25s ease, filter 0.25s ease;
     transform-origin: center;
 }
 
@@ -1098,7 +1156,7 @@ a.clickable.bold-text:hover {
 
 @media (prefers-reduced-motion: reduce) {
     .fair-use-item img {
-        transition: filter 0.2s ease, opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: filter 0.2s ease, opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .fair-use-thumb img {

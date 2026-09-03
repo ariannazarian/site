@@ -666,6 +666,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modelIsTitle = document.getElementById("model-is-title");
     const modelIsArrow = document.getElementById("model-is-arrow");
     const modelIsContent = document.getElementById("model-is-content");
+    const modelIsTyped = document.getElementById("model-is-typed");
 
     const fairUseItems = Array.from(document.querySelectorAll(".fair-use-item"));
     const popup = document.getElementById("fair-use-popup");
@@ -680,7 +681,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (
         !graphicsTitle || !graphicsArrow || !graphicsContent ||
         !fairUseTitle || !fairUseArrow || !fairUseContent ||
-        !modelIsTitle || !modelIsArrow || !modelIsContent ||
+        !modelIsTitle || !modelIsArrow || !modelIsContent || !modelIsTyped ||
         fairUseItems.length === 0 || !popup || !shield || !art || !caption ||
         !previousButton || !nextButton || !thumbnailContainer || !closeButton
     ) {
@@ -696,8 +697,11 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentIndex = 0;
     let thumbnailsReady = false;
     let fairUseRevealStarted = false;
+    let modelIsTypingStarted = false;
     const preloadedArtwork = new Set();
-    const shirtRevealStaggerMs = 75;
+    const shirtRevealStaggerMs = 85;
+    const modelIsTypingIntervalMs = 55;
+    const modelIsMessage = "under construction";
 
     function activateWithKeyboard(element, action) {
         element.addEventListener("keydown", event => {
@@ -821,10 +825,31 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    async function typeModelIsOnce() {
+        if (modelIsTypingStarted) return;
+        modelIsTypingStarted = true;
+
+        modelIsTyped.textContent = "";
+        modelIsTyped.classList.remove("is-complete");
+
+        // A fixed system-like cadence is intentional: this reads as interface
+        // feedback rather than an imitation of irregular human typing.
+        for (const character of modelIsMessage) {
+            await wait(modelIsTypingIntervalMs);
+            modelIsTyped.textContent += character;
+        }
+
+        modelIsTyped.classList.add("is-complete");
+    }
+
     function toggleModelIs() {
         const opening = modelIsTitle.getAttribute("aria-expanded") !== "true";
         modelIsArrow.classList.remove("blink-arrow");
         setPanel(modelIsTitle, modelIsArrow, modelIsContent, opening);
+
+        if (opening) {
+            typeModelIsOnce();
+        }
     }
 
     graphicsTitle.addEventListener("click", toggleGraphics);
