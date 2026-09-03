@@ -135,9 +135,14 @@ header .personal-text {
 }
 
 /* The Eternal Watch - No space between it and frozen time */
-#eternal-title {
+#eternal-title,
+#ants-title {
     font-size: var(--text-size);
     margin-bottom: 0px;
+}
+
+#ants-content {
+    display: none;
 }
 
 /* Frozen time display - Larger (24px) */
@@ -188,13 +193,14 @@ header .personal-text {
 }
 
 /* 🔹 Ensure ▲ remains unaffected */
-#eternal-arrow, #watch-arrow {
+#eternal-arrow, #watch-arrow, #ants-arrow {
     transition: opacity 0.3s ease-in-out;
 }
 
 /* 🔹 Stop blinking for "▲" by removing the animation */
 #eternal-arrow:not(.blink-arrow),
-#watch-arrow:not(.blink-arrow) {
+#watch-arrow:not(.blink-arrow),
+#ants-arrow:not(.blink-arrow) {
     animation: none !important;
 }
 
@@ -559,6 +565,10 @@ a.clickable.bold-text:hover {
     color: white;
 }
 
+.work-page #ants-on-line {
+    margin-top: 10px;
+}
+
 #stick {
     position: relative;
     width: 90vw;
@@ -582,7 +592,9 @@ a.clickable.bold-text:hover {
 
 #special-ants {
     position: absolute; /* ✅ Ties it to the stick */
+    left: 0;
     top: 10px; /* ✅ Moves it below the stick */
+    width: 100%;
     height: 20px;
 }
 
