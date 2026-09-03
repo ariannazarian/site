@@ -178,8 +178,8 @@ header .personal-text {
     font-weight: bold;
     font-size: var(--text-size);
     opacity: 0;
-    display: none;
-    transition: opacity 3s ease-in, scale 0.28s ease-in-out; /* First-time fade-in + gentler hover */
+    visibility: hidden;
+    transition: opacity 3s ease-in, scale 0.28s ease-in-out; /* Reserved in flow; first-time fade-in + gentler hover */
 }
 
 /* 🔹 Blinking effect for ▼ indicators (stopped via JavaScript after first click) */
@@ -833,8 +833,15 @@ a.clickable.bold-text:hover {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    transition: transform 0.25s ease, filter 0.25s ease;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.25s ease, filter 0.25s ease;
     transform-origin: center;
+}
+
+/* The square item reserves its final geometry immediately. Each mockup becomes
+   visible only after its first-open request has loaded and decoded. */
+.fair-use-item.is-revealed img {
+    opacity: 1;
 }
 
 @media (hover: hover) and (pointer: fine) {

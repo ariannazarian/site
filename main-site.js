@@ -695,7 +695,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let currentIndex = 0;
     let thumbnailsReady = false;
+    let fairUseRevealStarted = false;
     const preloadedArtwork = new Set();
+    const shirtRevealStaggerMs = 75;
 
     function activateWithKeyboard(element, action) {
         element.addEventListener("keydown", event => {
@@ -724,10 +726,99 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function wait(milliseconds) {
+        return new Promise(resolve => setTimeout(resolve, milliseconds));
+    }
+
+    function prepareShirtImage(item) {
+        const image = item.querySelector("img[data-src]");
+        if (!image) {
+            return Promise.resolve(false);
+        }
+
+        const source = image.dataset.src;
+        if (!source) {
+            return Promise.resolve(false);
+        }
+
+        return new Promise(resolve => {
+            let settled = false;
+
+            const finish = success => {
+                if (settled) return;
+                settled = true;
+                image.removeEventListener("load", handleLoad);
+                image.removeEventListener("error", handleError);
+                resolve(success);
+            };
+
+            const handleLoad = async () => {
+                if (typeof image.decode === "function") {
+                    try {
+                        await image.decode();
+                    } catch (_) {
+                        // A successful load with valid intrinsic dimensions is
+                        // still safe to reveal if decode() rejects spuriously.
+                    }
+                }
+                finish(image.naturalWidth > 0);
+            };
+
+            const handleError = () => finish(false);
+
+            image.addEventListener("load", handleLoad);
+            image.addEventListener("error", handleError);
+            image.src = source;
+            image.removeAttribute("data-src");
+
+            // Covers an already-cached resource whose completion state is
+            // observable before the load event callback runs.
+            if (image.complete) {
+                queueMicrotask(() => {
+                    if (settled) return;
+                    if (image.naturalWidth > 0) {
+                        handleLoad();
+                    } else {
+                        handleError();
+                    }
+                });
+            }
+        });
+    }
+
+    async function revealFairUseShirtsOnce() {
+        if (fairUseRevealStarted) return;
+        fairUseRevealStarted = true;
+
+        // Starting every request before awaiting any one of them keeps network
+        // loading concurrent. Only the visual reveal is serialized.
+        const readiness = fairUseItems.map(prepareShirtImage);
+        let lastRevealAt = null;
+
+        for (let index = 0; index < fairUseItems.length; index += 1) {
+            const loaded = await readiness[index];
+            if (!loaded) continue;
+
+            if (lastRevealAt !== null) {
+                const elapsed = performance.now() - lastRevealAt;
+                if (elapsed < shirtRevealStaggerMs) {
+                    await wait(shirtRevealStaggerMs - elapsed);
+                }
+            }
+
+            fairUseItems[index].classList.add("is-revealed");
+            lastRevealAt = performance.now();
+        }
+    }
+
     function toggleFairUse() {
         const opening = fairUseTitle.getAttribute("aria-expanded") !== "true";
         fairUseArrow.classList.remove("blink-arrow");
         setPanel(fairUseTitle, fairUseArrow, fairUseContent, opening);
+
+        if (opening) {
+            revealFairUseShirtsOnce();
+        }
     }
 
     function toggleModelIs() {

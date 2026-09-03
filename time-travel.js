@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function fadeInWatchText() {
         let watchText = document.querySelector("#reveal-matching-alt");
         if (!hasRevealedWatchOnce) {
-            watchText.style.display = "block";
+            watchText.style.visibility = "visible";
             setTimeout(() => {
                 watchText.style.opacity = 1;
                 setTimeout(() => {
@@ -216,10 +216,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (watchText.style.opacity === "1") {
                 watchText.style.opacity = "0";
                 setTimeout(() => {
-                    watchText.style.display = "none";
+                    watchText.style.visibility = "hidden";
                 }, 50);
             } else {
-                watchText.style.display = "block";
+                watchText.style.visibility = "visible";
                 watchText.style.opacity = "1";
             }
         }
