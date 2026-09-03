@@ -604,7 +604,7 @@ a.clickable.bold-text:hover {
 .special-ant {
     position: absolute;
     font-size: 10px; /* ✅ Same size as normal ants */
-    transition: color 0.1s ease; /* ✅ Smooth transition for flash effect */
+    transition: left 0.05s linear, color 0.1s ease; /* Keep movement as smooth as normal ants while preserving the flash */
 }
 
 .special-ant.left {
@@ -618,7 +618,7 @@ a.clickable.bold-text:hover {
 /* ✅ Flash effect on collision */
 .special-ant.flash {
     color: #ffff00 !important; /* ✅ Force flash to override default colors */
-    transition: color 0s; /* ✅ Ensure instant flash */
+    transition: left 0.05s linear, color 0s; /* Keep motion smooth while the color flash remains instant */
 }
 
 /* ✅ Make only the numbers bold, not the labels */
@@ -1152,6 +1152,52 @@ nav a {
 @media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
     #eternal-watch:has(#eternal-title:hover, #current-time:hover) #eternal-title,
     #eternal-watch:has(#eternal-title:hover, #current-time:hover) #current-time {
+        scale: 1;
+    }
+}
+
+
+/* ========================================================================== */
+/* Ants on a Stick completed-state restart cue                                */
+/* ========================================================================== */
+
+/*
+   The simulation is intentionally inert while it is running. JavaScript adds
+   .is-resettable only after every ant has left the stick, so the same visible
+   simulation unit becomes gently interactive exactly when a click can restart
+   it. Hovering either the counters or the stick moves and illuminates the
+   complete unit together; blank space around the centered simulation does not
+   trigger the cue.
+*/
+#ants-on-line {
+    transform-origin: center;
+    transition: scale 0.22s ease-in-out, filter 0.22s ease-in-out;
+}
+
+#ants-on-line.is-resettable #ant-info,
+#ants-on-line.is-resettable #stick {
+    cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    #ants-on-line.is-resettable:has(#ant-info:hover, #stick:hover) {
+        scale: 1.03;
+        filter:
+            drop-shadow(0 0 5px rgba(255, 255, 255, 0.30))
+            drop-shadow(0 0 12px rgba(255, 255, 255, 0.12));
+    }
+}
+
+/* Reduced-motion users retain the completed-state glow and pointer cue, but
+   the simulation unit itself does not enlarge. */
+@media (prefers-reduced-motion: reduce) {
+    #ants-on-line {
+        transition: filter 0.22s ease-in-out;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
+    #ants-on-line.is-resettable:has(#ant-info:hover, #stick:hover) {
         scale: 1;
     }
 }

@@ -290,6 +290,7 @@ document.addEventListener("DOMContentLoaded", function () {
         specialAnts = [];
         startTime = null;
         simulationComplete = false;
+        antsSection.classList.remove("is-resettable");
 
         remainingAntsDisplay.textContent = "0";
         timerDisplay.textContent = "0.00";
@@ -390,6 +391,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 stopTimer();
                 updateRemainingAnts();
                 simulationComplete = true;
+                antsSection.classList.add("is-resettable");
                 return;
             }
 
