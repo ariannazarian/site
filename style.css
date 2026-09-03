@@ -68,7 +68,7 @@ header .email label {
     font-weight: bold;
     color: var(--usc-cardinal);
     text-decoration: none;
-    transition: text-shadow 0.3s ease-in-out;
+    transition: text-shadow 0.3s ease-in-out, scale 0.18s ease;
 }
 
 /* 🔹 Custom hover effect: USC Gold text shadow */
@@ -97,7 +97,7 @@ header .personal-text {
     font-weight: bold;
     color: black; /* Ensures links stay black */
     text-decoration: none !important; /* Removes underline */
-    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease, scale 0.18s ease;
 }
 
 /* 🔹 Prevent visited links from changing color */
@@ -116,7 +116,7 @@ header .personal-text {
     font-weight: bold;
     color: black !important;
     text-decoration: none !important; /* Removes underline */
-    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease, scale 0.18s ease;
 }
 
 /* 🔹 Apply hover effect to match other clickable elements */
@@ -127,7 +127,7 @@ header .personal-text {
 /* Clickable elements */
 .clickable {
     cursor: pointer;
-    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease, scale 0.18s ease;
 }
 
 /* Hover effect */
@@ -179,7 +179,7 @@ header .personal-text {
     font-size: var(--text-size);
     opacity: 0;
     display: none;
-    transition: opacity 3s ease-in; /* First-time fade-in */
+    transition: opacity 3s ease-in, scale 0.18s ease; /* First-time fade-in */
 }
 
 /* 🔹 Blinking effect for ▼ indicators (stopped via JavaScript after first click) */
@@ -313,7 +313,7 @@ footer a.clickable {
     font-size: 16px;
     color: white;
     text-decoration: none;
-    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease, scale 0.18s ease;
 }
 
 /* 🔹 Maintain hover effect */
@@ -348,7 +348,7 @@ footer a.clickable:hover {
     color: white;
     margin-bottom: 5px;
     cursor: pointer; /* Make title clickable */
-    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease, scale 0.18s ease;
 }
 
 /* Hover effect for video titles (matching Eternal Watch style) */
@@ -508,13 +508,13 @@ img, a {
 }
 
 
-/* Ensure the Mathematical Framework link stays bold, same color, and no underline */
+/* Ensure paper links stay bold, same color, and no underline */
 a.clickable.bold-text {
     font-size: var(--text-size);
     font-weight: bold;
     color: var(--white) !important; /* Ensures it never changes */
     text-decoration: none !important; /* Prevents underlining */
-    transition: text-shadow 0.3s ease;
+    transition: text-shadow 0.3s ease, scale 0.18s ease;
 }
 
 /* Prevent visited links from changing color */
@@ -550,7 +550,7 @@ a.clickable.bold-text:hover {
     font-weight: bold;
     text-align: center;
     cursor: pointer;
-    transition: text-shadow 0.3s ease;
+    transition: text-shadow 0.3s ease, scale 0.18s ease;
 }
 
 /* 🔹 Hover Effect for Short Films Title */
@@ -738,7 +738,7 @@ a.clickable.bold-text:hover {
    Use box-shadow here so the hover cue never competes with the homepage
    wiggle animation, which intentionally animates the filter property. */
 .header-image {
-    transition: opacity 0.3s ease-in-out, box-shadow 0.25s ease;
+    transition: opacity 0.3s ease-in-out, box-shadow 0.25s ease, scale 0.18s ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -763,7 +763,7 @@ a.clickable.bold-text:hover {
     font-weight: bold;
     text-align: center;
     cursor: pointer;
-    transition: text-shadow 0.3s ease;
+    transition: text-shadow 0.3s ease, scale 0.18s ease;
 }
 
 #graphics-title {
@@ -930,7 +930,7 @@ a.clickable.bold-text:hover {
     cursor: pointer;
     -webkit-appearance: none;
     appearance: none;
-    transition: text-shadow 0.3s ease;
+    transition: text-shadow 0.3s ease, scale 0.18s ease;
 }
 
 #fair-use-prev {
@@ -1083,5 +1083,56 @@ a.clickable.bold-text:hover {
     .fair-use-thumb:hover img,
     .fair-use-thumb:active img {
         transform: none;
+    }
+}
+
+/* ========================================================================== */
+/* Site-wide subtle hover scale                                               */
+/* ========================================================================== */
+
+/*
+   Normal clickable controls grow by 3% on genuine hover devices.
+   Fare Use shirt mockups (5%) and popup thumbnails (7%) retain their existing
+   stronger treatments. Video thumbnails, popup close bars, and the full
+   artwork navigation surface are deliberately excluded.
+
+   On the homepage the <picture> wrapper scales while #header-img keeps its
+   existing random wiggle/highlight behavior. The two effects therefore compose
+   instead of competing for the same transform.
+*/
+
+/* Inline links and labels need an independent transform box; this does not reflow text. */
+a.clickable,
+label.clickable,
+nav a {
+    display: inline-block;
+}
+
+/* The homepage header's hover motion belongs to its wrapper, not the wiggling image. */
+#index-page #header-image {
+    transform-origin: center;
+    transition: scale 0.18s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    #index-page #header-image:hover,
+    .personal-page .header-image:hover,
+    .work-page .header-image:hover,
+    .clickable:hover,
+    nav a:hover,
+    .fair-use-nav:hover {
+        scale: 1.03;
+    }
+}
+
+/* Reduced-motion users keep the existing shadow cues without added enlargement. */
+@media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
+    #index-page #header-image:hover,
+    .personal-page .header-image:hover,
+    .work-page .header-image:hover,
+    .clickable:hover,
+    nav a:hover,
+    .fair-use-nav:hover {
+        scale: 1;
     }
 }

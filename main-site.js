@@ -1,14 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // 🔹 Prevent Right-Click & Dragging
+    // 🔹 Preserve the site's intentionally constrained browser interactions
     document.addEventListener("contextmenu", event => event.preventDefault());
     document.addEventListener("dragstart", event => event.preventDefault());
+    document.addEventListener("copy", event => event.preventDefault());
 
-    // 🔹 Block DevTools & View Source Shortcuts
+    // 🔹 Block the existing DevTools / View Source shortcuts without swallowing a plain "u" keypress
     document.addEventListener("keydown", event => {
-        const blockedKeys = ["F12", "u"];
-        if (blockedKeys.includes(event.key) || 
-            (event.ctrlKey && event.shiftKey && event.key === "I") || 
-            (event.metaKey && event.altKey && event.key === "I")) {
+        const key = event.key.toLowerCase();
+        const viewSourceShortcut =
+            (event.ctrlKey && key === "u") ||
+            (event.metaKey && event.altKey && key === "u");
+        const devToolsShortcut =
+            event.key === "F12" ||
+            (event.ctrlKey && event.shiftKey && key === "i") ||
+            (event.metaKey && event.altKey && key === "i");
+
+        if (viewSourceShortcut || devToolsShortcut) {
             event.preventDefault();
         }
     });
