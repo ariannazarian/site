@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 document.querySelectorAll(".year-item").forEach(el => {
                     el.style.opacity = 1;
-                    el.style.transition = "none";
+                    el.style.transition = "scale 0.18s ease";
                 });
                 travelQuote.style.opacity = 1;
                 travelQuote.style.transition = "none";
@@ -124,33 +124,29 @@ document.addEventListener("DOMContentLoaded", () => {
                          .filter(year => new Date(year, month - 1, day).getDay() === weekday);
     
         if (years.length > 0) {
-            // Add "Coordinate Reflections:" before the first year
+            // Add "Coordinate Reflections:" before the first year.
             let label = document.createElement("strong");
-            label.textContent = "Coordinate Reflections: ";
+            label.id = "coordinate-reflections";
+            label.textContent = "Coordinate Reflections:";
             label.classList.add("clickable", "bold-text");
-    
-            // Make "Coordinate Reflections" also trigger the pop-up
-            label.addEventListener("click", () => {
-                document.getElementById("popup-years").checked = true;
-            });
-    
             matchingYearsList.appendChild(label);
+            matchingYearsList.appendChild(document.createTextNode(" "));
         }
     
         years.forEach((year, index) => {
             let span = document.createElement("span");
-            span.textContent = `${year}${index < years.length - 1 ? ", " : ""}`;
+            span.textContent = `${year}${index < years.length - 1 ? "," : ""}`;
             span.classList.add("year-item", "clickable");
             span.dataset.year = year;
             span.style.opacity = 0;
-            span.style.transition = "opacity 1.8s ease-in";
-    
-            // Click event to show the same singular pop-up
-            span.addEventListener("click", () => {
-                document.getElementById("popup-years").checked = true;
-            });
-    
+            span.style.transition = "opacity 1.8s ease-in, scale 0.18s ease";
             matchingYearsList.appendChild(span);
+
+            // Preserve the exact visible comma-and-space formatting while making
+            // each generated year a transformable hover target.
+            if (index < years.length - 1) {
+                matchingYearsList.appendChild(document.createTextNode(" "));
+            }
     
             setTimeout(() => {
                 span.style.opacity = 1;
@@ -162,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
         setTimeout(() => {
             document.querySelectorAll(".year-item").forEach(el => {
-                el.style.transition = "none";
+                el.style.transition = "scale 0.18s ease";
             });
         }, years.length * 1000 + 500);
     }
@@ -190,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 watchText.style.opacity = 1;
                 setTimeout(() => {
-                    watchText.style.transition = "none";
+                    watchText.style.transition = "scale 0.28s ease-in-out";
                 }, 3000);
             }, 50);
             hasRevealedWatchOnce = true;
@@ -246,10 +242,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeBtn = document.getElementById("popup-close");
     const matchingYearsContainer = document.getElementById("matching-years-list");
 
-    // ✅ Handle click on dynamically generated year
+    // Handle clicks on the dynamically generated Coordinate Reflections label or year.
     matchingYearsContainer.addEventListener("click", function (event) {
         const target = event.target;
-        if (target.classList.contains("year-item")) {
+        const opensYearsPopup = target.id === "coordinate-reflections" || target.classList.contains("year-item");
+        if (opensYearsPopup) {
             // Show popup
             popup.setAttribute("aria-hidden", "false");
             popup.style.visibility = "visible";

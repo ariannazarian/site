@@ -179,7 +179,7 @@ header .personal-text {
     font-size: var(--text-size);
     opacity: 0;
     display: none;
-    transition: opacity 3s ease-in, scale 0.18s ease; /* First-time fade-in */
+    transition: opacity 3s ease-in, scale 0.28s ease-in-out; /* First-time fade-in + gentler hover */
 }
 
 /* 🔹 Blinking effect for ▼ indicators (stopped via JavaScript after first click) */
@@ -485,11 +485,12 @@ img, a {
 
 .work-page #coordinate-reflections,
 .work-page .year-item {
+    display: inline-block;
     font-weight: bold;
     color: var(--white);
     text-decoration: none;
     cursor: pointer;
-    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease, scale 0.18s ease;
 }
 
 .work-page #coordinate-reflections:hover,
@@ -1133,6 +1134,24 @@ nav a {
     .clickable:hover,
     nav a:hover,
     .fair-use-nav:hover {
+        scale: 1;
+    }
+}
+
+/* The Eternal Watch title and frozen time trigger the same action. Hovering
+   either one therefore enlarges and highlights both together, while keeping
+   their existing layout and click targets completely unchanged. */
+@media (hover: hover) and (pointer: fine) {
+    #eternal-watch:has(#eternal-title:hover, #current-time:hover) #eternal-title,
+    #eternal-watch:has(#eternal-title:hover, #current-time:hover) #current-time {
+        scale: 1.03;
+        text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
+    #eternal-watch:has(#eternal-title:hover, #current-time:hover) #eternal-title,
+    #eternal-watch:has(#eternal-title:hover, #current-time:hover) #current-time {
         scale: 1;
     }
 }
