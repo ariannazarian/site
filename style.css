@@ -969,6 +969,8 @@ a.clickable.bold-text:hover {
 }
 
 .fair-use-thumb {
+    position: relative;
+    z-index: 0;
     aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
@@ -994,32 +996,45 @@ a.clickable.bold-text:hover {
     object-fit: contain;
     opacity: 0.68;
     transform-origin: center;
-    transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
+    box-shadow: none;
+    transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fair-use-thumb.is-active {
+    z-index: 1;
 }
 
 .fair-use-thumb.is-active img {
     opacity: 1;
-    filter:
-        drop-shadow(0 0 4px rgba(0, 0, 0, 0.30))
-        drop-shadow(0 0 9px rgba(0, 0, 0, 0.12));
+    box-shadow:
+        0 0 4px rgba(0, 0, 0, 0.30),
+        0 0 9px rgba(0, 0, 0, 0.12);
 }
 
 @media (hover: hover) and (pointer: fine) {
+    .fair-use-thumb:hover {
+        z-index: 2;
+    }
+
     .fair-use-thumb:hover img {
         opacity: 1;
         transform: scale(1.07);
-        filter:
-            drop-shadow(0 0 4px rgba(0, 0, 0, 0.30))
-            drop-shadow(0 0 9px rgba(0, 0, 0, 0.12));
+        box-shadow:
+            0 0 4px rgba(0, 0, 0, 0.30),
+            0 0 9px rgba(0, 0, 0, 0.12);
     }
+}
+
+.fair-use-thumb:active {
+    z-index: 2;
 }
 
 .fair-use-thumb:active img {
     opacity: 1;
     transform: scale(1.07);
-    filter:
-        drop-shadow(0 0 4px rgba(0, 0, 0, 0.30))
-        drop-shadow(0 0 9px rgba(0, 0, 0, 0.12));
+    box-shadow:
+        0 0 4px rgba(0, 0, 0, 0.30),
+        0 0 9px rgba(0, 0, 0, 0.12);
 }
 
 .personal-page .fair-use-popup .close-button {
@@ -1075,9 +1090,12 @@ a.clickable.bold-text:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .fair-use-item img,
-    .fair-use-thumb img {
+    .fair-use-item img {
         transition: filter 0.2s ease, opacity 0.2s ease;
+    }
+
+    .fair-use-thumb img {
+        transition: box-shadow 0.2s ease, opacity 0.2s ease;
     }
 
     .fair-use-item:hover img,
