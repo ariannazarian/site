@@ -585,3 +585,281 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 9600);
   });
   
+// 🔹 Graphics / Fair Use handling on the Personal page
+// Added as a self-contained block so the site's existing interactions remain untouched.
+document.addEventListener("DOMContentLoaded", function () {
+    if (!document.body.classList.contains("personal-page")) return;
+
+    const graphicsTitle = document.getElementById("graphics-title");
+    const graphicsArrow = document.getElementById("graphics-arrow");
+    const graphicsContent = document.getElementById("graphics-content");
+    const fairUseTitle = document.getElementById("fair-use-title");
+    const fairUseArrow = document.getElementById("fair-use-arrow");
+    const fairUseContent = document.getElementById("fair-use-content");
+    const modelIsTitle = document.getElementById("model-is-title");
+    const modelIsArrow = document.getElementById("model-is-arrow");
+    const modelIsContent = document.getElementById("model-is-content");
+
+    const fairUseItems = Array.from(document.querySelectorAll(".fair-use-item"));
+    const popup = document.getElementById("fair-use-popup");
+    const shield = document.getElementById("fair-use-shield");
+    const art = document.getElementById("fair-use-art");
+    const caption = document.getElementById("fair-use-caption");
+    const previousButton = document.getElementById("fair-use-prev");
+    const nextButton = document.getElementById("fair-use-next");
+    const thumbnailContainer = document.getElementById("fair-use-thumbnails");
+    const closeButton = document.getElementById("fair-use-close");
+
+    if (
+        !graphicsTitle || !graphicsArrow || !graphicsContent ||
+        !fairUseTitle || !fairUseArrow || !fairUseContent ||
+        !modelIsTitle || !modelIsArrow || !modelIsContent ||
+        fairUseItems.length === 0 || !popup || !shield || !art || !caption ||
+        !previousButton || !nextButton || !thumbnailContainer || !closeButton
+    ) {
+        return;
+    }
+
+    const works = fairUseItems.map(item => ({
+        base: item.dataset.base,
+        title: item.dataset.title,
+        year: item.dataset.year || ""
+    }));
+
+    let currentIndex = 0;
+    let thumbnailsReady = false;
+    const preloadedArtwork = new Set();
+
+    function activateWithKeyboard(element, action) {
+        element.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                action();
+            }
+        });
+    }
+
+    function setPanel(title, arrow, content, open) {
+        content.classList.toggle("hidden", !open);
+        title.setAttribute("aria-expanded", open ? "true" : "false");
+        arrow.textContent = open ? "▲" : "▼";
+    }
+
+    function toggleGraphics() {
+        const opening = graphicsTitle.getAttribute("aria-expanded") !== "true";
+        graphicsArrow.classList.remove("blink-arrow");
+        setPanel(graphicsTitle, graphicsArrow, graphicsContent, opening);
+
+        if (!opening) {
+            // Match Short Films: closing the parent also closes its open children.
+            setPanel(fairUseTitle, fairUseArrow, fairUseContent, false);
+            setPanel(modelIsTitle, modelIsArrow, modelIsContent, false);
+        }
+    }
+
+    function toggleFairUse() {
+        const opening = fairUseTitle.getAttribute("aria-expanded") !== "true";
+        fairUseArrow.classList.remove("blink-arrow");
+        setPanel(fairUseTitle, fairUseArrow, fairUseContent, opening);
+    }
+
+    function toggleModelIs() {
+        const opening = modelIsTitle.getAttribute("aria-expanded") !== "true";
+        modelIsArrow.classList.remove("blink-arrow");
+        setPanel(modelIsTitle, modelIsArrow, modelIsContent, opening);
+    }
+
+    graphicsTitle.addEventListener("click", toggleGraphics);
+    fairUseTitle.addEventListener("click", toggleFairUse);
+    modelIsTitle.addEventListener("click", toggleModelIs);
+    activateWithKeyboard(graphicsTitle, toggleGraphics);
+    activateWithKeyboard(fairUseTitle, toggleFairUse);
+    activateWithKeyboard(modelIsTitle, toggleModelIs);
+
+    function fullArtworkPath(work) {
+        return `assets/images/${work.base}.webp`;
+    }
+
+    function thumbnailPath(work) {
+        return `assets/images/${work.base}-thumb.webp`;
+    }
+
+    function updateCaption(work) {
+        const title = document.createElement("em");
+        title.textContent = work.title;
+        caption.replaceChildren(title);
+
+        // Years are intentionally optional until the actual creation years are supplied.
+        if (work.year) {
+            caption.appendChild(document.createTextNode(`, ${work.year}`));
+        }
+    }
+
+    function buildThumbnails() {
+        if (thumbnailsReady) return;
+
+        works.forEach((work, index) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "fair-use-thumb";
+            button.setAttribute("aria-label", `View ${work.title}`);
+
+            const image = document.createElement("img");
+            image.src = thumbnailPath(work);
+            image.alt = `${work.title} gallery thumbnail`;
+            image.loading = "lazy";
+            image.decoding = "async";
+            image.draggable = false;
+
+            button.appendChild(image);
+            button.addEventListener("click", () => {
+                if (index !== currentIndex) showWork(index);
+            });
+            thumbnailContainer.appendChild(button);
+        });
+
+        thumbnailsReady = true;
+    }
+
+    function updateActiveThumbnail() {
+        if (!thumbnailsReady) return;
+
+        Array.from(thumbnailContainer.children).forEach((button, index) => {
+            const active = index === currentIndex;
+            button.classList.toggle("is-active", active);
+            if (active) {
+                button.setAttribute("aria-current", "true");
+            } else {
+                button.removeAttribute("aria-current");
+            }
+        });
+    }
+
+    function preloadArtwork(index) {
+        const normalizedIndex = (index + works.length) % works.length;
+        const work = works[normalizedIndex];
+        const path = fullArtworkPath(work);
+
+        if (preloadedArtwork.has(path)) return;
+        preloadedArtwork.add(path);
+        const image = new Image();
+        image.src = path;
+    }
+
+    function preloadAdjacentArtwork() {
+        preloadArtwork(currentIndex - 1);
+        preloadArtwork(currentIndex + 1);
+    }
+
+    function showWork(index) {
+        currentIndex = (index + works.length) % works.length;
+        const work = works[currentIndex];
+
+        art.src = fullArtworkPath(work);
+        art.alt = `${work.title} graphic`;
+        updateCaption(work);
+        updateActiveThumbnail();
+        preloadAdjacentArtwork();
+    }
+
+    function openPopup(index) {
+        buildThumbnails();
+        showWork(index);
+        popup.setAttribute("aria-hidden", "false");
+        shield.classList.add("is-active");
+    }
+
+    function closePopup() {
+        popup.setAttribute("aria-hidden", "true");
+        shield.classList.remove("is-active");
+        art.style.cursor = "default";
+    }
+
+    function showPrevious() {
+        showWork(currentIndex - 1);
+    }
+
+    function showNext() {
+        showWork(currentIndex + 1);
+    }
+
+    fairUseItems.forEach((item, index) => {
+        item.addEventListener("click", () => openPopup(index));
+    });
+
+    previousButton.addEventListener("click", showPrevious);
+    nextButton.addEventListener("click", showNext);
+    closeButton.addEventListener("click", closePopup);
+
+    // The artwork itself uses the agreed 47% / 6% / 47% navigation split.
+    art.addEventListener("click", event => {
+        if (popup.getAttribute("aria-hidden") !== "false") return;
+
+        const rect = art.getBoundingClientRect();
+        if (rect.width === 0) return;
+        const position = (event.clientX - rect.left) / rect.width;
+
+        if (position < 0.47) {
+            showPrevious();
+        } else if (position > 0.53) {
+            showNext();
+        }
+    });
+
+    // Cursor feedback mirrors the active/dead regions without adding visible UI.
+    art.addEventListener("mousemove", event => {
+        const rect = art.getBoundingClientRect();
+        if (rect.width === 0) return;
+        const position = (event.clientX - rect.left) / rect.width;
+        art.style.cursor = position < 0.47 || position > 0.53 ? "pointer" : "default";
+    });
+
+    art.addEventListener("mouseleave", () => {
+        art.style.cursor = "default";
+    });
+
+    document.addEventListener("keydown", event => {
+        if (popup.getAttribute("aria-hidden") !== "false") return;
+
+        if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            showPrevious();
+        } else if (event.key === "ArrowRight") {
+            event.preventDefault();
+            showNext();
+        }
+    });
+});
+
+// 🔹 Escape closes whichever site popup is currently open.
+// It deliberately reuses each popup's existing close mechanism so media cleanup
+// and other established behavior remain exactly where they already live.
+document.addEventListener("keydown", function (event) {
+    if (event.key !== "Escape") return;
+
+    const fairUsePopup = document.getElementById("fair-use-popup");
+    const fairUseClose = document.getElementById("fair-use-close");
+    if (fairUsePopup && fairUsePopup.getAttribute("aria-hidden") === "false" && fairUseClose) {
+        event.preventDefault();
+        fairUseClose.click();
+        return;
+    }
+
+    const workPopup = document.getElementById("popup-years-box");
+    const workClose = document.getElementById("popup-close");
+    if (workPopup && workPopup.getAttribute("aria-hidden") === "false" && workClose) {
+        event.preventDefault();
+        workClose.click();
+        return;
+    }
+
+    const popupReset = document.getElementById("popup-reset");
+    if (popupReset && !popupReset.checked) {
+        event.preventDefault();
+        popupReset.checked = true;
+        popupReset.dispatchEvent(new Event("change", { bubbles: true }));
+        document.querySelectorAll(".popup").forEach(popup => {
+            popup.setAttribute("aria-hidden", "true");
+        });
+    }
+});

@@ -7,9 +7,9 @@
     <meta name="description" content="Arian Nazarian's personal website.">
     <meta name="author" content="Arian Nazarian">
     <title>personal | Arian Nazarian</title>
-    <link rel="stylesheet" href="style.css?v=20260902-ants2">
+    <link rel="stylesheet" href="style.css?v=20260902-graphics1">
 
-    <script src="main-site.js?v=20260902-ants2" defer></script>
+    <script src="main-site.js?v=20260902-graphics1" defer></script>
 </head>
 
 <body class="personal-page">
@@ -23,6 +23,72 @@
     </header>
 
     <main>
+        <!-- Graphics Section -->
+<section id="graphics">
+    <h2 id="graphics-title" class="clickable bold-text" role="button" aria-expanded="false" tabindex="0">
+        Graphics <span id="graphics-arrow" class="blink-arrow">▼</span>
+    </h2>
+
+    <div id="graphics-content" class="hidden">
+        <section id="fair-use">
+            <h3 id="fair-use-title" class="clickable bold-text" role="button" aria-expanded="false" tabindex="0">
+                Fair Use <span id="fair-use-arrow" class="blink-arrow">▼</span>
+            </h3>
+
+            <div id="fair-use-content" class="hidden">
+                <div id="fair-use-grid" class="fair-use-grid" aria-label="Fair Use graphic designs">
+                    <button type="button" class="fair-use-item" data-base="bullitt-bunny" data-title="Bullitt Bunny" data-year="" aria-label="View Bullitt Bunny">
+                        <img src="assets/images/bullitt-bunny-mock.webp" alt="Bullitt Bunny shirt mockup" loading="lazy" decoding="async" draggable="false">
+                    </button>
+                    <button type="button" class="fair-use-item" data-base="hung-up" data-title="Hung Up" data-year="" aria-label="View Hung Up">
+                        <img src="assets/images/hung-up-mock.webp" alt="Hung Up shirt mockup" loading="lazy" decoding="async" draggable="false">
+                    </button>
+                    <button type="button" class="fair-use-item" data-base="faithfull" data-title="Faithfull" data-year="" aria-label="View Faithfull">
+                        <img src="assets/images/faithfull-mock.webp" alt="Faithfull shirt mockup" loading="lazy" decoding="async" draggable="false">
+                    </button>
+                    <button type="button" class="fair-use-item" data-base="manifest-destiny" data-title="Manifest Destiny" data-year="" aria-label="View Manifest Destiny">
+                        <img src="assets/images/manifest-destiny-mock.webp" alt="Manifest Destiny shirt mockup" loading="lazy" decoding="async" draggable="false">
+                    </button>
+                    <button type="button" class="fair-use-item" data-base="oly-x" data-title="I Want to Believe" data-year="" aria-label="View I Want to Believe">
+                        <img src="assets/images/oly-x-mock.webp" alt="I Want to Believe shirt mockup" loading="lazy" decoding="async" draggable="false">
+                    </button>
+                    <button type="button" class="fair-use-item" data-base="c5-aj" data-title="Untitled (C5 Campaign)" data-year="" aria-label="View Untitled (C5 Campaign)">
+                        <img src="assets/images/c5-aj-mock.webp" alt="Untitled (C5 Campaign) shirt mockup" loading="lazy" decoding="async" draggable="false">
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="model-is">
+            <h3 id="model-is-title" class="clickable bold-text" role="button" aria-expanded="false" tabindex="0">
+                model is <span id="model-is-arrow" class="blink-arrow">▼</span>
+            </h3>
+
+            <div id="model-is-content" class="hidden">
+                <p class="model-is-status"><span class="model-is-mark">model is</span> under construction</p>
+            </div>
+        </section>
+    </div>
+</section>
+
+<!-- Fair Use artwork viewer -->
+<div id="fair-use-shield" class="fair-use-shield" aria-hidden="true"></div>
+<div id="fair-use-popup" class="popup fair-use-popup" role="dialog" aria-modal="true" aria-labelledby="fair-use-caption" aria-hidden="true">
+    <div class="fair-use-art-stage">
+        <img id="fair-use-art" class="fair-use-art" alt="" decoding="async" draggable="false">
+    </div>
+
+    <div class="fair-use-nav-row">
+        <button id="fair-use-prev" class="fair-use-nav" type="button" aria-label="Previous design">&lt;</button>
+        <p id="fair-use-caption" class="fair-use-caption"></p>
+        <button id="fair-use-next" class="fair-use-nav" type="button" aria-label="Next design">&gt;</button>
+    </div>
+
+    <div id="fair-use-thumbnails" class="fair-use-thumbnails" aria-label="Jump to a Fair Use design"></div>
+
+    <button id="fair-use-close" class="close-button" type="button">close</button>
+</div>
+
         <!-- Short Films Section -->
 <section id="short-films">
     <h2 id="short-films-title" class="clickable bold-text">
