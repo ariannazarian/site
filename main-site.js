@@ -734,6 +734,14 @@ document.addEventListener("DOMContentLoaded", function () {
         return new Promise(resolve => setTimeout(resolve, milliseconds));
     }
 
+    function waitForInitialShirtPaint() {
+        return new Promise(resolve => {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(resolve);
+            });
+        });
+    }
+
     function prepareShirtImage(item) {
         const image = item.querySelector("img[data-src]");
         if (!image) {
@@ -797,6 +805,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // Starting every request before awaiting any one of them keeps network
         // loading concurrent. Only the visual reveal is serialized.
         const readiness = fairUseItems.map(prepareShirtImage);
+
+        // Give the newly opened grid a real painted opacity: 0 state before any
+        // cached/instantly decoded image can receive is-revealed. Two animation
+        // frames create that rendering boundary without delaying the requests.
+        await waitForInitialShirtPaint();
+
         let lastRevealAt = null;
 
         for (let index = 0; index < fairUseItems.length; index += 1) {
