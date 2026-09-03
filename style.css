@@ -3,6 +3,7 @@
     --black: #000000;
     --usc-cardinal: #990000; /* USC Crimson */
     --white: #ffffff;
+    --model-is-blue: #007aff;
     --text-size: 16px; /* Standard text size below the header */
     --larger-text-size: 24px; /* Frozen time display */
 }
@@ -776,7 +777,12 @@ a.clickable.bold-text:hover {
 
 #model-is-title,
 .model-is-mark {
-    color: #007aff;
+    color: var(--model-is-blue);
+}
+
+/* Keep the model is disclosure arrow neutral in every state. */
+#model-is-arrow {
+    color: var(--white);
 }
 
 .model-is-status {
