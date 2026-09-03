@@ -831,6 +831,7 @@ a.clickable.bold-text:hover {
 }
 
 .model-is-typed {
+    position: relative;
     justify-self: start;
 }
 
@@ -839,12 +840,13 @@ a.clickable.bold-text:hover {
    mode so the status behaves identically across site variants and platforms. */
 .model-is-typed::after {
     content: "";
-    display: inline-block;
+    position: absolute;
+    left: 100%;
+    top: 0.08em;
     width: 1px;
     height: 1em;
     margin-left: 2px;
     background: currentColor;
-    vertical-align: -0.12em;
     opacity: 1;
 }
 
@@ -892,7 +894,7 @@ a.clickable.bold-text:hover {
     height: 100%;
     object-fit: contain;
     opacity: 0;
-    transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.25s ease, filter 0.25s ease;
+    transition: opacity 0.5s cubic-bezier(0.37, 0, 0.63, 1), transform 0.25s ease, filter 0.25s ease;
     transform-origin: center;
 }
 
@@ -1156,7 +1158,7 @@ a.clickable.bold-text:hover {
 
 @media (prefers-reduced-motion: reduce) {
     .fair-use-item img {
-        transition: filter 0.2s ease, opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        transition: filter 0.2s ease, opacity 0.5s cubic-bezier(0.37, 0, 0.63, 1);
     }
 
     .fair-use-thumb img {

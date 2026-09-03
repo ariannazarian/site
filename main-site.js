@@ -699,7 +699,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let fairUseRevealStarted = false;
     let modelIsTypingStarted = false;
     const preloadedArtwork = new Set();
-    const shirtRevealStaggerMs = 85;
+    const shirtRevealStaggerMs = 90;
     const modelIsTypingIntervalMs = 55;
     const modelIsMessage = "under construction";
 
