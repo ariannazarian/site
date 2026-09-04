@@ -297,32 +297,42 @@ document.addEventListener("DOMContentLoaded", () => {
     const audioIcon = document.getElementById("popup-audio-icon");
     const popupCloseBtn = document.getElementById("popup-close");
 
-    let fadeInterval = null;
-
-    function startVolumeRamp() {
-        clearInterval(fadeInterval);
-        fadeInterval = setInterval(() => {
-            if (audio.volume < 0.8) {
-                audio.volume = Math.min(audio.volume + 0.02, 0.8);
-            } else {
-                clearInterval(fadeInterval);
-            }
-        }, 100);
-    }
+    let fadeTimer = null;
 
     function fadeInAudio() {
-        clearInterval(fadeInterval);
-        audio.volume = 0;
-        audio.currentTime = 39.69;
+        clearInterval(fadeTimer);
 
-        // Start ramping volume only after the seek completes and playback begins
-        audio.play().then(() => {
-            if (audio.seeking) {
-                audio.addEventListener("seeked", startVolumeRamp, { once: true });
-            } else {
-                startVolumeRamp();
-            }
-        }).catch(() => {});
+        // Pre-stage position and starting volume
+        audio.pause();
+        audio.currentTime = 39.69;
+        audio.volume = 0.05; // Audible baseline so initial play isn't silent
+
+        const onPlaying = () => {
+            let current = 0.05;
+            const target = 0.8;
+            const stepMs = 50;
+            const totalDurationMs = 2500;
+            const totalSteps = totalDurationMs / stepMs;
+            const increment = (target - current) / totalSteps;
+
+            clearInterval(fadeTimer);
+            fadeTimer = setInterval(() => {
+                current = Math.min(current + increment, target);
+                audio.volume = current;
+
+                if (current >= target) {
+                    clearInterval(fadeTimer);
+                }
+            }, stepMs);
+        };
+
+        // Ensure we only ramp once the audio is actively pushing frames
+        audio.addEventListener("playing", onPlaying, { once: true });
+
+        audio.play().catch(err => {
+            console.warn("Playback error:", err);
+            audio.removeEventListener("playing", onPlaying);
+        });
     }
 
     function toggleAudioPlayback() {
@@ -330,16 +340,17 @@ document.addEventListener("DOMContentLoaded", () => {
             fadeInAudio();
             audioIcon.textContent = "∅";
         } else {
+            clearInterval(fadeTimer);
             audio.pause();
             audioIcon.textContent = "♬";
         }
     }
 
     function stopAndResetAudio() {
-        clearInterval(fadeInterval);
+        clearInterval(fadeTimer);
         audio.pause();
         audio.currentTime = 39.69;
-        audio.volume = 0;
+        audio.volume = 0.05;
         audioIcon.textContent = "♬";
     }
 
