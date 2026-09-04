@@ -299,10 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let fadeInterval = null;
 
-    function fadeInAudio() {
-        audio.volume = 0;
-        audio.currentTime = 39.69;
-        audio.play().catch(() => {});
+    function startVolumeRamp() {
         clearInterval(fadeInterval);
         fadeInterval = setInterval(() => {
             if (audio.volume < 0.8) {
@@ -311,6 +308,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 clearInterval(fadeInterval);
             }
         }, 100);
+    }
+
+    function fadeInAudio() {
+        clearInterval(fadeInterval);
+        audio.volume = 0;
+        audio.currentTime = 39.69;
+
+        // Start ramping volume only after the seek completes and playback begins
+        audio.play().then(() => {
+            if (audio.seeking) {
+                audio.addEventListener("seeked", startVolumeRamp, { once: true });
+            } else {
+                startVolumeRamp();
+            }
+        }).catch(() => {});
     }
 
     function toggleAudioPlayback() {
@@ -324,11 +336,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function stopAndResetAudio() {
+        clearInterval(fadeInterval);
         audio.pause();
         audio.currentTime = 39.69;
         audio.volume = 0;
         audioIcon.textContent = "♬";
-        clearInterval(fadeInterval);
     }
 
     if (popupToggle) {
