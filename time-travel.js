@@ -301,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function fadeInAudio() {
         audio.volume = 0;
-        audio.currentTime = 39.6;
+        audio.currentTime = 39.2;
         audio.play().catch(() => {});
         clearInterval(fadeInterval);
         fadeInterval = setInterval(() => {
@@ -325,7 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function stopAndResetAudio() {
         audio.pause();
-        audio.currentTime = 39.6;
+        audio.currentTime = 39.2;
         audio.volume = 0;
         audioIcon.textContent = "♬";
         clearInterval(fadeInterval);
