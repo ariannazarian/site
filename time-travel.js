@@ -297,60 +297,29 @@ document.addEventListener("DOMContentLoaded", () => {
     const audioIcon = document.getElementById("popup-audio-icon");
     const popupCloseBtn = document.getElementById("popup-close");
 
-    let fadeTimer = null;
+    audio.volume = 0.8;
 
-    function fadeInAudio() {
-        clearInterval(fadeTimer);
-
-        // Pre-stage position and starting volume
-        audio.pause();
+    function playAudio() {
         audio.currentTime = 39.69;
-        audio.volume = 0.05; // Audible baseline so initial play isn't silent
-
-        const onPlaying = () => {
-            let current = 0.05;
-            const target = 0.8;
-            const stepMs = 50;
-            const totalDurationMs = 2500;
-            const totalSteps = totalDurationMs / stepMs;
-            const increment = (target - current) / totalSteps;
-
-            clearInterval(fadeTimer);
-            fadeTimer = setInterval(() => {
-                current = Math.min(current + increment, target);
-                audio.volume = current;
-
-                if (current >= target) {
-                    clearInterval(fadeTimer);
-                }
-            }, stepMs);
-        };
-
-        // Ensure we only ramp once the audio is actively pushing frames
-        audio.addEventListener("playing", onPlaying, { once: true });
-
-        audio.play().catch(err => {
-            console.warn("Playback error:", err);
-            audio.removeEventListener("playing", onPlaying);
+        audio.play().then(() => {
+            audioIcon.textContent = "∅";
+        }).catch(err => {
+            console.warn("Playback prevented:", err);
         });
     }
 
     function toggleAudioPlayback() {
         if (audio.paused) {
-            fadeInAudio();
-            audioIcon.textContent = "∅";
+            playAudio();
         } else {
-            clearInterval(fadeTimer);
             audio.pause();
             audioIcon.textContent = "♬";
         }
     }
 
     function stopAndResetAudio() {
-        clearInterval(fadeTimer);
         audio.pause();
         audio.currentTime = 39.69;
-        audio.volume = 0.05;
         audioIcon.textContent = "♬";
     }
 
