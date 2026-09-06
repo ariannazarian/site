@@ -297,38 +297,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const audioIcon = document.getElementById("popup-audio-icon");
     const popupCloseBtn = document.getElementById("popup-close");
 
-    let fadeInterval = null;
+    function startAudio() {
+        audio.currentTime = 0;
 
-    function fadeInAudio() {
-        audio.volume = 0;
-        audio.currentTime = 39.4;
-        audio.play().catch(() => {});
-        clearInterval(fadeInterval);
-        fadeInterval = setInterval(() => {
-            if (audio.volume < 0.8) {
-                audio.volume = Math.min(audio.volume + 0.02, 0.8);
-            } else {
-                clearInterval(fadeInterval);
-            }
-        }, 100);
-    }
-
-    function toggleAudioPlayback() {
-        if (audio.paused) {
-            fadeInAudio();
-            audioIcon.textContent = "∅";
-        } else {
-            audio.pause();
-            audioIcon.textContent = "♬";
-        }
+        audio.play()
+            .then(() => {
+                audioIcon.textContent = "∅";
+            })
+            .catch(() => {
+                audioIcon.textContent = "♬";
+            });
     }
 
     function stopAndResetAudio() {
         audio.pause();
-        audio.currentTime = 39.4;
-        audio.volume = 0;
+        audio.currentTime = 0;
         audioIcon.textContent = "♬";
-        clearInterval(fadeInterval);
+    }
+
+    function toggleAudioPlayback() {
+        if (audio.paused) {
+            startAudio();
+        } else {
+            stopAndResetAudio();
+        }
     }
 
     if (popupToggle) {
