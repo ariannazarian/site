@@ -1,9 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const frozenTime = new Date();
-    const audio = document.querySelector("#eternal-audio");
     let hasRevealedStoryOnce = false;
     let hasRevealedYearsOnce = false;
-    let hasRevealedLatinOnce = false;
     let hasRevealedQuoteOnce = false;
     let hasRevealedWatchOnce = false;
     let hasToggledEternalOnce = false;
@@ -11,9 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getFrozenUTCDate() {
         let now = new Date(frozenTime);
-    
+
         return now.toLocaleString("en-US", {
-            timeZone: "UTC", // Force UTC display
+            timeZone: "UTC",
             weekday: "long",
             month: "long",
             day: "numeric",
@@ -21,8 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
             minute: "2-digit",
             second: "2-digit",
             hour12: false
-        }) + " UTC"; // Append UTC to the string
-    }    
+        }) + " UTC";
+    }
 
     document.querySelector("#current-time").innerText = getFrozenUTCDate();
 
@@ -30,23 +28,21 @@ document.addEventListener("DOMContentLoaded", () => {
         let hiddenText = document.querySelector("#hidden-text");
         let arrow = document.querySelector("#eternal-arrow");
         let expanded = hiddenText.style.display === "block";
-    
+
         if (!hasToggledEternalOnce) {
             arrow.classList.remove("blink-arrow");
             hasToggledEternalOnce = true;
         }
-    
+
         if (expanded) {
             hiddenText.style.display = "none";
             arrow.innerText = "▼";
         } else {
             hiddenText.style.display = "block";
             arrow.innerText = "▲";
-    
+
             if (!hasRevealedStoryOnce) {
-                fadeInStoryGroups(() => {
-                    fadeInWatchText();
-                });
+                fadeInStoryGroups();
                 hasRevealedStoryOnce = true;
             } else {
                 document.querySelectorAll(".fade-group").forEach(el => {
@@ -57,7 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
-    
 
     document.querySelector("#hidden-text").style.display = "none";
     document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
@@ -72,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let expanded = matchingYears.style.display === "block";
 
         if (!hasToggledYearsOnce) {
-            arrow.classList.remove("blink-arrow"); // Stop blinking after first toggle
+            arrow.classList.remove("blink-arrow");
             hasToggledYearsOnce = true;
         }
 
@@ -110,31 +105,26 @@ document.addEventListener("DOMContentLoaded", () => {
     function revealMatchingYearsWithFade(callback) {
         let matchingYearsContainer = document.querySelector("#matching-years");
         let matchingYearsList = document.querySelector("#matching-years-list");
-    
-        matchingYearsList.innerHTML = ""; // Clear previous years
-        matchingYearsContainer.style.display = "block"; // Show the section
-    
+
+        matchingYearsList.innerHTML = "";
+        matchingYearsContainer.style.display = "block";
+
         const month = frozenTime.getUTCMonth() + 1;
         const day = frozenTime.getUTCDate();
         const weekday = frozenTime.getUTCDay();
         const currentYear = frozenTime.getUTCFullYear();
-    
+
         const years = Array.from({ length: currentYear - 1880 }, (_, i) => i + 1880)
             .filter(year => {
                 const candidate = new Date(Date.UTC(year, month - 1, day));
-
-                // Date() normalizes impossible dates (for example, February 29
-                // in a non-leap year). Verify that the requested calendar date
-                // survived construction before comparing its weekday.
                 const isSameDate =
                     candidate.getUTCMonth() === month - 1 &&
                     candidate.getUTCDate() === day;
 
                 return isSameDate && candidate.getUTCDay() === weekday;
             });
-    
+
         if (years.length > 0) {
-            // Add "Coordinate Reflections:" before the first year.
             let label = document.createElement("strong");
             label.id = "coordinate-reflections";
             label.textContent = "Coordinate Reflections:";
@@ -142,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
             matchingYearsList.appendChild(label);
             matchingYearsList.appendChild(document.createTextNode(" "));
         }
-    
+
         years.forEach((year, index) => {
             let span = document.createElement("span");
             span.textContent = `${year}${index < years.length - 1 ? "," : ""}`;
@@ -151,13 +141,10 @@ document.addEventListener("DOMContentLoaded", () => {
             span.style.opacity = 0;
             span.style.transition = "opacity 1.8s ease-in, scale 0.18s ease";
             matchingYearsList.appendChild(span);
-
-            // Preserve the exact visible comma-and-space formatting while making
-            // each generated year a transformable hover target.
             if (index < years.length - 1) {
                 matchingYearsList.appendChild(document.createTextNode(" "));
             }
-    
+
             setTimeout(() => {
                 span.style.opacity = 1;
                 if (index === years.length - 1 && callback) {
@@ -165,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }, index * 600);
         });
-    
+
         setTimeout(() => {
             document.querySelectorAll(".year-item").forEach(el => {
                 el.style.transition = "scale 0.18s ease";
@@ -173,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, years.length * 1000 + 500);
     }
 
-    function fadeInStoryGroups(callback) {
+    function fadeInStoryGroups() {
         let fadeGroups = document.querySelectorAll(".fade-group");
         fadeGroups.forEach((el, index) => {
             setTimeout(() => {
@@ -242,8 +229,8 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             element.innerText = element.innerText === translations[element.id][0] ? translations[element.id][1] : translations[element.id][0];
         });
-    }); 
-   
+    });
+
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -251,26 +238,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const videoContainer = document.getElementById("popup-video-container");
     const closeBtn = document.getElementById("popup-close");
     const matchingYearsContainer = document.getElementById("matching-years-list");
-
-    // Handle clicks on the dynamically generated Coordinate Reflections label or year.
     matchingYearsContainer.addEventListener("click", function (event) {
         const target = event.target;
         const opensYearsPopup = target.id === "coordinate-reflections" || target.classList.contains("year-item");
         if (opensYearsPopup) {
-            // Show popup
             popup.setAttribute("aria-hidden", "false");
             popup.style.visibility = "visible";
             popup.style.opacity = "1";
-
-            // Insert fresh video
             videoContainer.innerHTML = `
                 <video id="popup-video" loop autoplay muted playsinline>
                     <source src="assets/images/london-time.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             `;
-
-            // Try to autoplay after layout
             setTimeout(() => {
                 const video = document.getElementById("popup-video");
                 if (video) {
@@ -281,13 +261,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 50);
         }
     });
-
-    // ✅ Close popup and stop video
     closeBtn.addEventListener("click", function () {
         popup.setAttribute("aria-hidden", "true");
         popup.style.visibility = "hidden";
         popup.style.opacity = "0";
-        videoContainer.innerHTML = ""; // Fully remove video to stop loop
+        videoContainer.innerHTML = "";
     });
 });
 
