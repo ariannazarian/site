@@ -58,7 +58,7 @@ header .email label {
 }
 
 header .email label:hover {
-    text-shadow: 2px 2px 6px #FFCC00;
+    text-shadow: 2px 2px 6px #ffcc00;
 }
 
 header .email em {
@@ -91,14 +91,16 @@ header .personal-text {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-.back-arrow, nav a {
+.back-arrow,
+nav a {
     font-weight: bold;
     color: black !important;
     text-decoration: none !important;
     transition: opacity 0.3s ease, text-shadow 0.3s ease, scale 0.18s ease;
 }
 
-.back-arrow:hover, nav a:hover {
+.back-arrow:hover,
+nav a:hover {
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
@@ -114,7 +116,7 @@ header .personal-text {
 #eternal-title,
 #ants-title {
     font-size: var(--text-size);
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 #ants-content {
@@ -123,7 +125,7 @@ header .personal-text {
 
 #current-time {
     font-size: var(--text-size);
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 .watch-text {
@@ -152,7 +154,9 @@ header .personal-text {
     transition: opacity 3s ease-in, scale 0.28s ease-in-out;
 }
 
-#eternal-arrow, #watch-arrow, #ants-arrow {
+#eternal-arrow,
+#watch-arrow,
+#ants-arrow {
     transition: opacity 0.3s ease-in-out;
 }
 
@@ -193,7 +197,7 @@ header .personal-text {
     left: 50%;
     transform: translate(-50%, -50%);
     background: #990000;
-    color: #FFCC00;
+    color: #ffcc00;
     padding: 15px;
     border-radius: 8px;
     font-size: 16px;
@@ -225,7 +229,7 @@ header .personal-text {
 .popup .close-button {
     display: block;
     margin-top: 10px;
-    background: #FFCC00;
+    background: #ffcc00;
     color: #990000;
     padding: 5px 10px;
     border-radius: 5px;
@@ -236,7 +240,7 @@ header .personal-text {
 }
 
 .close-button:hover {
-    background: #FFD700;
+    background: #ffd700;
 }
 
 @media (max-width: 768px) {
@@ -346,7 +350,8 @@ footer a.clickable:hover {
     border-radius: 8px;
 }
 
-img, a {
+img,
+a {
     -webkit-touch-callout: none;
     user-select: none;
 }
@@ -471,6 +476,8 @@ a.clickable.bold-text:hover {
     margin-bottom: 40px;
     font-size: 16px;
     color: white;
+    transform-origin: center;
+    transition: scale 0.22s ease-in-out, filter 0.22s ease-in-out;
 }
 
 .work-page #ants-on-line {
@@ -486,7 +493,8 @@ a.clickable.bold-text:hover {
     margin: 10px auto 5px;
 }
 
-.ant, .special-ant {
+.ant,
+.special-ant {
     position: absolute;
     font-size: 10px;
     transform: translateX(-50%);
@@ -507,8 +515,6 @@ a.clickable.bold-text:hover {
 }
 
 .special-ant {
-    position: absolute;
-    font-size: 10px;
     transition: left 0.05s linear, color 0.1s ease;
 }
 
@@ -525,7 +531,8 @@ a.clickable.bold-text:hover {
     transition: left 0.05s linear, color 0s;
 }
 
-#remaining-ants, #timer {
+#remaining-ants,
+#timer {
     font-weight: bold;
 }
 
@@ -544,7 +551,7 @@ a.clickable.bold-text:hover {
 }
 
 @keyframes refined-wiggle {
-    0%   { transform: scale(1, 1) rotate(0deg); filter: blur(0px); }
+    0%   { transform: scale(1, 1) rotate(0deg); filter: blur(0); }
 
     10%  { transform: scale(1.03, 0.97) rotate(-3deg); filter: blur(0.5px); }
     22%  { transform: scale(0.975, 1.025) rotate(3deg); filter: blur(0.15px); }
@@ -555,7 +562,7 @@ a.clickable.bold-text:hover {
     68%  { transform: scale(1.005, 0.995) rotate(-0.8deg); filter: blur(0.05px); }
     84%  { transform: scale(0.998, 1.002) rotate(0.3deg); filter: blur(0.02px); }
 
-    100% { transform: scale(1, 1) rotate(0deg); filter: blur(0px); }
+    100% { transform: scale(1, 1) rotate(0deg); filter: blur(0); }
   }
 
 .wiggle {
@@ -939,7 +946,7 @@ a.clickable.bold-text:hover {
 .fair-use-thumb.is-active img {
     opacity: 1;
     box-shadow:
-        0 0 4px rgba(0, 0, 0, 0.30),
+        0 0 4px rgba(0, 0, 0, 0.3),
         0 0 9px rgba(0, 0, 0, 0.12);
 }
 
@@ -952,7 +959,7 @@ a.clickable.bold-text:hover {
         opacity: 1;
         transform: scale(1.07);
         box-shadow:
-            0 0 4px rgba(0, 0, 0, 0.30),
+            0 0 4px rgba(0, 0, 0, 0.3),
             0 0 9px rgba(0, 0, 0, 0.12);
     }
 }
@@ -965,7 +972,7 @@ a.clickable.bold-text:hover {
     opacity: 1;
     transform: scale(1.07);
     box-shadow:
-        0 0 4px rgba(0, 0, 0, 0.30),
+        0 0 4px rgba(0, 0, 0, 0.3),
         0 0 9px rgba(0, 0, 0, 0.12);
 }
 
@@ -1086,11 +1093,6 @@ nav a {
     }
 }
 
-#ants-on-line {
-    transform-origin: center;
-    transition: scale 0.22s ease-in-out, filter 0.22s ease-in-out;
-}
-
 #ants-on-line.is-resettable #ant-info,
 #ants-on-line.is-resettable #stick {
     cursor: pointer;
@@ -1100,7 +1102,7 @@ nav a {
     #ants-on-line.is-resettable:has(#ant-info:hover, #stick:hover) {
         scale: 1.03;
         filter:
-            drop-shadow(0 0 5px rgba(255, 255, 255, 0.30))
+            drop-shadow(0 0 5px rgba(255, 255, 255, 0.3))
             drop-shadow(0 0 12px rgba(255, 255, 255, 0.12));
     }
 }

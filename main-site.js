@@ -471,123 +471,123 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    const isIndexPage = document.body.id === 'index-page';
+document.addEventListener("DOMContentLoaded", () => {
+    const isIndexPage = document.body.id === "index-page";
     if (!isIndexPage) return;
 
     const targets = {
-      'link-personal': document.querySelector('#link-personal'),
-      'link-work': document.querySelector('#link-work'),
-      'label-ariann': document.querySelector('#label-ariann'),
-      'label-usc': document.querySelector('#label-usc'),
-      'label-edu': document.querySelector('#label-edu'),
-      'header-img': document.querySelector('#header-img')
+        "link-personal": document.querySelector("#link-personal"),
+        "link-work": document.querySelector("#link-work"),
+        "label-ariann": document.querySelector("#label-ariann"),
+        "label-usc": document.querySelector("#label-usc"),
+        "label-edu": document.querySelector("#label-edu"),
+        "header-img": document.querySelector("#header-img")
     };
 
     const unclicked = new Set(Object.keys(targets));
     let lastAnimated = null;
     let secondLastAnimated = null;
     const animationDuration = 1200;
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     for (const [id, element] of Object.entries(targets)) {
-      if (element) {
-        element.addEventListener('click', () => {
-          unclicked.delete(id);
-        });
-      }
+        if (element) {
+            element.addEventListener("click", () => {
+                unclicked.delete(id);
+            });
+        }
     }
 
     const animateRandom = () => {
-      if (unclicked.size === 0) return;
+        if (unclicked.size === 0) return;
 
-      const unclickedArray = Array.from(unclicked);
-      let candidates = [...unclickedArray];
+        const unclickedArray = Array.from(unclicked);
+        let candidates = [...unclickedArray];
 
-      if (unclickedArray.length > 2) {
-        candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
-      } else if (unclickedArray.length === 2 && lastAnimated !== null) {
-        candidates = candidates.filter(id => id !== lastAnimated);
-      }
-
-      if (candidates.length === 0) {
-        candidates = unclickedArray;
-        lastAnimated = null;
-        secondLastAnimated = null;
-      }
-
-      const randomId = candidates[Math.floor(Math.random() * candidates.length)];
-      const element = targets[randomId];
-      if (!element) return;
-
-      element.classList.remove('wiggle', 'reduced-text');
-      void element.offsetWidth;
-
-      if (!prefersReduced) {
-        element.classList.add('wiggle');
-      }
-
-      if (prefersReduced) {
-        if (element.id === 'header-img') {
-          const container = element.parentElement;
-          container.style.position = 'relative';
-
-          const sectionCount = 6;
-          const stepDelay = 40;
-          const fadeDuration = 300;
-          const totalHoldTime = 1800;
-
-          for (let i = 0; i < sectionCount; i++) {
-            const overlay = document.createElement('div');
-            overlay.className = `highlight-overlay step-${i + 1}`;
-            overlay.style.left = `${i * (100 / sectionCount)}%`;
-            overlay.style.width = `${100 / sectionCount}%`;
-            overlay.style.animationDelay = `${i * stepDelay}ms`;
-            overlay.style.animationDuration = `${fadeDuration}ms`;
-            overlay.style.animationFillMode = 'forwards';
-            container.appendChild(overlay);
-          }
-
-          setTimeout(() => {
-            const overlays = container.querySelectorAll('.highlight-overlay');
-            overlays.forEach(overlay => overlay.remove());
-          }, totalHoldTime);
-
-        } else {
-          const originalText = element.textContent;
-          const chars = [...originalText];
-
-          element.innerHTML = '';
-          chars.forEach((char, i) => {
-            const span = document.createElement('span');
-            span.textContent = char;
-            span.style.animationDelay = `${i * 40}ms`;
-            element.appendChild(span);
-          });
-
-          element.classList.add('reduced-text');
-          void element.offsetWidth;
+        if (unclickedArray.length > 2) {
+            candidates = candidates.filter(id => id !== lastAnimated && id !== secondLastAnimated);
+        } else if (unclickedArray.length === 2 && lastAnimated !== null) {
+            candidates = candidates.filter(id => id !== lastAnimated);
         }
-      }
 
-      const cleanupTime = prefersReduced ? 1800 : animationDuration;
-
-      setTimeout(() => {
-        element.classList.remove('wiggle', 'reduced-text');
-        if (prefersReduced && element.id !== 'header-img') {
-          element.textContent = element.textContent;
+        if (candidates.length === 0) {
+            candidates = unclickedArray;
+            lastAnimated = null;
+            secondLastAnimated = null;
         }
-      }, cleanupTime);
 
-      secondLastAnimated = lastAnimated;
-      lastAnimated = randomId;
+        const randomId = candidates[Math.floor(Math.random() * candidates.length)];
+        const element = targets[randomId];
+        if (!element) return;
+
+        element.classList.remove("wiggle", "reduced-text");
+        void element.offsetWidth;
+
+        if (!prefersReduced) {
+            element.classList.add("wiggle");
+        }
+
+        if (prefersReduced) {
+            if (element.id === "header-img") {
+                const container = element.parentElement;
+                container.style.position = "relative";
+
+                const sectionCount = 6;
+                const stepDelay = 40;
+                const fadeDuration = 300;
+                const totalHoldTime = 1800;
+
+                for (let i = 0; i < sectionCount; i++) {
+                    const overlay = document.createElement("div");
+                    overlay.className = `highlight-overlay step-${i + 1}`;
+                    overlay.style.left = `${i * (100 / sectionCount)}%`;
+                    overlay.style.width = `${100 / sectionCount}%`;
+                    overlay.style.animationDelay = `${i * stepDelay}ms`;
+                    overlay.style.animationDuration = `${fadeDuration}ms`;
+                    overlay.style.animationFillMode = "forwards";
+                    container.appendChild(overlay);
+                }
+
+                setTimeout(() => {
+                    const overlays = container.querySelectorAll(".highlight-overlay");
+                    overlays.forEach(overlay => overlay.remove());
+                }, totalHoldTime);
+            } else {
+                const originalText = element.textContent;
+                const chars = [...originalText];
+
+                element.innerHTML = "";
+                chars.forEach((char, i) => {
+                    const span = document.createElement("span");
+                    span.textContent = char;
+                    span.style.animationDelay = `${i * 40}ms`;
+                    element.appendChild(span);
+                });
+
+                element.classList.add("reduced-text");
+                void element.offsetWidth;
+            }
+        }
+
+        const cleanupTime = prefersReduced ? 1800 : animationDuration;
+
+        setTimeout(() => {
+            element.classList.remove("wiggle", "reduced-text");
+            if (prefersReduced && element.id !== "header-img") {
+                element.textContent = element.textContent;
+            }
+        }, cleanupTime);
+
+        secondLastAnimated = lastAnimated;
+        lastAnimated = randomId;
     };
 
     setTimeout(() => {
-      animateRandom();
-      setInterval(animateRandom, 5400);
+        animateRandom();
+        setInterval(animateRandom, 5400);
     }, 9600);
-  });
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     if (!document.body.classList.contains("personal-page")) return;
 
@@ -939,6 +939,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
 document.addEventListener("keydown", function (event) {
     if (event.key !== "Escape") return;
 

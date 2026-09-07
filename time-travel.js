@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const travelQuote = document.getElementById("travel-quote");
 
     function getFrozenUTCDate() {
-        let now = new Date(frozenTime);
+        const now = new Date(frozenTime);
 
         return now.toLocaleString("en-US", {
             timeZone: "UTC",
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
         if (years.length > 0) {
-            let label = document.createElement("strong");
+            const label = document.createElement("strong");
             label.id = "coordinate-reflections";
             label.textContent = "Coordinate Reflections:";
             label.classList.add("clickable", "bold-text");
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         years.forEach((year, index) => {
-            let span = document.createElement("span");
+            const span = document.createElement("span");
             span.textContent = `${year}${index < years.length - 1 ? "," : ""}`;
             span.classList.add("year-item", "clickable");
             span.dataset.year = year;
@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function fadeInStoryGroups() {
-        let fadeGroups = document.querySelectorAll(".fade-group");
+        const fadeGroups = document.querySelectorAll(".fade-group");
         fadeGroups.forEach((el, index) => {
             setTimeout(() => {
                 el.style.opacity = 1;
@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelectorAll(".toggle-text").forEach(element => {
         element.addEventListener("click", () => {
-            let translations = {
+            const translations = {
                 "num-nimis-erravi": ["NUM NIMIS ERRAVI", "Have I wandered too far?"],
                 "iterum-nos-convenimus": ["ITERUM NOS CONVENIMUS", "We meet again."],
                 "quo-vel-quando-vadis": ["QUO VEL QUANDO VADIS", "Where or when are you going?"]
