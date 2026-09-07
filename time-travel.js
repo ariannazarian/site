@@ -7,6 +7,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let hasToggledEternalOnce = false;
     let hasToggledYearsOnce = false;
 
+    const currentTime = document.getElementById("current-time");
+    const hiddenText = document.getElementById("hidden-text");
+    const eternalTitle = document.getElementById("eternal-title");
+    const eternalArrow = document.getElementById("eternal-arrow");
+    const revealMatching = document.getElementById("reveal-matching-alt");
+    const matchingYears = document.getElementById("matching-years");
+    const matchingYearsList = document.getElementById("matching-years-list");
+    const watchArrow = document.getElementById("watch-arrow");
+    const travelQuote = document.getElementById("travel-quote");
+
     function getFrozenUTCDate() {
         let now = new Date(frozenTime);
 
@@ -22,24 +32,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }) + " UTC";
     }
 
-    document.querySelector("#current-time").innerText = getFrozenUTCDate();
+    currentTime.innerText = getFrozenUTCDate();
 
     function toggleEternalWatch() {
-        let hiddenText = document.querySelector("#hidden-text");
-        let arrow = document.querySelector("#eternal-arrow");
-        let expanded = hiddenText.style.display === "block";
+        const expanded = hiddenText.style.display === "block";
 
         if (!hasToggledEternalOnce) {
-            arrow.classList.remove("blink-arrow");
+            eternalArrow.classList.remove("blink-arrow");
             hasToggledEternalOnce = true;
         }
 
         if (expanded) {
             hiddenText.style.display = "none";
-            arrow.innerText = "▼";
+            eternalArrow.innerText = "▼";
         } else {
             hiddenText.style.display = "block";
-            arrow.innerText = "▲";
+            eternalArrow.innerText = "▲";
 
             if (!hasRevealedStoryOnce) {
                 fadeInStoryGroups();
@@ -54,31 +62,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    document.querySelector("#hidden-text").style.display = "none";
-    document.querySelector("#eternal-title").addEventListener("click", toggleEternalWatch);
-    document.querySelector("#current-time").addEventListener("click", toggleEternalWatch);
+    hiddenText.style.display = "none";
+    eternalTitle.addEventListener("click", toggleEternalWatch);
+    currentTime.addEventListener("click", toggleEternalWatch);
 
-    document.querySelector("#reveal-matching-alt").addEventListener("click", toggleMatchingYears);
+    revealMatching.addEventListener("click", toggleMatchingYears);
 
     function toggleMatchingYears() {
-        let matchingYears = document.querySelector("#matching-years");
-        let travelQuote = document.querySelector("#travel-quote");
-        let arrow = document.querySelector("#watch-arrow");
-        let expanded = matchingYears.style.display === "block";
+        const expanded = matchingYears.style.display === "block";
 
         if (!hasToggledYearsOnce) {
-            arrow.classList.remove("blink-arrow");
+            watchArrow.classList.remove("blink-arrow");
             hasToggledYearsOnce = true;
         }
 
         if (expanded) {
             matchingYears.style.display = "none";
             travelQuote.style.display = "none";
-            arrow.innerText = "▼";
+            watchArrow.innerText = "▼";
         } else {
             matchingYears.style.display = "block";
             travelQuote.style.display = "block";
-            arrow.innerText = "▲";
+            watchArrow.innerText = "▲";
 
             if (!hasRevealedYearsOnce) {
                 revealMatchingYearsWithFade(() => {
@@ -103,11 +108,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function revealMatchingYearsWithFade(callback) {
-        let matchingYearsContainer = document.querySelector("#matching-years");
-        let matchingYearsList = document.querySelector("#matching-years-list");
-
         matchingYearsList.innerHTML = "";
-        matchingYearsContainer.style.display = "block";
+        matchingYears.style.display = "block";
 
         const month = frozenTime.getUTCMonth() + 1;
         const day = frozenTime.getUTCDate();
@@ -177,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function fadeInWatchText() {
-        let watchText = document.querySelector("#reveal-matching-alt");
+        const watchText = revealMatching;
         if (!hasRevealedWatchOnce) {
             watchText.style.visibility = "visible";
             setTimeout(() => {
@@ -190,15 +192,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    document.querySelector("#eternal-title").addEventListener("click", () => {
+    eternalTitle.addEventListener("click", () => {
         toggleWatchText();
     });
-    document.querySelector("#current-time").addEventListener("click", () => {
+    currentTime.addEventListener("click", () => {
         toggleWatchText();
     });
 
     function toggleWatchText() {
-        let watchText = document.querySelector("#reveal-matching-alt");
+        const watchText = revealMatching;
         if (hasRevealedWatchOnce) {
             if (watchText.style.opacity === "1") {
                 watchText.style.opacity = "0";
@@ -213,7 +215,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function fadeInTravelQuote() {
-        let travelQuote = document.querySelector("#travel-quote");
         travelQuote.style.display = "block";
         setTimeout(() => {
             travelQuote.style.opacity = 1;
