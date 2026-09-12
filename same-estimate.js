@@ -1326,39 +1326,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function drawCanonical() {
-        if (!showCanonical) {
-            return;
-        }
-
-        const cp = clamp((phaseProgress - 0.55) / 0.45, 0, 1);
-        if (cp <= 0) {
-            return;
-        }
-        const points = [
-            { pi: CANONICAL.certainMiddle, label: "πC" },
-            { pi: CANONICAL.lowHigh, label: "πU" }
-        ];
-
-        ctx.save();
-        ctx.font = `${W < 520 ? 9 : 10}px "Courier New",Courier,monospace`;
-        ctx.textBaseline = "middle";
-        points.forEach(item => {
-            const point = xy(item.pi);
-            ctx.beginPath();
-            ctx.arc(point.x, point.y, 3.1, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * cp);
-            ctx.strokeStyle = `rgba(255,255,255,${0.86 * cp})`;
-            ctx.lineWidth = 1.05;
-            ctx.stroke();
-            if (cp > 0.55) {
-                const labelAlpha = clamp((cp - 0.55) / 0.45, 0, 1);
-                drawPiSuperscriptLabel(point, item.label === "πC" ? "C" : "U", {
-                    alpha: 0.78 * labelAlpha,
-                    dx: 7,
-                    dy: -8
-                });
-            }
-        });
-        ctx.restore();
+        // The web piece does not display the paper-specific canonical beliefs pi^C and pi^U.
+        // The canonical phase retains only the fixed-mean fiber m(pi)=2.
     }
 
     function drawPosteriorPath() {
@@ -1724,7 +1693,7 @@ document.addEventListener("DOMContentLoaded", function () {
         showGlobal = true;
         globalProgress = 1;
         showFiber = true;
-        showCanonical = true;
+        showCanonical = false;
         fiberProgress = 0;
         setMean(2);
         const built = await animateValue(0, 1, TIMING.canonical, token, (_, t) => {
@@ -1741,10 +1710,7 @@ document.addEventListener("DOMContentLoaded", function () {
     async function runRealization(token) {
         phase = "realization";
         showGlobal = true;
-        // pi^C and pi^U are fixed canonical reference beliefs from the paper.
-        // Keep them visible throughout the realization rather than relabeling
-        // changing fiber endpoints with symbols that have fixed mathematical meanings.
-        showCanonical = true;
+        showCanonical = false;
         phaseProgress = 1;
         showFiber = true;
         showPosterior = true;
@@ -1779,7 +1745,7 @@ document.addEventListener("DOMContentLoaded", function () {
         globalProgress = 1;
         realizationProgress = 1;
         completed = true;
-        showCanonical = true;
+        showCanonical = false;
         phaseProgress = 1;
         showFiber = true;
         showPosterior = true;
@@ -1807,7 +1773,7 @@ document.addEventListener("DOMContentLoaded", function () {
         globalProgress = 1;
         realizationProgress = 1;
         phase = "residue";
-        showCanonical = true;
+        showCanonical = false;
         phaseProgress = 1;
         showFiber = true;
         showPosterior = true;
