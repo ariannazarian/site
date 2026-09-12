@@ -1156,7 +1156,7 @@ nav a {
 .same-estimate-wrap {
     position: relative;
     width: min(90vw, 680px);
-    aspect-ratio: 1.24 / 1;
+    aspect-ratio: 1.40 / 1;
     margin: 8px auto 4px;
     overflow: visible;
     transform-origin: center;
@@ -1167,7 +1167,7 @@ nav a {
     display: block;
     width: 100%;
     height: 100%;
-    background: var(--black);
+    background: transparent;
     touch-action: manipulation;
 }
 
@@ -1192,7 +1192,7 @@ nav a {
 @media (max-width: 600px) {
     .same-estimate-wrap {
         width: 92vw;
-        aspect-ratio: 1 / 1.03;
+        aspect-ratio: 1.32 / 1;
         margin-top: 6px;
     }
 }
@@ -1206,16 +1206,5 @@ nav a {
 @media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
     .same-estimate-wrap.is-resettable:hover {
         scale: 1;
-    }
-}
-
-/* Same Estimate: reclaim unused canvas space after removal of the lower trace. */
-#same-estimate-content {
-    margin-bottom: -2.25rem;
-}
-
-@media (max-width: 600px) {
-    #same-estimate-content {
-        margin-bottom: -1.5rem;
     }
 }

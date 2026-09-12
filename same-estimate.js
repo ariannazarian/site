@@ -596,10 +596,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function buildContourPaths(level, segments) {
         const fraction = level / GLOBAL_MAX.R;
-        return chainContourSegments(segments).map(points => {
+        const candidates = chainContourSegments(segments).map(points => {
             const first = boundaryParamForPoint(points[0]);
             const last = boundaryParamForPoint(points[points.length - 1]);
             if (last.param < first.param) points.reverse();
+
             const startInfo = boundaryParamForPoint(points[0]);
             const endInfo = boundaryParamForPoint(points[points.length - 1]);
             const lengths = [0];
@@ -608,16 +609,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 total += Math.hypot(points[i].x - points[i - 1].x, points[i].y - points[i - 1].y);
                 lengths.push(total);
             }
+
             return {
                 points,
                 lengths,
                 total,
                 start: startInfo.param,
                 end: Math.max(startInfo.param + 1e-4, endInfo.param),
+                startDistance: startInfo.distance,
+                endDistance: endInfo.distance,
                 alpha: 0.075 + 0.19 * Math.pow(fraction, 0.72),
                 width: fraction > 0.96 ? 0.95 : 0.62
             };
         });
+
+        // A displayed iso-loss arc must be one continuous boundary-to-boundary
+        // component. Some contour levels can contain a tiny secondary component
+        // near an endpoint; drawing both makes the curve appear to spawn twice.
+        // Keep the longest component whose two ends lie on the simplex boundary.
+        const boundaryTol = Math.max(1.25, Math.min(W, H) * 0.004);
+        const boundaryComponents = candidates.filter(path =>
+            path.startDistance <= boundaryTol && path.endDistance <= boundaryTol
+        );
+        const pool = boundaryComponents.length ? boundaryComponents : candidates;
+        if (!pool.length) return [];
+        const longest = pool.reduce((best, path) => path.total > best.total ? path : best, pool[0]);
+        return [longest];
     }
 
     function lineSignature(a, b) {
@@ -832,7 +849,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const mobile = W < 520;
         const padX = mobile ? Math.max(27, W * 0.075) : W * 0.08;
         const padTop = mobile ? 34 : 42;
-        const triBottom = H * (mobile ? 0.88 : 0.865);
+        const triBottom = H * (mobile ? 0.95 : 0.94);
         const triW = W - 2 * padX;
         const triH = Math.min(triBottom - padTop, triW * 0.72);
         const centerX = W / 2;
@@ -915,24 +932,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function drawContours(g) {
-        CONTOURS.forEach(level => {
-            const fraction = level / GLOBAL_MAX.R;
-            g.strokeStyle = `rgba(255,255,255,${0.075 + 0.19 * Math.pow(fraction, 0.72)})`;
-            g.lineWidth = fraction > 0.96 ? 0.95 : 0.62;
-
-            forEachTriangle((a, b, c) => {
-                const points = uniquePoints([
-                    edgeCross(a, b, level),
-                    edgeCross(b, c, level),
-                    edgeCross(c, a, level)
-                ]);
-                if (points.length !== 2) {
-                    return;
-                }
+        contourPaths.forEach(paths => {
+            paths.forEach(path => {
+                g.save();
+                g.strokeStyle = `rgba(255,255,255,${path.alpha})`;
+                g.lineWidth = path.width;
                 g.beginPath();
-                g.moveTo(points[0].x, points[0].y);
-                g.lineTo(points[1].x, points[1].y);
+                g.moveTo(path.points[0].x, path.points[0].y);
+                for (let i = 1; i < path.points.length; i += 1) {
+                    g.lineTo(path.points[i].x, path.points[i].y);
+                }
                 g.stroke();
+                g.restore();
             });
         });
     }
