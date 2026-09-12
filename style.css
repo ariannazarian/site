@@ -113,14 +113,12 @@ nav a:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
 
-#same-estimate-title,
 #eternal-title,
 #ants-title {
     font-size: var(--text-size);
     margin-bottom: 0;
 }
 
-#same-estimate-content,
 #ants-content {
     display: none;
 }
@@ -156,14 +154,12 @@ nav a:hover {
     transition: opacity 3s ease-in, scale 0.28s ease-in-out;
 }
 
-#same-estimate-arrow,
 #eternal-arrow,
 #watch-arrow,
 #ants-arrow {
     transition: opacity 0.3s ease-in-out;
 }
 
-#same-estimate-arrow:not(.blink-arrow),
 #eternal-arrow:not(.blink-arrow),
 #watch-arrow:not(.blink-arrow),
 #ants-arrow:not(.blink-arrow) {
@@ -1123,7 +1119,34 @@ nav a {
     }
 }
 
+
 /* Same Estimate, Different Information */
+#same-estimate-title,
+#eternal-title,
+#ants-title {
+    font-size: var(--text-size);
+    margin-bottom: 0;
+}
+
+#same-estimate-content,
+#ants-content {
+    display: none;
+}
+
+#same-estimate-arrow,
+#eternal-arrow,
+#watch-arrow,
+#ants-arrow {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#same-estimate-arrow:not(.blink-arrow),
+#eternal-arrow:not(.blink-arrow),
+#watch-arrow:not(.blink-arrow),
+#ants-arrow:not(.blink-arrow) {
+    animation: none !important;
+}
+
 #same-estimate-artwork {
     width: 100%;
     text-align: center;
@@ -1185,4 +1208,3 @@ nav a {
         scale: 1;
     }
 }
-
