@@ -1741,7 +1741,11 @@ document.addEventListener("DOMContentLoaded", function () {
     async function runRealization(token) {
         phase = "realization";
         showGlobal = true;
-        showCanonical = false;
+        // pi^C and pi^U are fixed canonical reference beliefs from the paper.
+        // Keep them visible throughout the realization rather than relabeling
+        // changing fiber endpoints with symbols that have fixed mathematical meanings.
+        showCanonical = true;
+        phaseProgress = 1;
         showFiber = true;
         showPosterior = true;
         showTrace = false;
@@ -1775,6 +1779,8 @@ document.addEventListener("DOMContentLoaded", function () {
         globalProgress = 1;
         realizationProgress = 1;
         completed = true;
+        showCanonical = true;
+        phaseProgress = 1;
         showFiber = true;
         showPosterior = true;
         showTrace = false;
@@ -1801,6 +1807,8 @@ document.addEventListener("DOMContentLoaded", function () {
         globalProgress = 1;
         realizationProgress = 1;
         phase = "residue";
+        showCanonical = true;
+        phaseProgress = 1;
         showFiber = true;
         showPosterior = true;
         showTrace = false;
