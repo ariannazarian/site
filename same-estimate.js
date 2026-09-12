@@ -559,6 +559,41 @@ document.addEventListener("DOMContentLoaded", function () {
         return raw;
     }
 
+
+    function chainContourSegments(segments) {
+        const unused = segments.map(segment => ({ a: { ...segment.a }, b: { ...segment.b } }));
+        const paths = [];
+        const tolerance = 1.6;
+        while (unused.length) {
+            const first = unused.pop();
+            const points = [first.a, first.b];
+            let extended = true;
+            while (extended) {
+                extended = false;
+                for (let i = unused.length - 1; i >= 0; i -= 1) {
+                    const segment = unused[i];
+                    const head = points[0];
+                    const tail = points[points.length - 1];
+                    const d = [
+                        [Math.hypot(segment.a.x - tail.x, segment.a.y - tail.y), "tailA"],
+                        [Math.hypot(segment.b.x - tail.x, segment.b.y - tail.y), "tailB"],
+                        [Math.hypot(segment.a.x - head.x, segment.a.y - head.y), "headA"],
+                        [Math.hypot(segment.b.x - head.x, segment.b.y - head.y), "headB"]
+                    ].sort((u, v) => u[0] - v[0])[0];
+                    if (d[0] > tolerance) continue;
+                    if (d[1] === "tailA") points.push(segment.b);
+                    else if (d[1] === "tailB") points.push(segment.a);
+                    else if (d[1] === "headA") points.unshift(segment.b);
+                    else points.unshift(segment.a);
+                    unused.splice(i, 1);
+                    extended = true;
+                }
+            }
+            paths.push(points);
+        }
+        return paths;
+    }
+
     function buildContourPaths(level, segments) {
         const fraction = level / GLOBAL_MAX.R;
         return chainContourSegments(segments).map(points => {
