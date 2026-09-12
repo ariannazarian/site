@@ -52,15 +52,18 @@ document.addEventListener("DOMContentLoaded", function () {
         lowHigh: Object.freeze([0.8, 0.0, 0.2])
     });
 
+    // One representative level from each topologically distinct CE-loss regime.
+    // The five levels generate 1, 2, 3, 2, and 1 connected components respectively.
+    // Values are midpoints between the six critical loss values of the baseline surface.
     const CONTOURS = Object.freeze([
-        1.0124584572835554e-05,
-        2.5311461432088884e-05,
-        5.062292286417777e-05,
-        7.593438429626665e-05,
-        9.112126115551999e-05,
-        9.820847035650486e-05,
-        0.00010073961649971376
+        3.6045067689677736e-06,
+        6.001239635562796e-06,
+        1.1009975767088122e-05,
+        1.6782292205972878e-05,
+        5.983344251669936e-05
     ]);
+
+    const EXPECTED_CONTOUR_COMPONENTS = Object.freeze([1, 2, 3, 2, 1]);
 
     const TIMING = Object.freeze({
         staticBuild: 9400,
@@ -456,6 +459,12 @@ document.addEventListener("DOMContentLoaded", function () {
         buildBoundaryMetrics();
         constructionGridLines = buildConstructionGridLines();
         contourPaths = CONTOURS.map((level, index) => buildContourPaths(level, contourSegments[index]));
+        const contourCounts = contourPaths.map(paths => paths.length);
+        contourCounts.forEach((count, index) => {
+            if (count !== EXPECTED_CONTOUR_COMPONENTS[index]) {
+                throw new Error(`Contour topology verification failed at level ${index}: expected ${EXPECTED_CONTOUR_COMPONENTS[index]} components, got ${count}.`);
+            }
+        });
         constructionTriangles = buildConstructionTriangles();
     }
 
@@ -718,11 +727,14 @@ document.addEventListener("DOMContentLoaded", function () {
             };
         }).filter(Boolean);
 
-        const boundaryComponents = candidates.filter(path => path.boundaryToBoundary);
-        const pool = boundaryComponents.length ? boundaryComponents : candidates;
-        if (!pool.length) return [];
-        const longest = pool.reduce((best, path) => path.total > best.total ? path : best, pool[0]);
-        return [longest];
+        // Every chosen baseline level consists only of genuine boundary-to-boundary
+        // components. Preserve all of them: disconnectedness is part of the loss geometry,
+        // not a rendering artifact. Sort by first clockwise boundary contact so animation
+        // order is deterministic.
+        const boundaryComponents = candidates
+            .filter(path => path.boundaryToBoundary)
+            .sort((a, b) => a.start - b.start);
+        return boundaryComponents;
     }
 
     function lineSignature(a, b) {
