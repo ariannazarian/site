@@ -1109,6 +1109,75 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.restore();
     }
 
+    function drawPiSuperscriptLabel(point, superscript, options = {}) {
+        const mobile = W < 520;
+        const alpha = options.alpha ?? 0.78;
+        const color = options.color ?? `rgba(255,255,255,${alpha})`;
+        const dx = options.dx ?? 7;
+        const dy = options.dy ?? -8;
+        const baseSize = mobile ? 9 : 10;
+        const smallSize = mobile ? 6.5 : 7.2;
+        const x = point.x + dx;
+        const y = point.y + dy;
+
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        ctx.font = `${baseSize}px "Courier New",Courier,monospace`;
+        ctx.fillText("π", x, y);
+        const baseWidth = ctx.measureText("π").width;
+        ctx.font = `${smallSize}px "Courier New",Courier,monospace`;
+        ctx.fillText(superscript, x + baseWidth + 0.5, y - baseSize * 0.32);
+        ctx.restore();
+    }
+
+    function drawPiSubscriptLabel(point, subscript, options = {}) {
+        const mobile = W < 520;
+        const alpha = options.alpha ?? 0.88;
+        const color = options.color ?? `rgba(255,255,255,${alpha})`;
+        const dx = options.dx ?? 8;
+        const dy = options.dy ?? -9;
+        const baseSize = mobile ? 9 : 10;
+        const smallSize = mobile ? 6.5 : 7.2;
+        const x = point.x + dx;
+        const y = point.y + dy;
+
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        ctx.font = `${baseSize}px "Courier New",Courier,monospace`;
+        ctx.fillText("π", x, y);
+        const baseWidth = ctx.measureText("π").width;
+        ctx.font = `${smallSize}px "Courier New",Courier,monospace`;
+        ctx.fillText(subscript, x + baseWidth + 0.5, y + baseSize * 0.34);
+        ctx.restore();
+    }
+
+    function drawFiberLabel(m) {
+        if (!showFiber) return;
+        const [pa, pb] = fixedMeanSegment(m);
+        const a = xy(pa);
+        const b = xy(pb);
+        const t = 0.40;
+        const x = lerp(a.x, b.x, t);
+        const y = lerp(a.y, b.y, t);
+        const mobile = W < 520;
+        const text = phase === "canonical"
+            ? "m(π)=2"
+            : `m(πₜ)=${m.toFixed(2)}`;
+        ctx.save();
+        ctx.font = `${mobile ? 8 : 9}px "Courier New",Courier,monospace`;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "bottom";
+        ctx.fillStyle = phase === "canonical"
+            ? "rgba(0,122,255,.72)"
+            : "rgba(0,122,255,.66)";
+        ctx.fillText(text, x + 5, y - 5);
+        ctx.restore();
+    }
+
     function drawVertexLabels() {
         labelHitBoxes = [];
         if (boundaryProgress <= 0 || !boundaryMetrics) {
@@ -1227,6 +1296,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.lineWidth = 2.5;
         ctx.stroke();
         ctx.restore();
+        drawFiberLabel(m);
     }
 
     function drawGlobalMax() {
@@ -1246,6 +1316,13 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.strokeStyle = "rgba(255,255,255,.13)";
         ctx.stroke();
         ctx.restore();
+        if (gp > 0.72) {
+            drawPiSuperscriptLabel(point, "*", {
+                alpha: 0.68 * clamp((gp - 0.72) / 0.28, 0, 1),
+                dx: 9,
+                dy: -2
+            });
+        }
     }
 
     function drawCanonical() {
@@ -1274,8 +1351,11 @@ document.addEventListener("DOMContentLoaded", function () {
             ctx.stroke();
             if (cp > 0.55) {
                 const labelAlpha = clamp((cp - 0.55) / 0.45, 0, 1);
-                ctx.fillStyle = `rgba(255,255,255,${0.78 * labelAlpha})`;
-                ctx.fillText(item.label, point.x + 7, point.y - 8);
+                drawPiSuperscriptLabel(point, item.label === "πC" ? "C" : "U", {
+                    alpha: 0.78 * labelAlpha,
+                    dx: 7,
+                    dy: -8
+                });
             }
         });
         ctx.restore();
@@ -1325,6 +1405,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ctx.strokeStyle = "rgba(255,255,255,.20)";
             ctx.lineWidth = 1.15;
             ctx.stroke();
+            drawPiSubscriptLabel(point, "t", { alpha: 0.88, dx: 9, dy: -10 });
         }
         ctx.restore();
     }
