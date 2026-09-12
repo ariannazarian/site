@@ -63,15 +63,16 @@ document.addEventListener("DOMContentLoaded", function () {
     ]);
 
     const TIMING = Object.freeze({
-        staticBuild: 4000,
-        canonical: 1050,
-        canonicalHold: 150,
-        realizationFirst: 350,
-        realizationStep: 560,
-        preResidue: 200
+        staticBuild: 9400,
+        canonical: 1200,
+        canonicalHold: 300,
+        realizationFirst: 500,
+        realizationStep: 580,
+        preResidue: 250
     });
 
-    const STATIC_BOUNDARY_FINISH = 0.82;
+    const GRID_TRI_DRAW = 0.065;
+    const GRID_TRI_SPREAD = 0.022;
     const GRID_LEVELS = Object.freeze([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]);
 
     let W = 0;
@@ -79,13 +80,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let DPR = 1;
     let vertices = [];
     let traceBox = null;
-    let fieldLayer = null;
     let screenNodes = [];
     let contourSegments = [];
     let contourPaths = [];
     let constructionGridLines = [];
-    let constructionCells = [];
+    let constructionTriangles = [];
     let boundaryMetrics = null;
+    let fieldLayer = null;
 
     let gridValues = null;
     let gridIndex = null;
@@ -454,7 +455,7 @@ document.addEventListener("DOMContentLoaded", function () {
         buildBoundaryMetrics();
         constructionGridLines = buildConstructionGridLines();
         contourPaths = CONTOURS.map((level, index) => buildContourPaths(level, contourSegments[index]));
-        constructionCells = buildConstructionCells();
+        constructionTriangles = buildConstructionTriangles();
     }
 
     function collectContourSegments(level) {
@@ -552,104 +553,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 b[others[1]] = 0;
                 const p0 = xy(a);
                 const p1 = xy(b);
-                const q0 = boundaryParamForPoint(p0);
-                const q1 = boundaryParamForPoint(p1);
-                const source = q0.param <= q1.param ? p0 : p1;
-                const other = q0.param <= q1.param ? p1 : p0;
-                raw.push({
-                    axis,
-                    level,
-                    a: p0,
-                    b: p1,
-                    source: { ...source },
-                    other: { ...other },
-                    start: Math.min(q0.param, q1.param) * STATIC_BOUNDARY_FINISH
-                });
+                raw.push({ axis, level, a: p0, b: p1 });
             });
-        }
-
-        const maxLength = Math.max(...raw.map(line => Math.hypot(line.b.x - line.a.x, line.b.y - line.a.y)));
-        const speed = maxLength / 0.115;
-        raw.forEach(line => { line.speed = speed; });
-
-        const intersections = [];
-        for (let i = 0; i < raw.length; i += 1) {
-            for (let j = i + 1; j < raw.length; j += 1) {
-                const A = raw[i];
-                const B = raw[j];
-                if (A.axis === B.axis) continue;
-                const pi = [0, 0, 0];
-                pi[A.axis] = A.level;
-                pi[B.axis] = B.level;
-                const remaining = [0, 1, 2].find(index => index !== A.axis && index !== B.axis);
-                pi[remaining] = 1 - A.level - B.level;
-                if (pi[remaining] < -1e-9) continue;
-                const point = xy(pi.map(value => Math.max(0, value)));
-                intersections.push({ i, j, point });
-            }
-        }
-
-        // Relax activation times through actual grid intersections. Once one line
-        // reaches an intersection, that contact may start its neighboring line.
-        for (let pass = 0; pass < 40; pass += 1) {
-            let changed = false;
-            intersections.forEach(({ i, j, point }) => {
-                const A = raw[i];
-                const B = raw[j];
-                const arriveA = A.start + Math.hypot(point.x - A.source.x, point.y - A.source.y) / A.speed;
-                const arriveB = B.start + Math.hypot(point.x - B.source.x, point.y - B.source.y) / B.speed;
-                if (arriveA + 1e-6 < B.start) {
-                    B.start = arriveA;
-                    B.source = { ...point };
-                    changed = true;
-                }
-                if (arriveB + 1e-6 < A.start) {
-                    A.start = arriveB;
-                    A.source = { ...point };
-                    changed = true;
-                }
-            });
-            if (!changed) break;
         }
         return raw;
-    }
-
-    function segmentPointDistance(a, b, point) {
-        return closestPointOnSegment(point, a, b).distance;
-    }
-
-    function chainContourSegments(segments) {
-        const unused = segments.map(segment => ({ a: { ...segment.a }, b: { ...segment.b } }));
-        const paths = [];
-        const tolerance = 1.6;
-        while (unused.length) {
-            const first = unused.pop();
-            const points = [first.a, first.b];
-            let extended = true;
-            while (extended) {
-                extended = false;
-                for (let i = unused.length - 1; i >= 0; i -= 1) {
-                    const segment = unused[i];
-                    const head = points[0];
-                    const tail = points[points.length - 1];
-                    const d = [
-                        [Math.hypot(segment.a.x - tail.x, segment.a.y - tail.y), "tailA"],
-                        [Math.hypot(segment.b.x - tail.x, segment.b.y - tail.y), "tailB"],
-                        [Math.hypot(segment.a.x - head.x, segment.a.y - head.y), "headA"],
-                        [Math.hypot(segment.b.x - head.x, segment.b.y - head.y), "headB"]
-                    ].sort((u, v) => u[0] - v[0])[0];
-                    if (d[0] > tolerance) continue;
-                    if (d[1] === "tailA") points.push(segment.b);
-                    else if (d[1] === "tailB") points.push(segment.a);
-                    else if (d[1] === "headA") points.unshift(segment.b);
-                    else points.unshift(segment.a);
-                    unused.splice(i, 1);
-                    extended = true;
-                }
-            }
-            paths.push(points);
-        }
-        return paths;
     }
 
     function buildContourPaths(level, segments) {
@@ -659,55 +566,157 @@ document.addEventListener("DOMContentLoaded", function () {
             const last = boundaryParamForPoint(points[points.length - 1]);
             if (last.param < first.param) points.reverse();
             const startInfo = boundaryParamForPoint(points[0]);
+            const endInfo = boundaryParamForPoint(points[points.length - 1]);
             const lengths = [0];
             let total = 0;
             for (let i = 1; i < points.length; i += 1) {
                 total += Math.hypot(points[i].x - points[i - 1].x, points[i].y - points[i - 1].y);
                 lengths.push(total);
             }
-            const contourSpeed = Math.max(W, H) / 0.16;
             return {
                 points,
                 lengths,
                 total,
-                start: startInfo.param * STATIC_BOUNDARY_FINISH,
-                speed: contourSpeed,
+                start: startInfo.param,
+                end: Math.max(startInfo.param + 1e-4, endInfo.param),
                 alpha: 0.075 + 0.19 * Math.pow(fraction, 0.72),
                 width: fraction > 0.96 ? 0.95 : 0.62
             };
         });
     }
 
-    function interiorActivationForPi(pi) {
-        const p = normalizeBelief(pi);
-        let edgeIndex = 0;
-        for (let i = 1; i < 3; i += 1) {
-            if (p[i] < p[edgeIndex]) edgeIndex = i;
-        }
-        const projected = [...p];
-        projected[edgeIndex] = 0;
-        const sum = projected.reduce((a, b) => a + b, 0) || 1;
-        const boundaryPi = projected.map(value => value / sum);
-        const boundaryPoint = xy(boundaryPi);
-        const boundaryTime = boundaryParamForPoint(boundaryPoint).param * STATIC_BOUNDARY_FINISH;
-        const inward = clamp(3 * p[edgeIndex], 0, 1);
-        return clamp(boundaryTime + 0.12 * inward, 0, 0.96);
+    function lineSignature(a, b) {
+        const p1 = `${a[0].toFixed(4)},${a[1].toFixed(4)},${a[2].toFixed(4)}`;
+        const p2 = `${b[0].toFixed(4)},${b[1].toFixed(4)},${b[2].toFixed(4)}`;
+        return [p1, p2].sort().join('|');
     }
 
-    function buildConstructionCells() {
-        const cells = [];
-        forEachTriangle((a, b, c) => {
-            const pi = [
-                (a.pi[0] + b.pi[0] + c.pi[0]) / 3,
-                (a.pi[1] + b.pi[1] + c.pi[1]) / 3,
-                (a.pi[2] + b.pi[2] + c.pi[2]) / 3
-            ];
-            const z = clamp((a.R + b.R + c.R) / (3 * GLOBAL_MAX.R), 0, 1);
-            const shaped = Math.pow(z, 0.68);
-            const value = Math.round(3 + 25 * shaped);
-            cells.push({ a, b, c, value, start: interiorActivationForPi(pi) });
+    function buildConstructionTriangles() {
+        const step = 0.1;
+        const tris = [];
+        const edgeOwners = new Map();
+
+        function pushTri(pis) {
+            const points = pis.map(pi => xy(pi));
+            const centroid = {
+                x: (points[0].x + points[1].x + points[2].x) / 3,
+                y: (points[0].y + points[1].y + points[2].y) / 3
+            };
+            const clockwise = points
+                .map((point, index) => ({ point, pi: pis[index], angle: Math.atan2(point.y - centroid.y, point.x - centroid.x) }))
+                .sort((u, v) => v.angle - u.angle);
+            const tri = {
+                id: tris.length,
+                pis: clockwise.map(item => item.pi),
+                points: clockwise.map(item => item.point),
+                centroid,
+                start: Infinity,
+                sourcePoint: null,
+                neighbors: []
+            };
+            tris.push(tri);
+        }
+
+        for (let i = 0; i < 10; i += 1) {
+            for (let j = 0; j < 10 - i; j += 1) {
+                const A = [i * step, 1 - (i + j) * step, j * step];
+                const B = [(i + 1) * step, 1 - ((i + 1) + j) * step, j * step];
+                const C = [i * step, 1 - (i + (j + 1)) * step, (j + 1) * step];
+                pushTri([A, B, C]);
+                if (i + j <= 8) {
+                    const D = [(i + 1) * step, 1 - ((i + 1) + (j + 1)) * step, (j + 1) * step];
+                    pushTri([B, D, C]);
+                }
+            }
+        }
+
+        tris.forEach(tri => {
+            tri.edgeKeys = [];
+            for (let k = 0; k < 3; k += 1) {
+                const piA = tri.pis[k];
+                const piB = tri.pis[(k + 1) % 3];
+                const key = lineSignature(piA, piB);
+                tri.edgeKeys.push(key);
+                if (!edgeOwners.has(key)) edgeOwners.set(key, []);
+                edgeOwners.get(key).push({ tri: tri.id, edgeIndex: k });
+            }
         });
-        return cells;
+
+        edgeOwners.forEach(owners => {
+            if (owners.length === 2) {
+                const a = owners[0];
+                const b = owners[1];
+                tris[a.tri].neighbors.push({ tri: b.tri, via: a.edgeIndex });
+                tris[b.tri].neighbors.push({ tri: a.tri, via: b.edgeIndex });
+            }
+        });
+
+        tris.forEach(tri => {
+            for (let k = 0; k < 3; k += 1) {
+                const piA = tri.pis[k];
+                const piB = tri.pis[(k + 1) % 3];
+                const supportA = piA.filter(value => value > 1e-8).length;
+                const supportB = piB.filter(value => value > 1e-8).length;
+                if (supportA <= 2 && supportB <= 2) {
+                    const pointA = xy(piA);
+                    const pointB = xy(piB);
+                    const qa = boundaryParamForPoint(pointA);
+                    const qb = boundaryParamForPoint(pointB);
+                    if (qa.distance < 0.8 && qb.distance < 0.8) {
+                        const chosen = qa.param <= qb.param ? { q: qa, point: pointA } : { q: qb, point: pointB };
+                        if (chosen.q.param < tri.start) {
+                            tri.start = chosen.q.param;
+                            tri.sourcePoint = { ...chosen.point };
+                        }
+                    }
+                }
+            }
+        });
+
+        for (let pass = 0; pass < 60; pass += 1) {
+            let changed = false;
+            tris.forEach(tri => {
+                if (!Number.isFinite(tri.start)) return;
+                tri.neighbors.forEach(link => {
+                    const neighbor = tris[link.tri];
+                    const candidate = tri.start + GRID_TRI_SPREAD;
+                    if (candidate + 1e-6 < neighbor.start) {
+                        neighbor.start = candidate;
+                        const a = tri.points[link.via];
+                        const b = tri.points[(link.via + 1) % 3];
+                        neighbor.sourcePoint = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+                        changed = true;
+                    }
+                });
+            });
+            if (!changed) break;
+        }
+
+        tris.forEach(tri => {
+            if (!Number.isFinite(tri.start)) tri.start = 0.5;
+            const source = tri.sourcePoint || tri.points[0];
+            let startIndex = 0;
+            let best = Infinity;
+            tri.points.forEach((point, index) => {
+                const d = Math.hypot(point.x - source.x, point.y - source.y);
+                if (d < best) { best = d; startIndex = index; }
+            });
+            tri.cycle = [
+                tri.points[startIndex],
+                tri.points[(startIndex + 1) % 3],
+                tri.points[(startIndex + 2) % 3],
+                tri.points[startIndex]
+            ];
+            tri.lengths = [0];
+            let total = 0;
+            for (let k = 1; k < tri.cycle.length; k += 1) {
+                total += Math.hypot(tri.cycle[k].x - tri.cycle[k - 1].x, tri.cycle[k].y - tri.cycle[k - 1].y);
+                tri.lengths.push(total);
+            }
+            tri.total = total;
+        });
+
+        return tris;
     }
 
     function drawPartialPolyline(points, lengths, total, distance) {
@@ -810,8 +819,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function rebuildStaticLayers() {
         fieldLayer = makeLayer();
         drawField(fieldLayer.ctx);
-        drawCoordinateGrid(fieldLayer.ctx);
-        drawContours(fieldLayer.ctx);
     }
 
     function drawField(g) {
@@ -921,59 +928,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function drawBuildingField() {
-        if (fieldReveal <= 0 || fieldReveal >= 0.9995) {
-            return;
-        }
         const p = clamp(fieldReveal, 0, 1);
+
+        if (fieldLayer && p > 0.55) {
+            ctx.save();
+            ctx.globalAlpha = ease(clamp((p - 0.55) / 0.35, 0, 1)) * 0.95;
+            ctx.drawImage(
+                fieldLayer.canvas,
+                0, 0, fieldLayer.canvas.width, fieldLayer.canvas.height,
+                0, 0, W, H
+            );
+            ctx.restore();
+        }
+
         ctx.save();
-
-        // Each micro-cell is activated from its nearest already-reached perimeter
-        // location, then grows locally. This makes the field follow the same
-        // clockwise construction rather than a vertical reveal mask.
-        constructionCells.forEach(cell => {
-            const local = clamp((p - cell.start) / 0.055, 0, 1);
-            if (local <= 0) return;
-            const cx = (cell.a.x + cell.b.x + cell.c.x) / 3;
-            const cy = (cell.a.y + cell.b.y + cell.c.y) / 3;
-            const grow = ease(local);
-            ctx.beginPath();
-            ctx.moveTo(lerp(cx, cell.a.x, grow), lerp(cy, cell.a.y, grow));
-            ctx.lineTo(lerp(cx, cell.b.x, grow), lerp(cy, cell.b.y, grow));
-            ctx.lineTo(lerp(cx, cell.c.x, grow), lerp(cy, cell.c.y, grow));
-            ctx.closePath();
-            ctx.fillStyle = `rgb(${cell.value},${cell.value},${cell.value})`;
-            ctx.fill();
-        });
-
-        // The barycentric coordinate grid is a contact-propagation network.
-        // Boundary contact starts a line; completed portions can activate
-        // neighboring lines at their exact intersections.
-        ctx.strokeStyle = "rgba(255,255,255,.075)";
+        ctx.strokeStyle = "rgba(255,255,255,.055)";
         ctx.lineWidth = 0.5;
-        constructionGridLines.forEach(line => {
-            const radius = Math.max(0, p - line.start) * line.speed;
-            if (radius <= 0) return;
-            const endpoints = [line.a, line.b];
-            endpoints.forEach(endpoint => {
-                const dist = Math.hypot(endpoint.x - line.source.x, endpoint.y - line.source.y);
-                const t = clamp(radius / Math.max(1e-9, dist), 0, 1);
-                ctx.beginPath();
-                ctx.moveTo(line.source.x, line.source.y);
-                ctx.lineTo(lerp(line.source.x, endpoint.x, t), lerp(line.source.y, endpoint.y, t));
-                ctx.stroke();
-            });
+        constructionTriangles.forEach(tri => {
+            const local = clamp((p - tri.start) / GRID_TRI_DRAW, 0, 1);
+            if (local <= 0) return;
+            drawPartialPolyline(tri.cycle, tri.lengths, tri.total, tri.total * ease(local));
         });
+        ctx.restore();
 
-        // Every exact loss contour starts from the first of its boundary
-        // intersections encountered by the clockwise perimeter and then traces
-        // continuously along its own level-set geometry.
+        ctx.save();
         contourPaths.forEach(paths => {
             paths.forEach(path => {
-                const distance = Math.max(0, p - path.start) * path.speed;
-                if (distance <= 0) return;
+                const local = clamp((p - path.start) / Math.max(1e-4, path.end - path.start), 0, 1);
+                if (local <= 0) return;
                 ctx.strokeStyle = `rgba(255,255,255,${path.alpha})`;
                 ctx.lineWidth = path.width;
-                drawPartialPolyline(path.points, path.lengths, path.total, distance);
+                drawPartialPolyline(path.points, path.lengths, path.total, path.total * local);
             });
         });
         ctx.restore();
@@ -1325,6 +1310,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 0, 0, W, H
             );
             ctx.restore();
+            drawCoordinateGrid(ctx);
+            drawContours(ctx);
         } else {
             drawBuildingField();
         }
@@ -1441,12 +1428,11 @@ document.addEventListener("DOMContentLoaded", function () {
         draw();
 
         return animateValue(0, 1, TIMING.staticBuild, token, value => {
-            boundaryProgress = clamp(value / STATIC_BOUNDARY_FINISH, 0, 1);
+            boundaryProgress = value;
             fieldReveal = value;
-
-            const arrival = interiorActivationForPi(GLOBAL_MAX.pi);
+            const arrival = 0.72;
             showGlobal = value >= arrival;
-            globalProgress = clamp((value - arrival) / 0.08, 0, 1);
+            globalProgress = clamp((value - arrival) / 0.12, 0, 1);
             draw();
         }, t => t);
     }
