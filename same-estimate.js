@@ -63,13 +63,12 @@ document.addEventListener("DOMContentLoaded", function () {
     ]);
 
     const TIMING = Object.freeze({
-        boundary: 600,
-        field: 1050,
-        canonical: 850,
-        canonicalHold: 220,
-        realizationFirst: 260,
-        realizationStep: 280,
-        preResidue: 320
+        staticBuild: 3200,
+        canonical: 1100,
+        canonicalHold: 300,
+        realizationFirst: 500,
+        realizationStep: 560,
+        preResidue: 280
     });
 
     let W = 0;
@@ -644,33 +643,37 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const points = [vertices[0], vertices[1], vertices[2], vertices[0]];
-        const lengths = [];
-        let perimeter = 0;
-        for (let i = 0; i < 3; i += 1) {
-            const len = Math.hypot(points[i + 1].x - points[i].x, points[i + 1].y - points[i].y);
-            lengths.push(len);
-            perimeter += len;
-        }
-        let remaining = clamp(boundaryProgress, 0, 1) * perimeter;
+        // The static construction originates at pi^C = (0,1,0), the MID apex.
+        // Both side walls extend downward together; only after they reach the
+        // base is the LOW-HIGH edge drawn. This gives the entire static layer
+        // one geometric wavefront without privileging LOW over HIGH.
+        const p = clamp(boundaryProgress, 0, 1);
+        const sideProgress = clamp(p / 0.82, 0, 1);
+        const baseProgress = clamp((p - 0.82) / 0.18, 0, 1);
+        const apex = vertices[1];
+        const low = vertices[0];
+        const high = vertices[2];
 
         ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        for (let i = 0; i < 3 && remaining > 0; i += 1) {
-            const take = Math.min(1, remaining / lengths[i]);
-            ctx.lineTo(
-                lerp(points[i].x, points[i + 1].x, take),
-                lerp(points[i].y, points[i + 1].y, take)
-            );
-            remaining -= lengths[i];
-            if (take < 1) {
-                break;
-            }
-        }
         ctx.strokeStyle = "rgba(255,255,255,.61)";
         ctx.lineWidth = 1.05;
+
+        ctx.beginPath();
+        ctx.moveTo(apex.x, apex.y);
+        ctx.lineTo(lerp(apex.x, low.x, sideProgress), lerp(apex.y, low.y, sideProgress));
         ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(apex.x, apex.y);
+        ctx.lineTo(lerp(apex.x, high.x, sideProgress), lerp(apex.y, high.y, sideProgress));
+        ctx.stroke();
+
+        if (baseProgress > 0) {
+            ctx.beginPath();
+            ctx.moveTo(low.x, low.y);
+            ctx.lineTo(lerp(low.x, high.x, baseProgress), low.y);
+            ctx.stroke();
+        }
         ctx.restore();
     }
 
@@ -680,94 +683,110 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const r = clamp(fieldReveal, 0, 1);
+        const apexY = vertices[1].y;
+        const baseY = vertices[0].y;
+        const depthOfY = y => clamp((y - apexY) / Math.max(1, baseY - apexY), 0, 1);
+        const front = clamp(r / 0.92, 0, 1);
         ctx.save();
 
-        // The field is built in exact loss order. Each micro-triangle grows
-        // geometrically from its centroid rather than simply fading on.
+        // The interior uses the same MID-origin wavefront as the triangle.
+        // In barycentric coordinates this depth is exactly 1-pi_2: the work
+        // unfolds away from certainty in the middle-liquidity state.
         forEachTriangle((a, b, c) => {
-            const z = clamp((a.R + b.R + c.R) / (3 * GLOBAL_MAX.R), 0, 1);
-            const gate = clamp((r - 0.80 * z) / 0.20, 0, 1);
+            const depth = (depthOfY(a.y) + depthOfY(b.y) + depthOfY(c.y)) / 3;
+            const gate = clamp((front - depth) / 0.055, 0, 1);
             if (gate <= 0) {
                 return;
             }
+            const z = clamp((a.R + b.R + c.R) / (3 * GLOBAL_MAX.R), 0, 1);
             const shaped = Math.pow(z, 0.68);
             const value = Math.round(3 + 25 * shaped);
             const cx = (a.x + b.x + c.x) / 3;
             const cy = (a.y + b.y + c.y) / 3;
             const grow = ease(gate);
-            const ax = lerp(cx, a.x, grow);
-            const ay = lerp(cy, a.y, grow);
-            const bx = lerp(cx, b.x, grow);
-            const by = lerp(cy, b.y, grow);
-            const cx2 = lerp(cx, c.x, grow);
-            const cy2 = lerp(cy, c.y, grow);
             ctx.beginPath();
-            ctx.moveTo(ax, ay);
-            ctx.lineTo(bx, by);
-            ctx.lineTo(cx2, cy2);
+            ctx.moveTo(lerp(cx, a.x, grow), lerp(cy, a.y, grow));
+            ctx.lineTo(lerp(cx, b.x, grow), lerp(cy, b.y, grow));
+            ctx.lineTo(lerp(cx, c.x, grow), lerp(cy, c.y, grow));
             ctx.closePath();
             ctx.fillStyle = `rgb(${value},${value},${value})`;
             ctx.fill();
         });
 
-        // Contours are traced progressively along their actual level-set
-        // segments once the corresponding loss level has been reached.
-        CONTOURS.forEach((level, index) => {
-            const fraction = level / GLOBAL_MAX.R;
-            const startAt = 0.58 * fraction + 0.10;
-            const local = clamp((r - startAt) / Math.max(0.12, 0.92 - startAt), 0, 1);
-            if (local <= 0) {
-                return;
-            }
-            const segments = contourSegments[index] || [];
-            const count = local * segments.length;
-            ctx.strokeStyle = `rgba(255,255,255,${0.075 + 0.19 * Math.pow(fraction, 0.72)})`;
-            ctx.lineWidth = fraction > 0.96 ? 0.95 : 0.62;
-            for (let i = 0; i < Math.ceil(count); i += 1) {
-                const segment = segments[i];
-                if (!segment) {
+        // The deterministic stipple field is constructed by that same front.
+        for (let i = 0; i <= GRID_N; i += 2) {
+            for (let j = 0; j <= GRID_N - i; j += 2) {
+                const record = gridNode(i, j);
+                const depth = depthOfY(record.y);
+                const gate = clamp((front - depth) / 0.045, 0, 1);
+                const z = clamp(record.R / GLOBAL_MAX.R, 0, 1);
+                if (gate <= 0 || z < 0.07) {
                     continue;
                 }
-                const tail = i === Math.floor(count) ? count - Math.floor(count) : 1;
+                const radius = (0.22 + 0.68 * Math.pow(z, 0.72)) * ease(gate);
                 ctx.beginPath();
-                ctx.moveTo(segment.a.x, segment.a.y);
-                ctx.lineTo(
-                    lerp(segment.a.x, segment.b.x, tail),
-                    lerp(segment.a.y, segment.b.y, tail)
-                );
-                ctx.stroke();
+                ctx.arc(record.x, record.y, radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255,255,255,${(0.025 + 0.13 * Math.pow(z, 0.86)) * gate})`;
+                ctx.fill();
             }
+        }
+
+        // Each contour begins only when the same construction front reaches
+        // that part of the exact level set. Segments are drawn from the
+        // apex-nearer endpoint toward the base, so the curves visibly grow.
+        CONTOURS.forEach((level, index) => {
+            const fraction = level / GLOBAL_MAX.R;
+            const segments = contourSegments[index] || [];
+            ctx.strokeStyle = `rgba(255,255,255,${0.075 + 0.19 * Math.pow(fraction, 0.72)})`;
+            ctx.lineWidth = fraction > 0.96 ? 0.95 : 0.62;
+            segments.forEach(segment => {
+                const a = segment.a.y <= segment.b.y ? segment.a : segment.b;
+                const b = segment.a.y <= segment.b.y ? segment.b : segment.a;
+                const depth = depthOfY((a.y + b.y) / 2);
+                const local = clamp((front - depth) / 0.045, 0, 1);
+                if (local <= 0) {
+                    return;
+                }
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(lerp(a.x, b.x, local), lerp(a.y, b.y, local));
+                ctx.stroke();
+            });
         });
         ctx.restore();
     }
-
     function drawVertexLabels() {
-        if (boundaryProgress < 0.86) {
+        if (boundaryProgress <= 0) {
             return;
         }
         const mobile = W < 520;
+        const p = clamp(boundaryProgress, 0, 1);
+        const apexAlpha = clamp(p / 0.16, 0, 1);
+        const baseAlpha = clamp((p - 0.72) / 0.18, 0, 1);
         ctx.save();
         ctx.font = `${mobile ? 9 : 10}px "Courier New",Courier,monospace`;
-        ctx.fillStyle = "rgba(255,255,255,.52)";
         ctx.textBaseline = "middle";
-        if (mobile) {
-            ctx.textAlign = "left";
-            ctx.fillText("LOW .5", vertices[0].x + 3, vertices[0].y + 12);
-            ctx.textAlign = "center";
-            ctx.fillText("MID 2", vertices[1].x, vertices[1].y - 13);
-            ctx.textAlign = "right";
-            ctx.fillText("HIGH 8", vertices[2].x - 3, vertices[2].y + 12);
-        } else {
-            ctx.textAlign = "right";
-            ctx.fillText("LOW .5", vertices[0].x - 8, vertices[0].y + 3);
-            ctx.textAlign = "center";
-            ctx.fillText("MID 2", vertices[1].x, vertices[1].y - 14);
-            ctx.textAlign = "left";
-            ctx.fillText("HIGH 8", vertices[2].x + 8, vertices[2].y + 3);
+
+        ctx.fillStyle = `rgba(255,255,255,${0.52 * apexAlpha})`;
+        ctx.textAlign = "center";
+        ctx.fillText("MID 2", vertices[1].x, vertices[1].y - (mobile ? 13 : 14));
+
+        if (baseAlpha > 0) {
+            ctx.fillStyle = `rgba(255,255,255,${0.52 * baseAlpha})`;
+            if (mobile) {
+                ctx.textAlign = "left";
+                ctx.fillText("LOW .5", vertices[0].x + 3, vertices[0].y + 12);
+                ctx.textAlign = "right";
+                ctx.fillText("HIGH 8", vertices[2].x - 3, vertices[2].y + 12);
+            } else {
+                ctx.textAlign = "right";
+                ctx.fillText("LOW .5", vertices[0].x - 8, vertices[0].y + 3);
+                ctx.textAlign = "left";
+                ctx.fillText("HIGH 8", vertices[2].x + 8, vertices[2].y + 3);
+            }
         }
         ctx.restore();
     }
-
     function activeCandidates(m) {
         const candidates = fixedMeanCandidates(m);
         const maxR = Math.max(...candidates.map(candidate => candidate.R));
@@ -1084,7 +1103,6 @@ document.addEventListener("DOMContentLoaded", function () {
         drawCanonical();
         drawPosteriorPath();
         drawDecisionResidue();
-        drawCompletionMark();
     }
 
     function setMean(value) {
@@ -1181,26 +1199,26 @@ document.addEventListener("DOMContentLoaded", function () {
         draw();
     }
 
-    async function runBoundary(token) {
-        phase = "boundary";
+    async function runStaticBuild(token) {
+        phase = "build";
         boundaryProgress = 0;
         fieldReveal = 0;
-        draw();
-        return animateValue(0, 1, TIMING.boundary, token, value => {
-            boundaryProgress = value;
-            draw();
-        }, t => t);
-    }
-
-    async function runFieldBuild(token) {
-        phase = "field";
-        boundaryProgress = 1;
-        fieldReveal = 0;
         fieldAlpha = 1;
-        return animateValue(0, 1, TIMING.field, token, value => {
+        showGlobal = false;
+        globalProgress = 0;
+        draw();
+
+        return animateValue(0, 1, TIMING.staticBuild, token, value => {
+            boundaryProgress = value;
             fieldReveal = value;
-            showGlobal = value > 0.88;
-            globalProgress = clamp((value - 0.88) / 0.12, 0, 1);
+
+            const point = xy(GLOBAL_MAX.pi);
+            const apexY = vertices[1].y;
+            const baseY = vertices[0].y;
+            const depth = clamp((point.y - apexY) / Math.max(1, baseY - apexY), 0, 1);
+            const arrival = 0.92 * depth;
+            showGlobal = value >= arrival;
+            globalProgress = clamp((value - arrival) / 0.10, 0, 1);
             draw();
         }, t => t);
     }
@@ -1310,10 +1328,7 @@ document.addEventListener("DOMContentLoaded", function () {
         scenario = generateScenario(currentSeed);
         const token = runToken;
 
-        if (!(await runBoundary(token))) {
-            return;
-        }
-        if (!(await runFieldBuild(token))) {
+        if (!(await runStaticBuild(token))) {
             return;
         }
         if (!(await runCanonical(token))) {
