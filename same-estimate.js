@@ -63,13 +63,16 @@ document.addEventListener("DOMContentLoaded", function () {
     ]);
 
     const TIMING = Object.freeze({
-        staticBuild: 3200,
-        canonical: 1100,
-        canonicalHold: 300,
-        realizationFirst: 500,
+        staticBuild: 4000,
+        canonical: 1050,
+        canonicalHold: 150,
+        realizationFirst: 350,
         realizationStep: 560,
-        preResidue: 280
+        preResidue: 200
     });
+
+    const STATIC_BOUNDARY_FINISH = 0.82;
+    const GRID_LEVELS = Object.freeze([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]);
 
     let W = 0;
     let H = 0;
@@ -79,6 +82,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let fieldLayer = null;
     let screenNodes = [];
     let contourSegments = [];
+    let contourPaths = [];
+    let constructionGridLines = [];
+    let constructionCells = [];
+    let boundaryMetrics = null;
 
     let gridValues = null;
     let gridIndex = null;
@@ -93,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let showFiber = false;
     let showCanonical = false;
     let showPosterior = false;
-    let showTrace = false;
+    let showTrace = false; // retained for API compatibility; no lower diagnostic is rendered
     let phase = "idle";
     let phaseProgress = 0;
     let globalProgress = 0;
@@ -444,6 +451,10 @@ document.addEventListener("DOMContentLoaded", function () {
             return { ...record, x: point.x, y: point.y };
         });
         contourSegments = CONTOURS.map(level => collectContourSegments(level));
+        buildBoundaryMetrics();
+        constructionGridLines = buildConstructionGridLines();
+        contourPaths = CONTOURS.map((level, index) => buildContourPaths(level, contourSegments[index]));
+        constructionCells = buildConstructionCells();
     }
 
     function collectContourSegments(level) {
@@ -467,6 +478,258 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         segments.sort((u, v) => u.angle - v.angle);
         return segments;
+    }
+
+
+    function buildBoundaryMetrics() {
+        const apex = vertices[1];
+        const high = vertices[2];
+        const low = vertices[0];
+        const segments = [
+            { a: apex, b: high },
+            { a: high, b: low },
+            { a: low, b: apex }
+        ].map(segment => ({
+            ...segment,
+            length: Math.hypot(segment.b.x - segment.a.x, segment.b.y - segment.a.y)
+        }));
+        let cumulative = 0;
+        segments.forEach(segment => {
+            segment.start = cumulative;
+            cumulative += segment.length;
+        });
+        boundaryMetrics = { segments, perimeter: cumulative };
+    }
+
+    function closestPointOnSegment(point, a, b) {
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const denom = dx * dx + dy * dy || 1;
+        const t = clamp(((point.x - a.x) * dx + (point.y - a.y) * dy) / denom, 0, 1);
+        const x = a.x + dx * t;
+        const y = a.y + dy * t;
+        return { x, y, t, distance: Math.hypot(point.x - x, point.y - y) };
+    }
+
+    function boundaryParamForPoint(point) {
+        let best = null;
+        boundaryMetrics.segments.forEach(segment => {
+            const projection = closestPointOnSegment(point, segment.a, segment.b);
+            if (!best || projection.distance < best.distance) {
+                best = {
+                    distance: projection.distance,
+                    param: (segment.start + projection.t * segment.length) / boundaryMetrics.perimeter,
+                    point: { x: projection.x, y: projection.y }
+                };
+            }
+        });
+        return best;
+    }
+
+    function boundaryPointAt(progress) {
+        const distance = clamp(progress, 0, 1) * boundaryMetrics.perimeter;
+        const segment = boundaryMetrics.segments.find(item => distance <= item.start + item.length + 1e-9)
+            || boundaryMetrics.segments[boundaryMetrics.segments.length - 1];
+        const t = clamp((distance - segment.start) / Math.max(1e-9, segment.length), 0, 1);
+        return {
+            x: lerp(segment.a.x, segment.b.x, t),
+            y: lerp(segment.a.y, segment.b.y, t)
+        };
+    }
+
+    function buildConstructionGridLines() {
+        const raw = [];
+        for (let axis = 0; axis < 3; axis += 1) {
+            GRID_LEVELS.forEach(level => {
+                const a = [0, 0, 0];
+                const b = [0, 0, 0];
+                a[axis] = level;
+                b[axis] = level;
+                const others = [0, 1, 2].filter(index => index !== axis);
+                a[others[0]] = 0;
+                a[others[1]] = 1 - level;
+                b[others[0]] = 1 - level;
+                b[others[1]] = 0;
+                const p0 = xy(a);
+                const p1 = xy(b);
+                const q0 = boundaryParamForPoint(p0);
+                const q1 = boundaryParamForPoint(p1);
+                const source = q0.param <= q1.param ? p0 : p1;
+                const other = q0.param <= q1.param ? p1 : p0;
+                raw.push({
+                    axis,
+                    level,
+                    a: p0,
+                    b: p1,
+                    source: { ...source },
+                    other: { ...other },
+                    start: Math.min(q0.param, q1.param) * STATIC_BOUNDARY_FINISH
+                });
+            });
+        }
+
+        const maxLength = Math.max(...raw.map(line => Math.hypot(line.b.x - line.a.x, line.b.y - line.a.y)));
+        const speed = maxLength / 0.115;
+        raw.forEach(line => { line.speed = speed; });
+
+        const intersections = [];
+        for (let i = 0; i < raw.length; i += 1) {
+            for (let j = i + 1; j < raw.length; j += 1) {
+                const A = raw[i];
+                const B = raw[j];
+                if (A.axis === B.axis) continue;
+                const pi = [0, 0, 0];
+                pi[A.axis] = A.level;
+                pi[B.axis] = B.level;
+                const remaining = [0, 1, 2].find(index => index !== A.axis && index !== B.axis);
+                pi[remaining] = 1 - A.level - B.level;
+                if (pi[remaining] < -1e-9) continue;
+                const point = xy(pi.map(value => Math.max(0, value)));
+                intersections.push({ i, j, point });
+            }
+        }
+
+        // Relax activation times through actual grid intersections. Once one line
+        // reaches an intersection, that contact may start its neighboring line.
+        for (let pass = 0; pass < 40; pass += 1) {
+            let changed = false;
+            intersections.forEach(({ i, j, point }) => {
+                const A = raw[i];
+                const B = raw[j];
+                const arriveA = A.start + Math.hypot(point.x - A.source.x, point.y - A.source.y) / A.speed;
+                const arriveB = B.start + Math.hypot(point.x - B.source.x, point.y - B.source.y) / B.speed;
+                if (arriveA + 1e-6 < B.start) {
+                    B.start = arriveA;
+                    B.source = { ...point };
+                    changed = true;
+                }
+                if (arriveB + 1e-6 < A.start) {
+                    A.start = arriveB;
+                    A.source = { ...point };
+                    changed = true;
+                }
+            });
+            if (!changed) break;
+        }
+        return raw;
+    }
+
+    function segmentPointDistance(a, b, point) {
+        return closestPointOnSegment(point, a, b).distance;
+    }
+
+    function chainContourSegments(segments) {
+        const unused = segments.map(segment => ({ a: { ...segment.a }, b: { ...segment.b } }));
+        const paths = [];
+        const tolerance = 1.6;
+        while (unused.length) {
+            const first = unused.pop();
+            const points = [first.a, first.b];
+            let extended = true;
+            while (extended) {
+                extended = false;
+                for (let i = unused.length - 1; i >= 0; i -= 1) {
+                    const segment = unused[i];
+                    const head = points[0];
+                    const tail = points[points.length - 1];
+                    const d = [
+                        [Math.hypot(segment.a.x - tail.x, segment.a.y - tail.y), "tailA"],
+                        [Math.hypot(segment.b.x - tail.x, segment.b.y - tail.y), "tailB"],
+                        [Math.hypot(segment.a.x - head.x, segment.a.y - head.y), "headA"],
+                        [Math.hypot(segment.b.x - head.x, segment.b.y - head.y), "headB"]
+                    ].sort((u, v) => u[0] - v[0])[0];
+                    if (d[0] > tolerance) continue;
+                    if (d[1] === "tailA") points.push(segment.b);
+                    else if (d[1] === "tailB") points.push(segment.a);
+                    else if (d[1] === "headA") points.unshift(segment.b);
+                    else points.unshift(segment.a);
+                    unused.splice(i, 1);
+                    extended = true;
+                }
+            }
+            paths.push(points);
+        }
+        return paths;
+    }
+
+    function buildContourPaths(level, segments) {
+        const fraction = level / GLOBAL_MAX.R;
+        return chainContourSegments(segments).map(points => {
+            const first = boundaryParamForPoint(points[0]);
+            const last = boundaryParamForPoint(points[points.length - 1]);
+            if (last.param < first.param) points.reverse();
+            const startInfo = boundaryParamForPoint(points[0]);
+            const lengths = [0];
+            let total = 0;
+            for (let i = 1; i < points.length; i += 1) {
+                total += Math.hypot(points[i].x - points[i - 1].x, points[i].y - points[i - 1].y);
+                lengths.push(total);
+            }
+            const contourSpeed = Math.max(W, H) / 0.16;
+            return {
+                points,
+                lengths,
+                total,
+                start: startInfo.param * STATIC_BOUNDARY_FINISH,
+                speed: contourSpeed,
+                alpha: 0.075 + 0.19 * Math.pow(fraction, 0.72),
+                width: fraction > 0.96 ? 0.95 : 0.62
+            };
+        });
+    }
+
+    function interiorActivationForPi(pi) {
+        const p = normalizeBelief(pi);
+        let edgeIndex = 0;
+        for (let i = 1; i < 3; i += 1) {
+            if (p[i] < p[edgeIndex]) edgeIndex = i;
+        }
+        const projected = [...p];
+        projected[edgeIndex] = 0;
+        const sum = projected.reduce((a, b) => a + b, 0) || 1;
+        const boundaryPi = projected.map(value => value / sum);
+        const boundaryPoint = xy(boundaryPi);
+        const boundaryTime = boundaryParamForPoint(boundaryPoint).param * STATIC_BOUNDARY_FINISH;
+        const inward = clamp(3 * p[edgeIndex], 0, 1);
+        return clamp(boundaryTime + 0.12 * inward, 0, 0.96);
+    }
+
+    function buildConstructionCells() {
+        const cells = [];
+        forEachTriangle((a, b, c) => {
+            const pi = [
+                (a.pi[0] + b.pi[0] + c.pi[0]) / 3,
+                (a.pi[1] + b.pi[1] + c.pi[1]) / 3,
+                (a.pi[2] + b.pi[2] + c.pi[2]) / 3
+            ];
+            const z = clamp((a.R + b.R + c.R) / (3 * GLOBAL_MAX.R), 0, 1);
+            const shaped = Math.pow(z, 0.68);
+            const value = Math.round(3 + 25 * shaped);
+            cells.push({ a, b, c, value, start: interiorActivationForPi(pi) });
+        });
+        return cells;
+    }
+
+    function drawPartialPolyline(points, lengths, total, distance) {
+        if (!points.length || distance <= 0) return;
+        const target = Math.min(distance, total);
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i += 1) {
+            if (lengths[i] <= target + 1e-9) {
+                ctx.lineTo(points[i].x, points[i].y);
+                continue;
+            }
+            const segmentStart = lengths[i - 1];
+            const segmentLength = lengths[i] - segmentStart || 1;
+            const t = clamp((target - segmentStart) / segmentLength, 0, 1);
+            ctx.lineTo(
+                lerp(points[i - 1].x, points[i].x, t),
+                lerp(points[i - 1].y, points[i].y, t)
+            );
+            break;
+        }
+        ctx.stroke();
     }
 
     function gridNode(i, j) {
@@ -525,8 +788,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const mobile = W < 520;
         const padX = mobile ? Math.max(27, W * 0.075) : W * 0.08;
         const padTop = mobile ? 34 : 42;
-        const traceTop = H * (mobile ? 0.80 : 0.805);
-        const triBottom = H * (mobile ? 0.70 : 0.705);
+        const triBottom = H * (mobile ? 0.88 : 0.865);
         const triW = W - 2 * padX;
         const triH = Math.min(triBottom - padTop, triW * 0.72);
         const centerX = W / 2;
@@ -538,12 +800,7 @@ document.addEventListener("DOMContentLoaded", function () {
             { x: centerX + triW / 2, y: bottom }
         ];
 
-        traceBox = {
-            left: mobile ? 28 : 44,
-            right: W - (mobile ? 28 : 44),
-            top: traceTop,
-            bottom: H - (mobile ? 21 : 27)
-        };
+        traceBox = null;
 
         rebuildScreenGrid();
         rebuildStaticLayers();
@@ -553,6 +810,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function rebuildStaticLayers() {
         fieldLayer = makeLayer();
         drawField(fieldLayer.ctx);
+        drawCoordinateGrid(fieldLayer.ctx);
         drawContours(fieldLayer.ctx);
     }
 
@@ -573,20 +831,19 @@ document.addEventListener("DOMContentLoaded", function () {
             g.fill();
         });
 
-        for (let i = 0; i <= GRID_N; i += 2) {
-            for (let j = 0; j <= GRID_N - i; j += 2) {
-                const record = gridNode(i, j);
-                const z = clamp(record.R / GLOBAL_MAX.R, 0, 1);
-                if (z < 0.07) {
-                    continue;
-                }
-                const radius = 0.22 + 0.68 * Math.pow(z, 0.72);
-                g.beginPath();
-                g.arc(record.x, record.y, radius, 0, Math.PI * 2);
-                g.fillStyle = `rgba(255,255,255,${0.025 + 0.13 * Math.pow(z, 0.86)})`;
-                g.fill();
-            }
-        }
+    }
+
+    function drawCoordinateGrid(g) {
+        g.save();
+        g.strokeStyle = "rgba(255,255,255,.075)";
+        g.lineWidth = 0.5;
+        constructionGridLines.forEach(line => {
+            g.beginPath();
+            g.moveTo(line.a.x, line.a.y);
+            g.lineTo(line.b.x, line.b.y);
+            g.stroke();
+        });
+        g.restore();
     }
 
     function edgeCross(p1, p2, level) {
@@ -639,41 +896,27 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function drawTriangle() {
-        if (boundaryProgress <= 0) {
+        if (boundaryProgress <= 0 || !boundaryMetrics) {
             return;
         }
-
-        // The static construction originates at pi^C = (0,1,0), the MID apex.
-        // Both side walls extend downward together; only after they reach the
-        // base is the LOW-HIGH edge drawn. This gives the entire static layer
-        // one geometric wavefront without privileging LOW over HIGH.
         const p = clamp(boundaryProgress, 0, 1);
-        const sideProgress = clamp(p / 0.82, 0, 1);
-        const baseProgress = clamp((p - 0.82) / 0.18, 0, 1);
-        const apex = vertices[1];
-        const low = vertices[0];
-        const high = vertices[2];
+        const targetDistance = p * boundaryMetrics.perimeter;
+        let remaining = targetDistance;
 
         ctx.save();
         ctx.strokeStyle = "rgba(255,255,255,.61)";
         ctx.lineWidth = 1.05;
-
         ctx.beginPath();
-        ctx.moveTo(apex.x, apex.y);
-        ctx.lineTo(lerp(apex.x, low.x, sideProgress), lerp(apex.y, low.y, sideProgress));
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(apex.x, apex.y);
-        ctx.lineTo(lerp(apex.x, high.x, sideProgress), lerp(apex.y, high.y, sideProgress));
-        ctx.stroke();
-
-        if (baseProgress > 0) {
-            ctx.beginPath();
-            ctx.moveTo(low.x, low.y);
-            ctx.lineTo(lerp(low.x, high.x, baseProgress), low.y);
-            ctx.stroke();
+        ctx.moveTo(vertices[1].x, vertices[1].y);
+        for (const segment of boundaryMetrics.segments) {
+            if (remaining <= 0) break;
+            const amount = Math.min(segment.length, remaining);
+            const t = amount / Math.max(1e-9, segment.length);
+            ctx.lineTo(lerp(segment.a.x, segment.b.x, t), lerp(segment.a.y, segment.b.y, t));
+            remaining -= amount;
+            if (t < 1) break;
         }
+        ctx.stroke();
         ctx.restore();
     }
 
@@ -681,108 +924,98 @@ document.addEventListener("DOMContentLoaded", function () {
         if (fieldReveal <= 0 || fieldReveal >= 0.9995) {
             return;
         }
-
-        const r = clamp(fieldReveal, 0, 1);
-        const apexY = vertices[1].y;
-        const baseY = vertices[0].y;
-        const depthOfY = y => clamp((y - apexY) / Math.max(1, baseY - apexY), 0, 1);
-        const front = clamp(r / 0.92, 0, 1);
+        const p = clamp(fieldReveal, 0, 1);
         ctx.save();
 
-        // The interior uses the same MID-origin wavefront as the triangle.
-        // In barycentric coordinates this depth is exactly 1-pi_2: the work
-        // unfolds away from certainty in the middle-liquidity state.
-        forEachTriangle((a, b, c) => {
-            const depth = (depthOfY(a.y) + depthOfY(b.y) + depthOfY(c.y)) / 3;
-            const gate = clamp((front - depth) / 0.055, 0, 1);
-            if (gate <= 0) {
-                return;
-            }
-            const z = clamp((a.R + b.R + c.R) / (3 * GLOBAL_MAX.R), 0, 1);
-            const shaped = Math.pow(z, 0.68);
-            const value = Math.round(3 + 25 * shaped);
-            const cx = (a.x + b.x + c.x) / 3;
-            const cy = (a.y + b.y + c.y) / 3;
-            const grow = ease(gate);
+        // Each micro-cell is activated from its nearest already-reached perimeter
+        // location, then grows locally. This makes the field follow the same
+        // clockwise construction rather than a vertical reveal mask.
+        constructionCells.forEach(cell => {
+            const local = clamp((p - cell.start) / 0.055, 0, 1);
+            if (local <= 0) return;
+            const cx = (cell.a.x + cell.b.x + cell.c.x) / 3;
+            const cy = (cell.a.y + cell.b.y + cell.c.y) / 3;
+            const grow = ease(local);
             ctx.beginPath();
-            ctx.moveTo(lerp(cx, a.x, grow), lerp(cy, a.y, grow));
-            ctx.lineTo(lerp(cx, b.x, grow), lerp(cy, b.y, grow));
-            ctx.lineTo(lerp(cx, c.x, grow), lerp(cy, c.y, grow));
+            ctx.moveTo(lerp(cx, cell.a.x, grow), lerp(cy, cell.a.y, grow));
+            ctx.lineTo(lerp(cx, cell.b.x, grow), lerp(cy, cell.b.y, grow));
+            ctx.lineTo(lerp(cx, cell.c.x, grow), lerp(cy, cell.c.y, grow));
             ctx.closePath();
-            ctx.fillStyle = `rgb(${value},${value},${value})`;
+            ctx.fillStyle = `rgb(${cell.value},${cell.value},${cell.value})`;
             ctx.fill();
         });
 
-        // The deterministic stipple field is constructed by that same front.
-        for (let i = 0; i <= GRID_N; i += 2) {
-            for (let j = 0; j <= GRID_N - i; j += 2) {
-                const record = gridNode(i, j);
-                const depth = depthOfY(record.y);
-                const gate = clamp((front - depth) / 0.045, 0, 1);
-                const z = clamp(record.R / GLOBAL_MAX.R, 0, 1);
-                if (gate <= 0 || z < 0.07) {
-                    continue;
-                }
-                const radius = (0.22 + 0.68 * Math.pow(z, 0.72)) * ease(gate);
+        // The barycentric coordinate grid is a contact-propagation network.
+        // Boundary contact starts a line; completed portions can activate
+        // neighboring lines at their exact intersections.
+        ctx.strokeStyle = "rgba(255,255,255,.075)";
+        ctx.lineWidth = 0.5;
+        constructionGridLines.forEach(line => {
+            const radius = Math.max(0, p - line.start) * line.speed;
+            if (radius <= 0) return;
+            const endpoints = [line.a, line.b];
+            endpoints.forEach(endpoint => {
+                const dist = Math.hypot(endpoint.x - line.source.x, endpoint.y - line.source.y);
+                const t = clamp(radius / Math.max(1e-9, dist), 0, 1);
                 ctx.beginPath();
-                ctx.arc(record.x, record.y, radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255,255,255,${(0.025 + 0.13 * Math.pow(z, 0.86)) * gate})`;
-                ctx.fill();
-            }
-        }
-
-        // Each contour begins only when the same construction front reaches
-        // that part of the exact level set. Segments are drawn from the
-        // apex-nearer endpoint toward the base, so the curves visibly grow.
-        CONTOURS.forEach((level, index) => {
-            const fraction = level / GLOBAL_MAX.R;
-            const segments = contourSegments[index] || [];
-            ctx.strokeStyle = `rgba(255,255,255,${0.075 + 0.19 * Math.pow(fraction, 0.72)})`;
-            ctx.lineWidth = fraction > 0.96 ? 0.95 : 0.62;
-            segments.forEach(segment => {
-                const a = segment.a.y <= segment.b.y ? segment.a : segment.b;
-                const b = segment.a.y <= segment.b.y ? segment.b : segment.a;
-                const depth = depthOfY((a.y + b.y) / 2);
-                const local = clamp((front - depth) / 0.045, 0, 1);
-                if (local <= 0) {
-                    return;
-                }
-                ctx.beginPath();
-                ctx.moveTo(a.x, a.y);
-                ctx.lineTo(lerp(a.x, b.x, local), lerp(a.y, b.y, local));
+                ctx.moveTo(line.source.x, line.source.y);
+                ctx.lineTo(lerp(line.source.x, endpoint.x, t), lerp(line.source.y, endpoint.y, t));
                 ctx.stroke();
+            });
+        });
+
+        // Every exact loss contour starts from the first of its boundary
+        // intersections encountered by the clockwise perimeter and then traces
+        // continuously along its own level-set geometry.
+        contourPaths.forEach(paths => {
+            paths.forEach(path => {
+                const distance = Math.max(0, p - path.start) * path.speed;
+                if (distance <= 0) return;
+                ctx.strokeStyle = `rgba(255,255,255,${path.alpha})`;
+                ctx.lineWidth = path.width;
+                drawPartialPolyline(path.points, path.lengths, path.total, distance);
             });
         });
         ctx.restore();
     }
+
     function drawVertexLabels() {
-        if (boundaryProgress <= 0) {
+        if (boundaryProgress <= 0 || !boundaryMetrics) {
             return;
         }
         const mobile = W < 520;
         const p = clamp(boundaryProgress, 0, 1);
-        const apexAlpha = clamp(p / 0.16, 0, 1);
-        const baseAlpha = clamp((p - 0.72) / 0.18, 0, 1);
+        const edge1 = boundaryMetrics.segments[0].length / boundaryMetrics.perimeter;
+        const edge2 = (boundaryMetrics.segments[0].length + boundaryMetrics.segments[1].length) / boundaryMetrics.perimeter;
+        const midAlpha = clamp(p / 0.08, 0, 1);
+        const highAlpha = clamp((p - edge1) / 0.06, 0, 1);
+        const lowAlpha = clamp((p - edge2) / 0.06, 0, 1);
+
         ctx.save();
         ctx.font = `${mobile ? 9 : 10}px "Courier New",Courier,monospace`;
         ctx.textBaseline = "middle";
-
-        ctx.fillStyle = `rgba(255,255,255,${0.52 * apexAlpha})`;
+        ctx.fillStyle = `rgba(255,255,255,${0.52 * midAlpha})`;
         ctx.textAlign = "center";
         ctx.fillText("MID 2", vertices[1].x, vertices[1].y - (mobile ? 13 : 14));
 
-        if (baseAlpha > 0) {
-            ctx.fillStyle = `rgba(255,255,255,${0.52 * baseAlpha})`;
+        if (highAlpha > 0) {
+            ctx.fillStyle = `rgba(255,255,255,${0.52 * highAlpha})`;
             if (mobile) {
-                ctx.textAlign = "left";
-                ctx.fillText("LOW .5", vertices[0].x + 3, vertices[0].y + 12);
                 ctx.textAlign = "right";
                 ctx.fillText("HIGH 8", vertices[2].x - 3, vertices[2].y + 12);
             } else {
-                ctx.textAlign = "right";
-                ctx.fillText("LOW .5", vertices[0].x - 8, vertices[0].y + 3);
                 ctx.textAlign = "left";
                 ctx.fillText("HIGH 8", vertices[2].x + 8, vertices[2].y + 3);
+            }
+        }
+        if (lowAlpha > 0) {
+            ctx.fillStyle = `rgba(255,255,255,${0.52 * lowAlpha})`;
+            if (mobile) {
+                ctx.textAlign = "left";
+                ctx.fillText("LOW .5", vertices[0].x + 3, vertices[0].y + 12);
+            } else {
+                ctx.textAlign = "right";
+                ctx.fillText("LOW .5", vertices[0].x - 8, vertices[0].y + 3);
             }
         }
         ctx.restore();
@@ -988,7 +1221,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.beginPath();
         ctx.moveTo(left, top);
         ctx.lineTo(right, top);
-        ctx.strokeStyle = "rgba(255,255,255,.055)";
+        ctx.strokeStyle = "rgba(255,255,255,.075)";
         ctx.lineWidth = 1;
         ctx.stroke();
 
@@ -1102,7 +1335,6 @@ document.addEventListener("DOMContentLoaded", function () {
         drawGlobalMax();
         drawCanonical();
         drawPosteriorPath();
-        drawDecisionResidue();
     }
 
     function setMean(value) {
@@ -1209,16 +1441,12 @@ document.addEventListener("DOMContentLoaded", function () {
         draw();
 
         return animateValue(0, 1, TIMING.staticBuild, token, value => {
-            boundaryProgress = value;
+            boundaryProgress = clamp(value / STATIC_BOUNDARY_FINISH, 0, 1);
             fieldReveal = value;
 
-            const point = xy(GLOBAL_MAX.pi);
-            const apexY = vertices[1].y;
-            const baseY = vertices[0].y;
-            const depth = clamp((point.y - apexY) / Math.max(1, baseY - apexY), 0, 1);
-            const arrival = 0.92 * depth;
+            const arrival = interiorActivationForPi(GLOBAL_MAX.pi);
             showGlobal = value >= arrival;
-            globalProgress = clamp((value - arrival) / 0.10, 0, 1);
+            globalProgress = clamp((value - arrival) / 0.08, 0, 1);
             draw();
         }, t => t);
     }
@@ -1248,7 +1476,7 @@ document.addEventListener("DOMContentLoaded", function () {
         showCanonical = false;
         showFiber = true;
         showPosterior = true;
-        showTrace = true;
+        showTrace = false;
         fiberProgress = 1;
         posterior = null;
         posteriorPath = [];
@@ -1281,7 +1509,7 @@ document.addEventListener("DOMContentLoaded", function () {
         completed = true;
         showFiber = true;
         showPosterior = true;
-        showTrace = true;
+        showTrace = false;
         wrap.classList.add("is-resettable");
         canvas.tabIndex = 0;
         canvas.setAttribute("role", "button");
@@ -1307,7 +1535,7 @@ document.addEventListener("DOMContentLoaded", function () {
         phase = "residue";
         showFiber = true;
         showPosterior = true;
-        showTrace = true;
+        showTrace = false;
 
         scenario.forEach(event => {
             currentEvent = event;
