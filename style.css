@@ -113,12 +113,14 @@ nav a:hover {
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.3);
 }
 
+#same-estimate-title,
 #eternal-title,
 #ants-title {
     font-size: var(--text-size);
     margin-bottom: 0;
 }
 
+#same-estimate-content,
 #ants-content {
     display: none;
 }
@@ -154,12 +156,14 @@ nav a:hover {
     transition: opacity 3s ease-in, scale 0.28s ease-in-out;
 }
 
+#same-estimate-arrow,
 #eternal-arrow,
 #watch-arrow,
 #ants-arrow {
     transition: opacity 0.3s ease-in-out;
 }
 
+#same-estimate-arrow:not(.blink-arrow),
 #eternal-arrow:not(.blink-arrow),
 #watch-arrow:not(.blink-arrow),
 #ants-arrow:not(.blink-arrow) {
@@ -1118,3 +1122,67 @@ nav a {
         scale: 1;
     }
 }
+
+/* Same Estimate, Different Information */
+#same-estimate-artwork {
+    width: 100%;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.same-estimate-wrap {
+    position: relative;
+    width: min(90vw, 680px);
+    aspect-ratio: 1.24 / 1;
+    margin: 8px auto 4px;
+    overflow: visible;
+    transform-origin: center;
+    transition: scale 0.22s ease-in-out, filter 0.22s ease-in-out;
+}
+
+#same-estimate-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--black);
+    touch-action: manipulation;
+}
+
+.same-estimate-wrap.is-resettable #same-estimate-canvas {
+    cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .same-estimate-wrap.is-resettable:hover {
+        scale: 1.03;
+        filter:
+            drop-shadow(0 0 5px rgba(255, 255, 255, 0.3))
+            drop-shadow(0 0 12px rgba(0, 122, 255, 0.14));
+    }
+}
+
+#same-estimate-canvas:focus-visible {
+    outline: 1px solid rgba(0, 122, 255, 0.72);
+    outline-offset: 4px;
+}
+
+@media (max-width: 600px) {
+    .same-estimate-wrap {
+        width: 92vw;
+        aspect-ratio: 1 / 1.03;
+        margin-top: 6px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .same-estimate-wrap {
+        transition: filter 0.22s ease-in-out;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
+    .same-estimate-wrap.is-resettable:hover {
+        scale: 1;
+    }
+}
+
