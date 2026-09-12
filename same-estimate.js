@@ -63,15 +63,13 @@ document.addEventListener("DOMContentLoaded", function () {
     ]);
 
     const TIMING = Object.freeze({
-        landscape: 1200,
-        canonical: 3000,
-        sweepMove: 4500,
-        switchHold: 260,
-        globalHold: 380,
-        transition: 220,
-        realizationFirst: 650,
-        realizationStep: 510,
-        preResidue: 650
+        boundary: 600,
+        field: 1050,
+        canonical: 850,
+        canonicalHold: 220,
+        realizationFirst: 260,
+        realizationStep: 280,
+        preResidue: 320
     });
 
     let W = 0;
@@ -87,7 +85,11 @@ document.addEventListener("DOMContentLoaded", function () {
     let triangles = null;
 
     let mean = 2;
+    let boundaryProgress = 0;
+    let fieldReveal = 0;
     let fieldAlpha = 0;
+    let fiberProgress = 1;
+    let showGlobal = false;
     let showFiber = false;
     let showCanonical = false;
     let showPosterior = false;
@@ -611,19 +613,94 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function drawTriangle() {
+        if (boundaryProgress <= 0) {
+            return;
+        }
+
+        const points = [vertices[0], vertices[1], vertices[2], vertices[0]];
+        const lengths = [];
+        let perimeter = 0;
+        for (let i = 0; i < 3; i += 1) {
+            const len = Math.hypot(points[i + 1].x - points[i].x, points[i + 1].y - points[i].y);
+            lengths.push(len);
+            perimeter += len;
+        }
+        let remaining = clamp(boundaryProgress, 0, 1) * perimeter;
+
         ctx.save();
         ctx.beginPath();
-        ctx.moveTo(vertices[0].x, vertices[0].y);
-        ctx.lineTo(vertices[1].x, vertices[1].y);
-        ctx.lineTo(vertices[2].x, vertices[2].y);
-        ctx.closePath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 0; i < 3 && remaining > 0; i += 1) {
+            const take = Math.min(1, remaining / lengths[i]);
+            ctx.lineTo(
+                lerp(points[i].x, points[i + 1].x, take),
+                lerp(points[i].y, points[i + 1].y, take)
+            );
+            remaining -= lengths[i];
+            if (take < 1) {
+                break;
+            }
+        }
         ctx.strokeStyle = "rgba(255,255,255,.61)";
         ctx.lineWidth = 1.05;
         ctx.stroke();
         ctx.restore();
     }
 
+    function drawBuildingField() {
+        if (fieldReveal <= 0 || fieldReveal >= 0.9995) {
+            return;
+        }
+
+        const r = clamp(fieldReveal, 0, 1);
+        ctx.save();
+        forEachTriangle((a, b, c) => {
+            const z = clamp((a.R + b.R + c.R) / (3 * GLOBAL_MAX.R), 0, 1);
+            const gate = clamp((r - 0.82 * z) / 0.18, 0, 1);
+            if (gate <= 0) {
+                return;
+            }
+            const shaped = Math.pow(z, 0.68);
+            const value = Math.round(3 + 25 * shaped);
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.lineTo(c.x, c.y);
+            ctx.closePath();
+            ctx.fillStyle = `rgba(${value},${value},${value},${gate})`;
+            ctx.fill();
+        });
+
+        CONTOURS.forEach(level => {
+            const fraction = level / GLOBAL_MAX.R;
+            if (fraction > r) {
+                return;
+            }
+            const local = clamp((r - fraction) / 0.10, 0, 1);
+            ctx.strokeStyle = `rgba(255,255,255,${local * (0.075 + 0.19 * Math.pow(fraction, 0.72))})`;
+            ctx.lineWidth = fraction > 0.96 ? 0.95 : 0.62;
+            forEachTriangle((a, b, c) => {
+                const points = uniquePoints([
+                    edgeCross(a, b, level),
+                    edgeCross(b, c, level),
+                    edgeCross(c, a, level)
+                ]);
+                if (points.length !== 2) {
+                    return;
+                }
+                ctx.beginPath();
+                ctx.moveTo(points[0].x, points[0].y);
+                ctx.lineTo(points[1].x, points[1].y);
+                ctx.stroke();
+            });
+        });
+        ctx.restore();
+    }
+
     function drawVertexLabels() {
+        if (boundaryProgress < 0.86) {
+            return;
+        }
         const mobile = W < 520;
         ctx.save();
         ctx.font = `${mobile ? 9 : 10}px "Courier New",Courier,monospace`;
@@ -671,12 +748,13 @@ document.addEventListener("DOMContentLoaded", function () {
             ? "rgba(0,122,255,.76)"
             : "rgba(0,122,255,.82)";
         ctx.lineWidth = 1.35;
+        const fp = phase === "canonical" ? clamp(fiberProgress, 0, 1) : 1;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
+        ctx.lineTo(lerp(a.x, b.x, fp), lerp(a.y, b.y, fp));
         ctx.stroke();
 
-        [pa, pb].forEach(pi => {
+        if (phase !== "canonical" || fiberProgress > 0.72) [pa, pb].forEach(pi => {
             const point = xy(pi);
             ctx.beginPath();
             ctx.arc(point.x, point.y, 3.5, 0, Math.PI * 2);
@@ -687,7 +765,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ctx.stroke();
         });
 
-        winners.forEach(candidate => {
+        if (phase !== "canonical" || fiberProgress > 0.82) winners.forEach(candidate => {
             const point = xy(candidate.pi);
             ctx.beginPath();
             ctx.arc(point.x, point.y, 5.0, 0, Math.PI * 2);
@@ -710,6 +788,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function drawGlobalMax() {
+        if (!showGlobal) {
+            return;
+        }
         const point = xy(GLOBAL_MAX.pi);
         ctx.save();
         ctx.beginPath();
@@ -882,7 +963,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, W, H);
 
-        if (fieldLayer && fieldAlpha > 0) {
+        if (fieldLayer && fieldReveal >= 0.9995 && fieldAlpha > 0) {
             ctx.save();
             ctx.globalAlpha = fieldAlpha;
             ctx.drawImage(
@@ -891,6 +972,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 0, 0, W, H
             );
             ctx.restore();
+        } else {
+            drawBuildingField();
         }
 
         drawTriangle();
@@ -962,7 +1045,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function resetTransient() {
         mean = 2;
+        boundaryProgress = 0;
+        fieldReveal = 0;
         fieldAlpha = 0;
+        fiberProgress = 1;
+        showGlobal = false;
         showFiber = false;
         showCanonical = false;
         showPosterior = false;
@@ -991,92 +1078,55 @@ document.addEventListener("DOMContentLoaded", function () {
         draw();
     }
 
-    function buildSweepPlan() {
-        const landmarks = [
-            MODEL.lambda[0],
-            SWITCHES[0],
-            2,
-            GLOBAL_MAX.m,
-            SWITCHES[1],
-            MODEL.lambda[2]
-        ];
-        const totalDistance = MODEL.lambda[2] - MODEL.lambda[0];
-
-        return landmarks.slice(1).map((to, index) => {
-            const from = landmarks[index];
-            const fraction = Math.abs(to - from) / totalDistance;
-            let holdMs = 0;
-            if (Math.abs(to - SWITCHES[0]) < 1e-12 || Math.abs(to - SWITCHES[1]) < 1e-12) {
-                holdMs = TIMING.switchHold;
-            } else if (Math.abs(to - GLOBAL_MAX.m) < 1e-12) {
-                holdMs = TIMING.globalHold;
-            }
-            return {
-                from,
-                to,
-                moveMs: Math.max(300, TIMING.sweepMove * fraction),
-                holdMs
-            };
-        });
+    async function runBoundary(token) {
+        phase = "boundary";
+        boundaryProgress = 0;
+        fieldReveal = 0;
+        draw();
+        return animateValue(0, 1, TIMING.boundary, token, value => {
+            boundaryProgress = value;
+            draw();
+        }, t => t);
     }
 
-    async function runLandscape(token) {
-        phase = "landscape";
-        fieldAlpha = 0;
-        draw();
-        return animateValue(0, 1, TIMING.landscape, token, value => {
-            fieldAlpha = value;
+    async function runFieldBuild(token) {
+        phase = "field";
+        boundaryProgress = 1;
+        fieldReveal = 0;
+        fieldAlpha = 1;
+        return animateValue(0, 1, TIMING.field, token, value => {
+            fieldReveal = value;
+            showGlobal = value > 0.965;
             draw();
         }, t => t);
     }
 
     async function runCanonical(token) {
         phase = "canonical";
+        showGlobal = true;
         showFiber = true;
         showCanonical = true;
+        fiberProgress = 0;
         setMean(2);
-        return animateValue(0, 1, TIMING.canonical, token, (_, t) => {
+        const built = await animateValue(0, 1, TIMING.canonical, token, (_, t) => {
+            fiberProgress = t;
             phaseProgress = t;
             draw();
         }, t => t);
-    }
-
-    async function runSweep(token) {
-        phase = "sweep";
-        phaseProgress = 0;
-        showCanonical = false;
-        showFiber = true;
-        showPosterior = false;
-        showTrace = false;
-        setMean(MODEL.lambda[0]);
-
-        for (const segment of buildSweepPlan()) {
-            const moved = await animateValue(
-                segment.from,
-                segment.to,
-                segment.moveMs,
-                token,
-                value => setMean(value)
-            );
-            if (!moved || token !== runToken) {
-                return false;
-            }
-            if (segment.holdMs > 0) {
-                const held = await wait(segment.holdMs, token);
-                if (!held) {
-                    return false;
-                }
-            }
+        if (!built) {
+            return false;
         }
-        return true;
+        return wait(TIMING.canonicalHold, token);
     }
 
     async function runRealization(token) {
         phase = "realization";
+        showGlobal = true;
         showCanonical = false;
         showFiber = true;
         showPosterior = true;
         showTrace = true;
+        fiberProgress = 1;
         posterior = null;
         posteriorPath = [];
         playedEvents = [];
@@ -1118,7 +1168,10 @@ document.addEventListener("DOMContentLoaded", function () {
         active = true;
         currentSeed = seed >>> 0;
         scenario = generateScenario(currentSeed);
+        boundaryProgress = 1;
+        fieldReveal = 1;
         fieldAlpha = 1;
+        showGlobal = true;
         phase = "residue";
         showFiber = true;
         showPosterior = true;
@@ -1143,27 +1196,15 @@ document.addEventListener("DOMContentLoaded", function () {
         scenario = generateScenario(currentSeed);
         const token = runToken;
 
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-            renderInstantResidue(currentSeed);
+        if (!(await runBoundary(token))) {
             return;
         }
-
-        if (!(await runLandscape(token))) {
+        if (!(await runFieldBuild(token))) {
             return;
         }
         if (!(await runCanonical(token))) {
             return;
         }
-        if (!(await runSweep(token))) {
-            return;
-        }
-
-        showFiber = false;
-        draw();
-        if (!(await wait(TIMING.transition, token))) {
-            return;
-        }
-
         if (!(await runRealization(token))) {
             return;
         }
