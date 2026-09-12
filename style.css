@@ -1171,12 +1171,12 @@ nav a {
     touch-action: manipulation;
 }
 
-.same-estimate-wrap.is-resettable #same-estimate-canvas {
+.same-estimate-wrap.is-resettable.is-artwork-hovered #same-estimate-canvas {
     cursor: pointer;
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .same-estimate-wrap.is-resettable:hover {
+    .same-estimate-wrap.is-resettable.is-artwork-hovered {
         scale: 1.03;
         filter:
             drop-shadow(0 0 5px rgba(255, 255, 255, 0.3))
@@ -1204,7 +1204,7 @@ nav a {
 }
 
 @media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
-    .same-estimate-wrap.is-resettable:hover {
+    .same-estimate-wrap.is-resettable.is-artwork-hovered {
         scale: 1;
     }
 }

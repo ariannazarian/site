@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let constructionTriangles = [];
     let boundaryMetrics = null;
     let fieldLayer = null;
+    let labelHitBoxes = [];
 
     let gridValues = null;
     let gridIndex = null;
@@ -458,29 +459,65 @@ document.addEventListener("DOMContentLoaded", function () {
         constructionTriangles = buildConstructionTriangles();
     }
 
-    function collectContourSegments(level) {
-        const segments = [];
-        forEachTriangle((a, b, c) => {
-            const points = uniquePoints([
-                edgeCross(a, b, level),
-                edgeCross(b, c, level),
-                edgeCross(c, a, level)
-            ]);
-            if (points.length !== 2) {
-                return;
-            }
-            const midX = (points[0].x + points[1].x) / 2;
-            const midY = (points[0].y + points[1].y) / 2;
-            segments.push({
-                a: points[0],
-                b: points[1],
-                angle: Math.atan2(midY - H * 0.42, midX - W * 0.5)
-            });
-        });
-        segments.sort((u, v) => u.angle - v.angle);
-        return segments;
+    function meshEdgeKey(aCoord, bCoord) {
+        const a = `${aCoord[0]},${aCoord[1]}`;
+        const b = `${bCoord[0]},${bCoord[1]}`;
+        return a < b ? `${a}|${b}` : `${b}|${a}`;
     }
 
+    function isBoundaryMeshEdge(aCoord, bCoord) {
+        const [ai, aj] = aCoord;
+        const [bi, bj] = bCoord;
+        return (ai === 0 && bi === 0)
+            || (aj === 0 && bj === 0)
+            || (ai + aj === GRID_N && bi + bj === GRID_N);
+    }
+
+    function collectContourSegments(level) {
+        const segments = [];
+
+        triangles.forEach(triangle => {
+            const coords = triangle;
+            const nodes = coords.map(coord => gridNode(...coord));
+            const edges = [
+                [0, 1],
+                [1, 2],
+                [2, 0]
+            ];
+            const hits = [];
+
+            edges.forEach(([u, v]) => {
+                const point = edgeCross(nodes[u], nodes[v], level);
+                if (!point) return;
+                const coordA = coords[u];
+                const coordB = coords[v];
+                hits.push({
+                    point,
+                    edgeKey: meshEdgeKey(coordA, coordB),
+                    boundary: isBoundaryMeshEdge(coordA, coordB)
+                });
+            });
+
+            // Deduplicate the rare case where a contour passes exactly through a mesh vertex.
+            const unique = [];
+            hits.forEach(hit => {
+                const existing = unique.find(item => item.edgeKey === hit.edgeKey);
+                if (!existing) unique.push(hit);
+            });
+
+            if (unique.length !== 2) return;
+            segments.push({
+                a: unique[0].point,
+                b: unique[1].point,
+                aKey: unique[0].edgeKey,
+                bKey: unique[1].edgeKey,
+                aBoundary: unique[0].boundary,
+                bBoundary: unique[1].boundary
+            });
+        });
+
+        return segments;
+    }
 
     function buildBoundaryMetrics() {
         const apex = vertices[1];
@@ -561,42 +598,99 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     function chainContourSegments(segments) {
-        const unused = segments.map(segment => ({ a: { ...segment.a }, b: { ...segment.b } }));
-        const paths = [];
-        const tolerance = 1.6;
-        while (unused.length) {
-            const first = unused.pop();
-            const points = [first.a, first.b];
-            let extended = true;
-            while (extended) {
-                extended = false;
-                for (let i = unused.length - 1; i >= 0; i -= 1) {
-                    const segment = unused[i];
-                    const head = points[0];
-                    const tail = points[points.length - 1];
-                    const d = [
-                        [Math.hypot(segment.a.x - tail.x, segment.a.y - tail.y), "tailA"],
-                        [Math.hypot(segment.b.x - tail.x, segment.b.y - tail.y), "tailB"],
-                        [Math.hypot(segment.a.x - head.x, segment.a.y - head.y), "headA"],
-                        [Math.hypot(segment.b.x - head.x, segment.b.y - head.y), "headB"]
-                    ].sort((u, v) => u[0] - v[0])[0];
-                    if (d[0] > tolerance) continue;
-                    if (d[1] === "tailA") points.push(segment.b);
-                    else if (d[1] === "tailB") points.push(segment.a);
-                    else if (d[1] === "headA") points.unshift(segment.b);
-                    else points.unshift(segment.a);
-                    unused.splice(i, 1);
-                    extended = true;
-                }
+        if (!segments.length) return [];
+
+        const nodeMap = new Map();
+        const segmentMap = new Map();
+
+        function addNode(key, point, boundary) {
+            if (!nodeMap.has(key)) {
+                nodeMap.set(key, { key, point: { ...point }, boundary: Boolean(boundary), segments: [] });
+            } else if (boundary) {
+                nodeMap.get(key).boundary = true;
             }
-            paths.push(points);
         }
+
+        segments.forEach((segment, index) => {
+            addNode(segment.aKey, segment.a, segment.aBoundary);
+            addNode(segment.bKey, segment.b, segment.bBoundary);
+            nodeMap.get(segment.aKey).segments.push(index);
+            nodeMap.get(segment.bKey).segments.push(index);
+            segmentMap.set(index, segment);
+        });
+
+        const unvisited = new Set(segments.map((_, index) => index));
+        const paths = [];
+
+        while (unvisited.size) {
+            const seedIndex = unvisited.values().next().value;
+            const componentSegments = new Set();
+            const componentNodes = new Set();
+            const stack = [seedIndex];
+
+            while (stack.length) {
+                const index = stack.pop();
+                if (componentSegments.has(index)) continue;
+                componentSegments.add(index);
+                unvisited.delete(index);
+                const segment = segmentMap.get(index);
+                [segment.aKey, segment.bKey].forEach(key => {
+                    componentNodes.add(key);
+                    nodeMap.get(key).segments.forEach(next => {
+                        if (!componentSegments.has(next)) stack.push(next);
+                    });
+                });
+            }
+
+            const endpointNodes = [...componentNodes]
+                .map(key => nodeMap.get(key))
+                .filter(node => node.boundary || node.segments.filter(index => componentSegments.has(index)).length === 1);
+
+            // A displayed loss arc should be the boundary-to-boundary component.
+            // Prefer a genuine simplex-boundary endpoint, then any degree-one endpoint.
+            let startNode = endpointNodes.find(node => node.boundary)
+                || endpointNodes[0]
+                || nodeMap.get(segmentMap.get(seedIndex).aKey);
+
+            const orderedPoints = [{ ...startNode.point }];
+            let currentKey = startNode.key;
+            let previousSegment = null;
+            const used = new Set();
+
+            while (used.size < componentSegments.size) {
+                const currentNode = nodeMap.get(currentKey);
+                const nextSegmentIndex = currentNode.segments.find(index =>
+                    componentSegments.has(index) && !used.has(index) && index !== previousSegment
+                );
+                if (nextSegmentIndex === undefined) break;
+
+                used.add(nextSegmentIndex);
+                const segment = segmentMap.get(nextSegmentIndex);
+                const nextKey = segment.aKey === currentKey ? segment.bKey : segment.aKey;
+                const nextNode = nodeMap.get(nextKey);
+                orderedPoints.push({ ...nextNode.point });
+                previousSegment = nextSegmentIndex;
+                currentKey = nextKey;
+            }
+
+            const start = nodeMap.get(startNode.key);
+            const end = nodeMap.get(currentKey);
+            paths.push({
+                points: orderedPoints,
+                startBoundary: start.boundary,
+                endBoundary: end.boundary
+            });
+        }
+
         return paths;
     }
 
     function buildContourPaths(level, segments) {
         const fraction = level / GLOBAL_MAX.R;
-        const candidates = chainContourSegments(segments).map(points => {
+        const candidates = chainContourSegments(segments).map(pathData => {
+            const points = [...pathData.points];
+            if (points.length < 2) return null;
+
             const first = boundaryParamForPoint(points[0]);
             const last = boundaryParamForPoint(points[points.length - 1]);
             if (last.param < first.param) points.reverse();
@@ -618,19 +712,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 end: Math.max(startInfo.param + 1e-4, endInfo.param),
                 startDistance: startInfo.distance,
                 endDistance: endInfo.distance,
+                boundaryToBoundary: pathData.startBoundary && pathData.endBoundary,
                 alpha: 0.075 + 0.19 * Math.pow(fraction, 0.72),
                 width: fraction > 0.96 ? 0.95 : 0.62
             };
-        });
+        }).filter(Boolean);
 
-        // A displayed iso-loss arc must be one continuous boundary-to-boundary
-        // component. Some contour levels can contain a tiny secondary component
-        // near an endpoint; drawing both makes the curve appear to spawn twice.
-        // Keep the longest component whose two ends lie on the simplex boundary.
-        const boundaryTol = Math.max(1.25, Math.min(W, H) * 0.004);
-        const boundaryComponents = candidates.filter(path =>
-            path.startDistance <= boundaryTol && path.endDistance <= boundaryTol
-        );
+        const boundaryComponents = candidates.filter(path => path.boundaryToBoundary);
         const pool = boundaryComponents.length ? boundaryComponents : candidates;
         if (!pool.length) return [];
         const longest = pool.reduce((best, path) => path.total > best.total ? path : best, pool[0]);
@@ -934,16 +1022,15 @@ document.addEventListener("DOMContentLoaded", function () {
     function drawContours(g) {
         contourPaths.forEach(paths => {
             paths.forEach(path => {
-                g.save();
-                g.strokeStyle = `rgba(255,255,255,${path.alpha})`;
-                g.lineWidth = path.width;
+                if (!path.points.length) return;
                 g.beginPath();
                 g.moveTo(path.points[0].x, path.points[0].y);
                 for (let i = 1; i < path.points.length; i += 1) {
                     g.lineTo(path.points[i].x, path.points[i].y);
                 }
+                g.strokeStyle = `rgba(255,255,255,${path.alpha})`;
+                g.lineWidth = path.width;
                 g.stroke();
-                g.restore();
             });
         });
     }
@@ -1011,6 +1098,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function drawVertexLabels() {
+        labelHitBoxes = [];
         if (boundaryProgress <= 0 || !boundaryMetrics) {
             return;
         }
@@ -1021,36 +1109,44 @@ document.addEventListener("DOMContentLoaded", function () {
         const midAlpha = clamp(p / 0.08, 0, 1);
         const highAlpha = clamp((p - edge1) / 0.06, 0, 1);
         const lowAlpha = clamp((p - edge2) / 0.06, 0, 1);
+        const fontSize = mobile ? 9 : 10;
+        const pad = mobile ? 6 : 7;
+
+        function drawLabel(text, x, y, align, alpha) {
+            if (alpha <= 0) return;
+            ctx.fillStyle = `rgba(255,255,255,${0.52 * alpha})`;
+            ctx.textAlign = align;
+            ctx.fillText(text, x, y);
+
+            const metrics = ctx.measureText(text);
+            const width = metrics.width;
+            const height = fontSize + 4;
+            let left = x;
+            if (align === "center") left = x - width / 2;
+            else if (align === "right") left = x - width;
+            labelHitBoxes.push({
+                left: left - pad,
+                right: left + width + pad,
+                top: y - height / 2 - pad,
+                bottom: y + height / 2 + pad
+            });
+        }
 
         ctx.save();
-        ctx.font = `${mobile ? 9 : 10}px "Courier New",Courier,monospace`;
+        ctx.font = `${fontSize}px "Courier New",Courier,monospace`;
         ctx.textBaseline = "middle";
-        ctx.fillStyle = `rgba(255,255,255,${0.52 * midAlpha})`;
-        ctx.textAlign = "center";
-        ctx.fillText("MID 2", vertices[1].x, vertices[1].y - (mobile ? 13 : 14));
+        drawLabel("MID 2", vertices[1].x, vertices[1].y - (mobile ? 13 : 14), "center", midAlpha);
 
-        if (highAlpha > 0) {
-            ctx.fillStyle = `rgba(255,255,255,${0.52 * highAlpha})`;
-            if (mobile) {
-                ctx.textAlign = "right";
-                ctx.fillText("HIGH 8", vertices[2].x - 3, vertices[2].y + 12);
-            } else {
-                ctx.textAlign = "left";
-                ctx.fillText("HIGH 8", vertices[2].x + 8, vertices[2].y + 3);
-            }
-        }
-        if (lowAlpha > 0) {
-            ctx.fillStyle = `rgba(255,255,255,${0.52 * lowAlpha})`;
-            if (mobile) {
-                ctx.textAlign = "left";
-                ctx.fillText("LOW .5", vertices[0].x + 3, vertices[0].y + 12);
-            } else {
-                ctx.textAlign = "right";
-                ctx.fillText("LOW .5", vertices[0].x - 8, vertices[0].y + 3);
-            }
+        if (mobile) {
+            drawLabel("HIGH 8", vertices[2].x - 3, vertices[2].y + 12, "right", highAlpha);
+            drawLabel("LOW .5", vertices[0].x + 3, vertices[0].y + 12, "left", lowAlpha);
+        } else {
+            drawLabel("HIGH 8", vertices[2].x + 8, vertices[2].y + 3, "left", highAlpha);
+            drawLabel("LOW .5", vertices[0].x - 8, vertices[0].y + 3, "right", lowAlpha);
         }
         ctx.restore();
     }
+
     function activeCandidates(m) {
         const candidates = fixedMeanCandidates(m);
         const maxR = Math.max(...candidates.map(candidate => candidate.R));
@@ -1370,6 +1466,53 @@ document.addEventListener("DOMContentLoaded", function () {
         drawPosteriorPath();
     }
 
+    function canvasPointFromEvent(event) {
+        const rect = canvas.getBoundingClientRect();
+        if (!rect.width || !rect.height) return null;
+        return {
+            x: (event.clientX - rect.left) * (W / rect.width),
+            y: (event.clientY - rect.top) * (H / rect.height)
+        };
+    }
+
+    function pointInTriangle(point, a, b, c) {
+        const sign = (p1, p2, p3) =>
+            (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+        const d1 = sign(point, a, b);
+        const d2 = sign(point, b, c);
+        const d3 = sign(point, c, a);
+        const hasNeg = d1 < 0 || d2 < 0 || d3 < 0;
+        const hasPos = d1 > 0 || d2 > 0 || d3 > 0;
+        return !(hasNeg && hasPos);
+    }
+
+    function distanceToSegment(point, a, b) {
+        return closestPointOnSegment(point, a, b).distance;
+    }
+
+    function pointInArtwork(point) {
+        if (!point || vertices.length !== 3) return false;
+        if (pointInTriangle(point, vertices[0], vertices[1], vertices[2])) return true;
+
+        const halo = 4;
+        if (distanceToSegment(point, vertices[0], vertices[1]) <= halo
+            || distanceToSegment(point, vertices[1], vertices[2]) <= halo
+            || distanceToSegment(point, vertices[2], vertices[0]) <= halo) {
+            return true;
+        }
+
+        return labelHitBoxes.some(box =>
+            point.x >= box.left && point.x <= box.right
+            && point.y >= box.top && point.y <= box.bottom
+        );
+    }
+
+    function updateArtworkHover(event) {
+        const qualified = completed && active && pointInArtwork(canvasPointFromEvent(event));
+        wrap.classList.toggle("is-artwork-hovered", qualified);
+        return qualified;
+    }
+
     function setMean(value) {
         mean = clamp(Number(value), MODEL.lambda[0], MODEL.lambda[2]);
         draw();
@@ -1446,7 +1589,7 @@ document.addEventListener("DOMContentLoaded", function () {
         globalProgress = 0;
         realizationProgress = 1;
         completed = false;
-        wrap.classList.remove("is-resettable");
+        wrap.classList.remove("is-resettable", "is-artwork-hovered");
         canvas.tabIndex = -1;
         canvas.setAttribute("role", "img");
         canvas.setAttribute(
@@ -1655,8 +1798,16 @@ document.addEventListener("DOMContentLoaded", function () {
     content.style.display = "none";
     title.addEventListener("click", toggleSection);
 
-    canvas.addEventListener("click", function () {
-        if (completed && active) {
+    canvas.addEventListener("pointermove", function (event) {
+        updateArtworkHover(event);
+    });
+
+    canvas.addEventListener("pointerleave", function () {
+        wrap.classList.remove("is-artwork-hovered");
+    });
+
+    canvas.addEventListener("click", function (event) {
+        if (completed && active && pointInArtwork(canvasPointFromEvent(event))) {
             restartArtwork();
         }
     });
