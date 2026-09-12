@@ -1208,3 +1208,14 @@ nav a {
         scale: 1;
     }
 }
+
+/* Same Estimate: reclaim unused canvas space after removal of the lower trace. */
+#same-estimate-content {
+    margin-bottom: -2.25rem;
+}
+
+@media (max-width: 600px) {
+    #same-estimate-content {
+        margin-bottom: -1.5rem;
+    }
+}
